@@ -1,0 +1,39 @@
+(node:48797) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[baseline] channel opened 7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU https://explorer.solana.com/tx/9LsAXgNePMMb1Eds2axYiyiC9qLM38Vhm4mzegZBL8Db1Be3SJQJyBZFprEZi6PxfKfGxHCUp6XxD4oww4xrFev?cluster=devnet
+[baseline] round 1: 3/8 paid requests succeeded
+[baseline] round 2: 2/8 paid requests succeeded
+[baseline] round 3: 3/8 paid requests succeeded
+[baseline] redeem attempt 1: server charged 22500, onchain settled 22500, paid out 22500
+[baseline] refund failed: refund refused: duplicate_settlement
+{
+  "label": "baseline",
+  "channelId": "7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU",
+  "channelUrl": "https://explorer.solana.com/address/7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU?cluster=devnet",
+  "depositTx": "9LsAXgNePMMb1Eds2axYiyiC9qLM38Vhm4mzegZBL8Db1Be3SJQJyBZFprEZi6PxfKfGxHCUp6XxD4oww4xrFev",
+  "requests": 24,
+  "succeeded": 8,
+  "failed": 16,
+  "failureReasons": [
+    "transaction_failed: batch operation reservation changed"
+  ],
+  "handlerServed": 24,
+  "storeWriteConflicts": 17,
+  "operations": {
+    "completed": 24,
+    "reserved": 0,
+    "completedActualSum": "60000"
+  },
+  "serverChannelChargedCumulative": "22500",
+  "serverChargedForWorkers": "20000",
+  "onchainSettledAfterRedeem": "22500",
+  "onchainDeposit": "500000",
+  "claimAndSettleTxs": [
+    {
+      "kind": "claim",
+      "tx": "4n2HWnTH7VbTYALv25hHXyTNzdWLAbKd29VEK179rZ1kjxQqaeqjJ69meftFek9FDQMwiZUi15a4Shy9yQ9ZFkmD",
+      "url": "https://explorer.solana.com/tx/4n2HWnTH7VbTYALv25hHXyTNzdWLAbKd29VEK179rZ1kjxQqaeqjJ69meftFek9FDQMwiZUi15a4Shy9yQ9ZFkmD?cluster=devnet"
+    }
+  ],
+  "refundError": "refund refused: duplicate_settlement"
+}

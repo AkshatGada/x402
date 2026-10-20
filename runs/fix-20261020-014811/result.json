@@ -1,0 +1,270 @@
+{
+  "label": "fix",
+  "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+  "channelUrl": "https://explorer.solana.com/address/EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU?cluster=devnet",
+  "depositTx": "5BN8MS9PAb96Mfujaos9kxjJazChM4Hk3c7Si6rNPJb9dBXAHmGTEPWTkbR26o7g75Dg9JJpBhAz9FCBjmbux8c1",
+  "requests": 24,
+  "succeeded": 24,
+  "failed": 0,
+  "failureReasons": [],
+  "handlerServed": 24,
+  "storeWriteConflicts": 33,
+  "operations": {
+    "completed": 24,
+    "reserved": 0,
+    "completedActualSum": "60000"
+  },
+  "serverChannelChargedCumulative": "62500",
+  "serverChargedForWorkers": "60000",
+  "onchainSettledAfterRedeem": "62500",
+  "onchainDeposit": "500000",
+  "redeem": [
+    {
+      "claimed": [
+        "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU"
+      ],
+      "distributed": [],
+      "sealed": []
+    }
+  ],
+  "claimAndSettleTxs": [
+    {
+      "kind": "claim",
+      "tx": "3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC",
+      "url": "https://explorer.solana.com/tx/3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC?cluster=devnet"
+    }
+  ],
+  "outcomes": [
+    {
+      "round": 1,
+      "replica": "A",
+      "requestId": "d086f8d0-138b-459f-b093-ff4e0000359d",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "5000"
+    },
+    {
+      "round": 1,
+      "replica": "B",
+      "requestId": "92dc47d9-480f-401d-888f-b55ff4a7db6b",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "15000"
+    },
+    {
+      "round": 1,
+      "replica": "A",
+      "requestId": "65dc85a6-7f25-417c-ac64-d43063a384d3",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "12500"
+    },
+    {
+      "round": 1,
+      "replica": "B",
+      "requestId": "d57ea58b-bea5-4e16-99a6-643c420afbf6",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "20000"
+    },
+    {
+      "round": 1,
+      "replica": "A",
+      "requestId": "68ef0285-079e-4f19-a90c-9cc4614486d7",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "17500"
+    },
+    {
+      "round": 1,
+      "replica": "B",
+      "requestId": "39d62931-3b9b-476b-867a-a496433d8691",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "22500"
+    },
+    {
+      "round": 1,
+      "replica": "A",
+      "requestId": "362f699f-eda0-496b-89b7-bde4c808f03e",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "7500"
+    },
+    {
+      "round": 1,
+      "replica": "B",
+      "requestId": "b5a056df-2324-4d43-9025-b7ed1b27a4e9",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "10000"
+    },
+    {
+      "round": 2,
+      "replica": "A",
+      "requestId": "e2ace933-e16a-468f-9492-882cadcf8099",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "30000"
+    },
+    {
+      "round": 2,
+      "replica": "B",
+      "requestId": "c5e6cf3d-1da0-4307-a2a4-ce7399b5ec0e",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "32500"
+    },
+    {
+      "round": 2,
+      "replica": "A",
+      "requestId": "63e66b42-ecaf-455e-a119-5c5e56efc141",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "35000"
+    },
+    {
+      "round": 2,
+      "replica": "B",
+      "requestId": "a41fa384-d48f-4d75-8e16-c2848ac94810",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "37500"
+    },
+    {
+      "round": 2,
+      "replica": "A",
+      "requestId": "28ba974b-1309-4e69-968e-21f868dfe268",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "40000"
+    },
+    {
+      "round": 2,
+      "replica": "B",
+      "requestId": "094383b1-d7c1-44d3-95d8-35d8d53b619d",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "42500"
+    },
+    {
+      "round": 2,
+      "replica": "A",
+      "requestId": "d8bdc630-7784-4ed3-8c8a-15cee92d816a",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "25000"
+    },
+    {
+      "round": 2,
+      "replica": "B",
+      "requestId": "797a91a9-b3d0-4314-be9d-7247973136bf",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "27500"
+    },
+    {
+      "round": 3,
+      "replica": "A",
+      "requestId": "4f34cca0-f2e4-4803-9ac7-58760f759eba",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "55000"
+    },
+    {
+      "round": 3,
+      "replica": "B",
+      "requestId": "17856024-0616-446a-a85e-95cab3505072",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "50000"
+    },
+    {
+      "round": 3,
+      "replica": "A",
+      "requestId": "c5a3cb2c-2bcb-478a-8810-3519e70f75ac",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "52500"
+    },
+    {
+      "round": 3,
+      "replica": "B",
+      "requestId": "36d87745-a6e2-474b-a3b3-6139c53f3d56",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "60000"
+    },
+    {
+      "round": 3,
+      "replica": "A",
+      "requestId": "db909363-741d-4c93-9952-009b4f117ce2",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "57500"
+    },
+    {
+      "round": 3,
+      "replica": "B",
+      "requestId": "e9e5c4a1-f371-4b97-a43a-5b1ec3d90845",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "62500"
+    },
+    {
+      "round": 3,
+      "replica": "A",
+      "requestId": "b226b5bb-fda8-4711-82c0-fe3b052dedfc",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "47500"
+    },
+    {
+      "round": 3,
+      "replica": "B",
+      "requestId": "8e45800f-b2b5-4748-993f-7448c5a90da8",
+      "status": 200,
+      "success": true,
+      "chargedAmount": "2500",
+      "cumulative": "45000"
+    }
+  ],
+  "refund": {
+    "success": true,
+    "payer": "DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED",
+    "transaction": "3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE",
+    "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+    "amount": "437500",
+    "extra": {
+      "channelState": {
+        "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+        "balance": "500000",
+        "totalClaimed": "62500",
+        "withdrawRequestedAt": 0
+      }
+    }
+  }
+}

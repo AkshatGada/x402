@@ -1,0 +1,179 @@
+package server
+
+// TEMPORARY evidence test; not part of any commit. Settles server-mode charges
+// from parallel goroutines through an optimistic compare-and-set ChannelStore.
+
+import (
+	"context"
+	"fmt"
+	"sync"
+	"sync/atomic"
+	"testing"
+	"time"
+
+	solana "github.com/gagliardetto/solana-go"
+	"github.com/stretchr/testify/require"
+
+	x402 "github.com/x402-foundation/x402/go/v2"
+	"github.com/x402-foundation/x402/go/v2/mechanisms/svm"
+	batchsettlement "github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement"
+	batchclient "github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/client"
+	"github.com/x402-foundation/x402/go/v2/types"
+)
+
+// casChannelStore reads a versioned record, runs the updater without holding a
+// lock, and commits only if the version is unchanged; otherwise it retries.
+type casChannelStore struct {
+	mu        sync.Mutex
+	states    map[string]ChannelState
+	versions  map[string]int
+	conflicts atomic.Int64
+}
+
+func newCASChannelStore() *casChannelStore {
+	return &casChannelStore{states: map[string]ChannelState{}, versions: map[string]int{}}
+}
+
+func (s *casChannelStore) Get(id string) (*ChannelState, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	state, ok := s.states[id]
+	if !ok {
+		return nil, nil
+	}
+	c := cloneState(state)
+	return &c, nil
+}
+
+func (s *casChannelStore) Put(state ChannelState) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.states[state.ChannelID] = cloneState(state)
+	s.versions[state.ChannelID]++
+	return nil
+}
+
+func (s *casChannelStore) Update(id string, updater func(*ChannelState) (ChannelState, error)) (ChannelState, error) {
+	for {
+		s.mu.Lock()
+		version := s.versions[id]
+		var current *ChannelState
+		if state, ok := s.states[id]; ok {
+			c := cloneState(state)
+			current = &c
+		}
+		s.mu.Unlock()
+		next, err := updater(current)
+		if err != nil {
+			return ChannelState{}, err
+		}
+		s.mu.Lock()
+		if s.versions[id] == version {
+			s.states[id] = cloneState(next)
+			s.versions[id]++
+			s.mu.Unlock()
+			return next, nil
+		}
+		s.mu.Unlock()
+		s.conflicts.Add(1)
+	}
+}
+
+func TestEvidenceConcurrentChargesWithCASStore(t *testing.T) {
+	const requests = 24
+	ctx := context.Background()
+	payer, operator, feePayer, receiverAuthorizer := newVoucherSigner(t), newVoucherSigner(t), newVoucherSigner(t), newVoucherSigner(t)
+	authExpires := time.Now().Unix() + 3_600
+	built, err := batchclient.BuildDepositPayload(ctx, batchclient.BuildDepositArgs{
+		Blockhash: solana.MustHashFromBase58(svm.USDCMainnetAddress), DepositAmount: 100_000,
+		FeePayer: feePayer.Address().String(), FirstCharge: 1_000, Mint: svm.USDCDevnetAddress,
+		OpenSlot: 123, Operator: operator.Address().String(), Payer: payer,
+		Receiver: svm.USDCMainnetAddress, ReceiverAuthorizer: receiverAuthorizer.Address().String(),
+		TokenProgram: solana.TokenProgramID.String(), VoucherSigner: batchsettlement.VoucherSignerServer,
+		WithdrawDelay: 900, AuthorizationExpiresAt: &authExpires,
+	})
+	require.NoError(t, err)
+	deposit := built.Payload
+	channelID := deposit.Authorization.ChannelID
+	requirements := types.PaymentRequirements{
+		Amount: "1000", Asset: svm.USDCDevnetAddress,
+		Extra: map[string]any{
+			batchsettlement.ExtraFeePayer:           feePayer.Address().String(),
+			batchsettlement.ExtraOperator:           operator.Address().String(),
+			batchsettlement.ExtraReceiverAuthorizer: receiverAuthorizer.Address().String(),
+			batchsettlement.ExtraTokenProgram:       solana.TokenProgramID.String(),
+			batchsettlement.ExtraVoucherSigner:      batchsettlement.VoucherSignerServer,
+			batchsettlement.ExtraWithdrawDelay:      900,
+		},
+		MaxTimeoutSeconds: 300, Network: svm.SolanaDevnetCAIP2, PayTo: svm.USDCMainnetAddress,
+		Scheme: batchsettlement.Scheme,
+	}
+
+	store := newCASChannelStore()
+	operations := NewMemoryBatchOperationStore()
+	scheme := NewBatchSvmScheme(&Config{ReceiverAuthorizer: receiverAuthorizer, Operator: operator, OperationStore: operations, Store: store})
+	open := types.PaymentPayload{Accepted: requirements, Payload: mustPayloadMap(t, deposit), X402Version: 2}
+	openCtx := verifyContext(open, requirements)
+	_, err = scheme.BeforeVerifyHook()(openCtx)
+	require.NoError(t, err)
+	_, err = scheme.AfterVerifyHook()(x402.VerifyResultContext{VerifyContext: openCtx, Result: &x402.VerifyResponse{IsValid: true, Payer: payer.Address().String()}})
+	require.NoError(t, err)
+	require.NoError(t, scheme.AfterSettleHook()(x402.SettleResultContext{
+		SettleContext: x402.SettleContext{Ctx: ctx, Payload: open, Requirements: requirements, Phase: x402.SettlePhaseAfterHandler},
+		Result: &x402.SettleResponse{Extra: map[string]any{"channelState": map[string]any{"balance": "100000", "totalClaimed": "0", "withdrawRequestedAt": 0}},
+			Network: svm.SolanaDevnetCAIP2, Success: true, Transaction: "open-signature"},
+	}))
+
+	payments := make([]types.PaymentPayload, requests)
+	for i := range payments {
+		auth, err := batchsettlement.SignBatchAuthorization(ctx, payer, channelID, operator.Address().String(), fmt.Sprintf("r-%d", i), 1_000, time.Now().Unix()+3_600)
+		require.NoError(t, err)
+		payments[i] = types.PaymentPayload{Accepted: requirements, X402Version: 2, Payload: mustPayloadMap(t, batchsettlement.BatchAuthorizationPayload{
+			Type: batchsettlement.PayloadTypeAuthorization, ChannelConfig: deposit.ChannelConfig, Authorization: auth})}
+		vctx := verifyContext(payments[i], requirements)
+		verified, err := scheme.BeforeVerifyHook()(vctx)
+		require.NoError(t, err)
+		reserved, err := scheme.AfterVerifyHook()(x402.VerifyResultContext{VerifyContext: vctx, Result: verified.SkipVerifyResult})
+		require.NoError(t, err)
+		require.Nil(t, reserved)
+	}
+
+	charge := requirements
+	charge.Amount = "250"
+	var failed atomic.Int64
+	var messages sync.Map
+	start := make(chan struct{})
+	var wg sync.WaitGroup
+	for i := range payments {
+		wg.Add(1)
+		go func(payment types.PaymentPayload) {
+			defer wg.Done()
+			<-start
+			result, err := scheme.BeforeSettleHook()(x402.SettleContext{Ctx: ctx, Payload: payment, Requirements: charge, Phase: x402.SettlePhaseAfterHandler})
+			if err != nil || result == nil || result.Abort {
+				failed.Add(1)
+				if result != nil {
+					messages.Store(result.Message, true)
+				}
+			}
+		}(payments[i])
+	}
+	close(start)
+	wg.Wait()
+
+	state, err := store.Get(channelID)
+	require.NoError(t, err)
+	var completed, completedActual int
+	for i := range payments {
+		op, err := operations.Get(channelID, fmt.Sprintf("r-%d", i))
+		require.NoError(t, err)
+		if op.Status == operationCompleted {
+			completed++
+			completedActual += int(op.Actual)
+		}
+	}
+	var reasons []string
+	messages.Range(func(k, _ any) bool { reasons = append(reasons, k.(string)); return true })
+	t.Logf("EVIDENCE requests=%d failed=%d reasons=%v conflicts=%d completedOps=%d completedActual=%d channelChargedForRequests=%d heldReservations=%d",
+		requests, failed.Load(), reasons, store.conflicts.Load(), completed, completedActual, int(state.ChargedCumulativeAmount)-1_000, len(state.Reservations))
+}

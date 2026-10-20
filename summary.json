@@ -1,0 +1,1337 @@
+[
+  {
+    "dir": "baseline-20261020-014627",
+    "label": "baseline",
+    "control": false,
+    "r": {
+      "label": "baseline",
+      "channelId": "7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU",
+      "channelUrl": "https://explorer.solana.com/address/7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU?cluster=devnet",
+      "depositTx": "9LsAXgNePMMb1Eds2axYiyiC9qLM38Vhm4mzegZBL8Db1Be3SJQJyBZFprEZi6PxfKfGxHCUp6XxD4oww4xrFev",
+      "requests": 24,
+      "succeeded": 8,
+      "failed": 16,
+      "failureReasons": [
+        "transaction_failed: batch operation reservation changed"
+      ],
+      "handlerServed": 24,
+      "storeWriteConflicts": 17,
+      "operations": {
+        "completed": 24,
+        "reserved": 0,
+        "completedActualSum": "60000"
+      },
+      "serverChannelChargedCumulative": "22500",
+      "serverChargedForWorkers": "20000",
+      "onchainSettledAfterRedeem": "22500",
+      "onchainDeposit": "500000",
+      "redeem": [
+        {
+          "claimed": [
+            "7gmjoCmxE9sFZH8UHwVS7XcJvxyxJtDxE3cGvDBht8nU"
+          ],
+          "distributed": [],
+          "sealed": []
+        }
+      ],
+      "claimAndSettleTxs": [
+        {
+          "kind": "claim",
+          "tx": "4n2HWnTH7VbTYALv25hHXyTNzdWLAbKd29VEK179rZ1kjxQqaeqjJ69meftFek9FDQMwiZUi15a4Shy9yQ9ZFkmD",
+          "url": "https://explorer.solana.com/tx/4n2HWnTH7VbTYALv25hHXyTNzdWLAbKd29VEK179rZ1kjxQqaeqjJ69meftFek9FDQMwiZUi15a4Shy9yQ9ZFkmD?cluster=devnet"
+        }
+      ],
+      "outcomes": [
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "5421567b-b0ed-42a6-b1ee-029261d93b56",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "5000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "3f799417-b508-4da3-a5f4-c95c4dc1cb41",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "4720199c-44b8-4570-9c63-21ca846f06f2",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "246e4de8-d306-4b9e-9182-0703f3c41178",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "1fe59798-b602-4317-9b19-417b2007fcea",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "4ba3d7b6-efb0-407b-ab3b-bfe06b114c7c",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "00b5dd42-f97d-4ff9-ae46-c7a75059e16b",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "7500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "9c6e0e91-8e33-4662-b786-fa32d4669425",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "10000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "bf210a22-c001-42d3-b890-2af063c118d1",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "4702fd3f-b390-4eb7-9cd5-10bae8edeef3",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "60aef64f-fe1f-4bfe-8d9d-6d862b86c76f",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "e447aea8-aaec-40a6-8003-9cf318286fdb",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "b085c0dc-acb9-4c9b-9e74-71e67413b1f8",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "96d3d87f-3e51-468c-9174-0d7228fc31ca",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "05caa571-8d8d-482f-9dfc-8acc44387415",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "12500"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "beb6f03e-1f63-4660-a7fe-85a5fa5d1929",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "15000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "b174e56e-50a0-489f-a495-81b651b7c432",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "b55e97f7-dc77-477c-aba5-d08115dc6209",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "22500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "99c82313-c1b3-4c53-b1c6-8f29b20471d9",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "7737fc78-360e-4edc-ae08-0895a7179409",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "b891aac3-4e38-4a51-afb9-094832a1df8c",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "33bc5423-97b1-4e62-8288-d48f585e5fff",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "2c9be2a1-896b-4306-a903-f0cae3051d9e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "17500"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "5236d1c6-32b0-4c5a-a7f6-54f34a4ba558",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "20000"
+        }
+      ],
+      "refundError": "refund refused: duplicate_settlement"
+    },
+    "orphanReservations": 16,
+    "head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+    "schemeSha": "fcebf21ec9bf689e1130ca9899b704f5397023202d9a44a430d9bcada6040d7c"
+  },
+  {
+    "dir": "baseline-20261020-014902",
+    "label": "baseline",
+    "control": false,
+    "r": {
+      "label": "baseline",
+      "channelId": "D7WLgopThAZqu9MUN733hCmeBCDcMUCdSpc5Ex4cf6Z4",
+      "channelUrl": "https://explorer.solana.com/address/D7WLgopThAZqu9MUN733hCmeBCDcMUCdSpc5Ex4cf6Z4?cluster=devnet",
+      "depositTx": "2PEGGua5PUgheBSHRsL7AMJJutmY5wQF6nXQqLVrBaejPZQpzef7ArbnMTH8oz9SD6rtUXeoMRDTXxsUimR12pMu",
+      "requests": 24,
+      "succeeded": 7,
+      "failed": 17,
+      "failureReasons": [
+        "transaction_failed: batch operation reservation changed"
+      ],
+      "handlerServed": 24,
+      "storeWriteConflicts": 18,
+      "operations": {
+        "completed": 24,
+        "reserved": 0,
+        "completedActualSum": "60000"
+      },
+      "serverChannelChargedCumulative": "20000",
+      "serverChargedForWorkers": "17500",
+      "onchainSettledAfterRedeem": "20000",
+      "onchainDeposit": "500000",
+      "redeem": [
+        {
+          "claimed": [
+            "D7WLgopThAZqu9MUN733hCmeBCDcMUCdSpc5Ex4cf6Z4"
+          ],
+          "distributed": [],
+          "sealed": []
+        }
+      ],
+      "claimAndSettleTxs": [
+        {
+          "kind": "claim",
+          "tx": "4oYdgzXS4qsDw8wE7jbCSUWQJzVKQacTnzEyZdZGMTZ4ytoRuQhvMfKNx7zA8QNBiyMw9SjKw7qFEVcyVgAWi17U",
+          "url": "https://explorer.solana.com/tx/4oYdgzXS4qsDw8wE7jbCSUWQJzVKQacTnzEyZdZGMTZ4ytoRuQhvMfKNx7zA8QNBiyMw9SjKw7qFEVcyVgAWi17U?cluster=devnet"
+        }
+      ],
+      "outcomes": [
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "c4180927-6b37-4caf-ab0d-905de2a171d8",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "5000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "131dfb5e-e9c9-481b-92b2-af8d4be84d7c",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "8ddc1ffe-4c93-49f6-b23c-839e3fc4e907",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "624309fc-50fa-44e8-9a3c-b9da35128f88",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "343e2076-0b68-4b56-bae5-75872f4c64e4",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "f6e3b091-455a-4ad1-a66d-5da67b36679e",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "26a14749-5979-4512-8242-7022541e9e33",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "7500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "a72c9c45-a9d0-4df9-a482-bf6539e03777",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "10000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "a74e5643-38de-483d-af33-3be833c40db4",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "578e361c-1faf-422c-8c13-0628c1771d83",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "300cf7c7-6199-4a41-9456-937787fe4c24",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "d8f164b0-dc20-4fa4-a190-30224f6d0c8e",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "9e90f538-c6bd-49fb-a22a-1d8757b21372",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "f94e07e4-79ac-4001-883c-3546c2d6ed2d",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "97d97096-9ffb-40d5-ae53-d9856eb16df1",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "12500"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "c7ddc03c-c348-4823-a402-2d04151ee79f",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "15000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "fe1e46db-6b6c-4316-9dce-6abfd2e6541d",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "86dbc436-a9f4-4e77-9d3e-75b06670f26b",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "4bc8b7a3-f0fe-4052-90bf-6b5e8bba95dc",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "e2b23362-1deb-4dd3-bd38-357a98e48715",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "c1d92bcc-e308-4593-a7f2-3939f58dbd95",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "bfb76450-0588-4999-bab9-52388c4f9eef",
+          "status": 402,
+          "success": false,
+          "error": "transaction_failed: batch operation reservation changed"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "8faaf49c-11ba-4921-8398-5680c2db1b19",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "20000"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "adbbc2c2-bf5b-4fae-97c0-27ca1567c915",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "17500"
+        }
+      ],
+      "refundError": "refund refused: duplicate_settlement"
+    },
+    "orphanReservations": 17,
+    "head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+    "schemeSha": "fcebf21ec9bf689e1130ca9899b704f5397023202d9a44a430d9bcada6040d7c"
+  },
+  {
+    "dir": "baseline-control-memory-20261020-015904",
+    "label": "baseline",
+    "control": true,
+    "r": {
+      "label": "baseline",
+      "channelId": "93B3vAcf6wb7k8GLwhcCZgQqMhQ6EecUxxG9hzNm5idi",
+      "channelUrl": "https://explorer.solana.com/address/93B3vAcf6wb7k8GLwhcCZgQqMhQ6EecUxxG9hzNm5idi?cluster=devnet",
+      "depositTx": "X7TghXd44tH7ozb1K8fYmPCYov3o5SnT3xicKmxGGFHwWmbNRkBxZQehjJ7Do6qtugsH6UwrreRmv6X3Ws5dRnF",
+      "requests": 24,
+      "succeeded": 24,
+      "failed": 0,
+      "failureReasons": [],
+      "handlerServed": 24,
+      "storeWriteConflicts": 0,
+      "operations": {
+        "completed": 24,
+        "reserved": 0,
+        "completedActualSum": "60000"
+      },
+      "store": "memory (SDK default), 1 replica",
+      "heldReservations": 0,
+      "serverChannelChargedCumulative": "62500",
+      "serverChargedForWorkers": "60000",
+      "onchainSettledAfterRedeem": "62500",
+      "onchainDeposit": "500000",
+      "redeem": [
+        {
+          "claimed": [
+            "93B3vAcf6wb7k8GLwhcCZgQqMhQ6EecUxxG9hzNm5idi"
+          ],
+          "distributed": [],
+          "sealed": []
+        }
+      ],
+      "claimAndSettleTxs": [
+        {
+          "kind": "claim",
+          "tx": "4gxNi3eXmK3E9WUEqz8AX38U1qVAfBBMi2bQ9XHBdFp9rHwtcx15NZDULWU6LrDDWNnNRsioTvcTM9kw8zNBFTy7",
+          "url": "https://explorer.solana.com/tx/4gxNi3eXmK3E9WUEqz8AX38U1qVAfBBMi2bQ9XHBdFp9rHwtcx15NZDULWU6LrDDWNnNRsioTvcTM9kw8zNBFTy7?cluster=devnet"
+        }
+      ],
+      "outcomes": [
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "5f660a2e-59c9-4087-a61c-2eeccdddd361",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "5000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "2e7f1ca6-6dbd-4167-bd1e-7a8034b1fcd5",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "7500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "6c40540f-5e20-46e0-bf4d-e46639f19cd5",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "10000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "f902baf1-f654-49bc-aee8-d9df748b0c3a",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "12500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "54d4952b-3593-4a3e-a33b-b2ef8047806d",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "15000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "5a92e7a0-4182-4e51-8d20-05e0d1515194",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "17500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "61210fb3-c077-428c-bd18-bf6f8c2da14c",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "20000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "4bae1fa4-1757-4968-b8b6-8011540ffa43",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "22500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "b05a3907-515a-4aad-b7cb-600f602f5bb9",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "25000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "791ab63b-feba-4191-89dc-9445938156c1",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "27500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "035ec152-b43c-4f77-9b54-986167b05be9",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "30000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "a55c65c6-ba3e-4eb0-8840-63b4db04a47e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "32500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "4e3550a7-5f0f-4067-b436-e8cc72d0f309",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "35000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "453e99ea-e071-459b-a4f0-22190490e297",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "37500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "dfd5efdb-4a2f-4971-8726-004da3acfbb8",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "40000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "9552f82d-62f7-4c9e-ab37-75d59b64e652",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "42500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "22854d04-cbcd-40fb-bb84-1eab0b2f6f23",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "45000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "e1dcaeba-e28c-4bec-b5dc-eaf240a39c8b",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "47500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "59e56a1c-8c4f-4dfc-936b-3eefed0d4c5e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "50000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "183f42b5-414b-4222-855d-f6fb8fe76225",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "52500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "6f0fb90a-f05a-4bd2-8cf1-7c02fdbde506",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "55000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "2f4fd004-3c99-44cf-a579-5939dcca5930",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "57500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "6dc928c9-c32b-459a-941e-df87295fdd5d",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "60000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "e3f4daee-3533-49cb-a056-6692153df181",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "62500"
+        }
+      ],
+      "refund": {
+        "success": true,
+        "payer": "DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED",
+        "transaction": "4gFqPQTo1gq8LxcvNxQEenns73WqLpnuwwbcQXgcTB5ZZbpu7chsHnQ2fJMq2rrLgzVxyruWpnxoWKfLaEYbgR2N",
+        "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        "amount": "437500",
+        "extra": {
+          "channelState": {
+            "channelId": "93B3vAcf6wb7k8GLwhcCZgQqMhQ6EecUxxG9hzNm5idi",
+            "balance": "500000",
+            "totalClaimed": "62500",
+            "withdrawRequestedAt": 0
+          }
+        }
+      }
+    },
+    "orphanReservations": 0,
+    "head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+    "schemeSha": "fcebf21ec9bf689e1130ca9899b704f5397023202d9a44a430d9bcada6040d7c"
+  },
+  {
+    "dir": "fix-20261020-014716",
+    "label": "fix",
+    "control": false,
+    "r": {
+      "label": "fix",
+      "channelId": "2qNWM6oZnG5E9ijsHkUFQhnb9tMgr1n48Q3N3zLWf2ZJ",
+      "channelUrl": "https://explorer.solana.com/address/2qNWM6oZnG5E9ijsHkUFQhnb9tMgr1n48Q3N3zLWf2ZJ?cluster=devnet",
+      "depositTx": "3X6sRMMUxqpgDWhxdnUivM6Yx4iRgHWxFMLJKe43H4aaL7F63RR1C4bUbvRAWgzUQVxpQwDrDehw43NeGRBrZ8Pz",
+      "requests": 24,
+      "succeeded": 24,
+      "failed": 0,
+      "failureReasons": [],
+      "handlerServed": 24,
+      "storeWriteConflicts": 44,
+      "operations": {
+        "completed": 24,
+        "reserved": 0,
+        "completedActualSum": "60000"
+      },
+      "serverChannelChargedCumulative": "62500",
+      "serverChargedForWorkers": "60000",
+      "onchainSettledAfterRedeem": "62500",
+      "onchainDeposit": "500000",
+      "redeem": [
+        {
+          "claimed": [
+            "2qNWM6oZnG5E9ijsHkUFQhnb9tMgr1n48Q3N3zLWf2ZJ"
+          ],
+          "distributed": [],
+          "sealed": []
+        }
+      ],
+      "claimAndSettleTxs": [
+        {
+          "kind": "claim",
+          "tx": "4rS1MAea2an83e66FHfRs4NXgf13oDYeGExa774dmHLCqeAftTwPxQtt2hnKQLGaFFgDHnMadpmRD8o6wbJ9svhT",
+          "url": "https://explorer.solana.com/tx/4rS1MAea2an83e66FHfRs4NXgf13oDYeGExa774dmHLCqeAftTwPxQtt2hnKQLGaFFgDHnMadpmRD8o6wbJ9svhT?cluster=devnet"
+        }
+      ],
+      "outcomes": [
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "1042ef72-0522-45ef-8850-9b70cbb7dc7c",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "10000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "49a77db6-30e0-4355-8ab5-3f775180fad9",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "12500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "4197d296-0583-487f-b220-06c0a16d8913",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "15000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "293775a1-8d7f-46cd-b13a-ddafa23c7c8e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "20000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "c4a99684-86f1-458d-92ae-28a7b9982b04",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "17500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "bd72f71d-2215-4906-8c1f-be9235208019",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "22500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "eead8645-e8ee-4076-ba5c-f9ce369bff3d",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "5000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "7391095c-4767-4b62-82d6-28a7ee229ab2",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "7500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "2335e708-7b59-4105-9be0-9bb032253c45",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "30000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "cb3deaf5-71b9-4f11-a350-a3adc7db1b1c",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "32500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "6303e3dc-9a67-45be-8ad0-0662de60af40",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "35000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "c527a98b-18e8-4ec4-a0b1-9cb2cc618ca8",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "37500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "15bc2c98-872c-47ab-ae01-3a0d733449f7",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "40000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "dff6df0a-ed44-46fa-958f-b5fbbb9b640a",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "42500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "1b1938c1-3506-4bd5-a967-a7e56d6afa28",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "27500"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "fe910d52-2d95-4573-bc13-0117efd1bdbc",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "25000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "a7d1cc73-6b88-477d-9bb2-32bd49bc821a",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "55000"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "865d4849-5510-49de-8dca-989c22381d8a",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "50000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "92cbb3a2-f2e0-4fc7-b6c4-54ef1344dfe9",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "60000"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "4c027a2f-55bf-420d-807a-c15c5795d844",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "57500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "a25fdd3e-172e-4f3d-9f8e-5581b27867bf",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "47500"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "7fbab1b8-03ab-4d61-be5e-e279a791464b",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "62500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "ee2490c2-9008-4093-91b7-5ab38eb22d75",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "45000"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "ba7c426b-9fd0-4001-8587-c5898534fa20",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "52500"
+        }
+      ],
+      "refund": {
+        "success": true,
+        "payer": "DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED",
+        "transaction": "4LvwAK1j5gShCLXLj2uFLWiktTeayxfw7VMcwcLVLtaGPmuZxdi4pEKpFsfG1gTw942VT1aTbMHkyWKgfwhSEPbd",
+        "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        "amount": "437500",
+        "extra": {
+          "channelState": {
+            "channelId": "2qNWM6oZnG5E9ijsHkUFQhnb9tMgr1n48Q3N3zLWf2ZJ",
+            "balance": "500000",
+            "totalClaimed": "62500",
+            "withdrawRequestedAt": 0
+          }
+        }
+      }
+    },
+    "orphanReservations": 0,
+    "head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+    "schemeSha": "57c41752d45d21b387d3cfde7dd2bf7fd7b8c8ee59fa84598c070e9e9d2d5ee2"
+  },
+  {
+    "dir": "fix-20261020-014811",
+    "label": "fix",
+    "control": false,
+    "r": {
+      "label": "fix",
+      "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+      "channelUrl": "https://explorer.solana.com/address/EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU?cluster=devnet",
+      "depositTx": "5BN8MS9PAb96Mfujaos9kxjJazChM4Hk3c7Si6rNPJb9dBXAHmGTEPWTkbR26o7g75Dg9JJpBhAz9FCBjmbux8c1",
+      "requests": 24,
+      "succeeded": 24,
+      "failed": 0,
+      "failureReasons": [],
+      "handlerServed": 24,
+      "storeWriteConflicts": 33,
+      "operations": {
+        "completed": 24,
+        "reserved": 0,
+        "completedActualSum": "60000"
+      },
+      "serverChannelChargedCumulative": "62500",
+      "serverChargedForWorkers": "60000",
+      "onchainSettledAfterRedeem": "62500",
+      "onchainDeposit": "500000",
+      "redeem": [
+        {
+          "claimed": [
+            "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU"
+          ],
+          "distributed": [],
+          "sealed": []
+        }
+      ],
+      "claimAndSettleTxs": [
+        {
+          "kind": "claim",
+          "tx": "3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC",
+          "url": "https://explorer.solana.com/tx/3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC?cluster=devnet"
+        }
+      ],
+      "outcomes": [
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "d086f8d0-138b-459f-b093-ff4e0000359d",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "5000"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "92dc47d9-480f-401d-888f-b55ff4a7db6b",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "15000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "65dc85a6-7f25-417c-ac64-d43063a384d3",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "12500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "d57ea58b-bea5-4e16-99a6-643c420afbf6",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "20000"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "68ef0285-079e-4f19-a90c-9cc4614486d7",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "17500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "39d62931-3b9b-476b-867a-a496433d8691",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "22500"
+        },
+        {
+          "round": 1,
+          "replica": "A",
+          "requestId": "362f699f-eda0-496b-89b7-bde4c808f03e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "7500"
+        },
+        {
+          "round": 1,
+          "replica": "B",
+          "requestId": "b5a056df-2324-4d43-9025-b7ed1b27a4e9",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "10000"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "e2ace933-e16a-468f-9492-882cadcf8099",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "30000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "c5e6cf3d-1da0-4307-a2a4-ce7399b5ec0e",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "32500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "63e66b42-ecaf-455e-a119-5c5e56efc141",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "35000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "a41fa384-d48f-4d75-8e16-c2848ac94810",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "37500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "28ba974b-1309-4e69-968e-21f868dfe268",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "40000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "094383b1-d7c1-44d3-95d8-35d8d53b619d",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "42500"
+        },
+        {
+          "round": 2,
+          "replica": "A",
+          "requestId": "d8bdc630-7784-4ed3-8c8a-15cee92d816a",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "25000"
+        },
+        {
+          "round": 2,
+          "replica": "B",
+          "requestId": "797a91a9-b3d0-4314-be9d-7247973136bf",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "27500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "4f34cca0-f2e4-4803-9ac7-58760f759eba",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "55000"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "17856024-0616-446a-a85e-95cab3505072",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "50000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "c5a3cb2c-2bcb-478a-8810-3519e70f75ac",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "52500"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "36d87745-a6e2-474b-a3b3-6139c53f3d56",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "60000"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "db909363-741d-4c93-9952-009b4f117ce2",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "57500"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "e9e5c4a1-f371-4b97-a43a-5b1ec3d90845",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "62500"
+        },
+        {
+          "round": 3,
+          "replica": "A",
+          "requestId": "b226b5bb-fda8-4711-82c0-fe3b052dedfc",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "47500"
+        },
+        {
+          "round": 3,
+          "replica": "B",
+          "requestId": "8e45800f-b2b5-4748-993f-7448c5a90da8",
+          "status": 200,
+          "success": true,
+          "chargedAmount": "2500",
+          "cumulative": "45000"
+        }
+      ],
+      "refund": {
+        "success": true,
+        "payer": "DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED",
+        "transaction": "3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE",
+        "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        "amount": "437500",
+        "extra": {
+          "channelState": {
+            "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+            "balance": "500000",
+            "totalClaimed": "62500",
+            "withdrawRequestedAt": 0
+          }
+        }
+      }
+    },
+    "orphanReservations": 0,
+    "head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+    "schemeSha": "57c41752d45d21b387d3cfde7dd2bf7fd7b8c8ee59fa84598c070e9e9d2d5ee2"
+  }
+]

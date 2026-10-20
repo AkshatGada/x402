@@ -1,0 +1,202 @@
+[
+  {
+    "round": 1,
+    "replica": "A",
+    "requestId": "5421567b-b0ed-42a6-b1ee-029261d93b56",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "5000"
+  },
+  {
+    "round": 1,
+    "replica": "B",
+    "requestId": "3f799417-b508-4da3-a5f4-c95c4dc1cb41",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 1,
+    "replica": "A",
+    "requestId": "4720199c-44b8-4570-9c63-21ca846f06f2",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 1,
+    "replica": "B",
+    "requestId": "246e4de8-d306-4b9e-9182-0703f3c41178",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 1,
+    "replica": "A",
+    "requestId": "1fe59798-b602-4317-9b19-417b2007fcea",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 1,
+    "replica": "B",
+    "requestId": "4ba3d7b6-efb0-407b-ab3b-bfe06b114c7c",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 1,
+    "replica": "A",
+    "requestId": "00b5dd42-f97d-4ff9-ae46-c7a75059e16b",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "7500"
+  },
+  {
+    "round": 1,
+    "replica": "B",
+    "requestId": "9c6e0e91-8e33-4662-b786-fa32d4669425",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "10000"
+  },
+  {
+    "round": 2,
+    "replica": "A",
+    "requestId": "bf210a22-c001-42d3-b890-2af063c118d1",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "B",
+    "requestId": "4702fd3f-b390-4eb7-9cd5-10bae8edeef3",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "A",
+    "requestId": "60aef64f-fe1f-4bfe-8d9d-6d862b86c76f",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "B",
+    "requestId": "e447aea8-aaec-40a6-8003-9cf318286fdb",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "A",
+    "requestId": "b085c0dc-acb9-4c9b-9e74-71e67413b1f8",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "B",
+    "requestId": "96d3d87f-3e51-468c-9174-0d7228fc31ca",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 2,
+    "replica": "A",
+    "requestId": "05caa571-8d8d-482f-9dfc-8acc44387415",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "12500"
+  },
+  {
+    "round": 2,
+    "replica": "B",
+    "requestId": "beb6f03e-1f63-4660-a7fe-85a5fa5d1929",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "15000"
+  },
+  {
+    "round": 3,
+    "replica": "A",
+    "requestId": "b174e56e-50a0-489f-a495-81b651b7c432",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 3,
+    "replica": "B",
+    "requestId": "b55e97f7-dc77-477c-aba5-d08115dc6209",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "22500"
+  },
+  {
+    "round": 3,
+    "replica": "A",
+    "requestId": "99c82313-c1b3-4c53-b1c6-8f29b20471d9",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 3,
+    "replica": "B",
+    "requestId": "7737fc78-360e-4edc-ae08-0895a7179409",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 3,
+    "replica": "A",
+    "requestId": "b891aac3-4e38-4a51-afb9-094832a1df8c",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 3,
+    "replica": "B",
+    "requestId": "33bc5423-97b1-4e62-8288-d48f585e5fff",
+    "status": 402,
+    "success": false,
+    "error": "transaction_failed: batch operation reservation changed"
+  },
+  {
+    "round": 3,
+    "replica": "A",
+    "requestId": "2c9be2a1-896b-4306-a903-f0cae3051d9e",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "17500"
+  },
+  {
+    "round": 3,
+    "replica": "B",
+    "requestId": "5236d1c6-32b0-4c5a-a7f6-54f34a4ba558",
+    "status": 200,
+    "success": true,
+    "chargedAmount": "2500",
+    "cumulative": "20000"
+  }
+]

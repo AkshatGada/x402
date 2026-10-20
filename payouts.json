@@ -1,0 +1,52 @@
+{
+  "baseline-20261020-014627": [
+    {
+      "tx": "5dAT9Re89nYYtGgGVM5yV6DYpdJbdqRokNq4urfw86mJgK862NY3q9Hrxfuj2ZiRqXQr3YEUKGb5NUumnnHNGGoT",
+      "url": "https://explorer.solana.com/tx/5dAT9Re89nYYtGgGVM5yV6DYpdJbdqRokNq4urfw86mJgK862NY3q9Hrxfuj2ZiRqXQr3YEUKGb5NUumnnHNGGoT?cluster=devnet",
+      "payToDelta": "22500"
+    }
+  ],
+  "baseline-20261020-014902": [
+    {
+      "tx": "3Ao13TeYJa3neP7chL7wkvrSE6tkSHbvX56SHeRUL64vEJmwxFVU6QB2VwJwt3LRTqH3wD4KfcUApqym8aqRPWw7",
+      "url": "https://explorer.solana.com/tx/3Ao13TeYJa3neP7chL7wkvrSE6tkSHbvX56SHeRUL64vEJmwxFVU6QB2VwJwt3LRTqH3wD4KfcUApqym8aqRPWw7?cluster=devnet",
+      "payToDelta": "20000"
+    }
+  ],
+  "baseline-control-memory-20261020-015904": [
+    {
+      "tx": "4gFqPQTo1gq8LxcvNxQEenns73WqLpnuwwbcQXgcTB5ZZbpu7chsHnQ2fJMq2rrLgzVxyruWpnxoWKfLaEYbgR2N",
+      "url": "https://explorer.solana.com/tx/4gFqPQTo1gq8LxcvNxQEenns73WqLpnuwwbcQXgcTB5ZZbpu7chsHnQ2fJMq2rrLgzVxyruWpnxoWKfLaEYbgR2N?cluster=devnet",
+      "payToDelta": "0"
+    },
+    {
+      "tx": "49FE8RdHsn3t6gNo59s6jvfAqFUYn8ivXUzgFGd9vwR1T37JrMUnWqmoGmoMWXKTruws8NR5EENeR1tjoR2jwD3z",
+      "url": "https://explorer.solana.com/tx/49FE8RdHsn3t6gNo59s6jvfAqFUYn8ivXUzgFGd9vwR1T37JrMUnWqmoGmoMWXKTruws8NR5EENeR1tjoR2jwD3z?cluster=devnet",
+      "payToDelta": "62500"
+    }
+  ],
+  "fix-20261020-014716": [
+    {
+      "tx": "4LvwAK1j5gShCLXLj2uFLWiktTeayxfw7VMcwcLVLtaGPmuZxdi4pEKpFsfG1gTw942VT1aTbMHkyWKgfwhSEPbd",
+      "url": "https://explorer.solana.com/tx/4LvwAK1j5gShCLXLj2uFLWiktTeayxfw7VMcwcLVLtaGPmuZxdi4pEKpFsfG1gTw942VT1aTbMHkyWKgfwhSEPbd?cluster=devnet",
+      "payToDelta": "0"
+    },
+    {
+      "tx": "4oAvMjCFjjpfYpmApxGpedy1jLrLorrr4BrF2voztYeMVPoBxt5bHGYCkp2K6c6y33qFh3RHNWZWNqGfHYgsG8Qy",
+      "url": "https://explorer.solana.com/tx/4oAvMjCFjjpfYpmApxGpedy1jLrLorrr4BrF2voztYeMVPoBxt5bHGYCkp2K6c6y33qFh3RHNWZWNqGfHYgsG8Qy?cluster=devnet",
+      "payToDelta": "62500"
+    }
+  ],
+  "fix-20261020-014811": [
+    {
+      "tx": "3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE",
+      "url": "https://explorer.solana.com/tx/3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE?cluster=devnet",
+      "payToDelta": "0"
+    },
+    {
+      "tx": "35NGxaQS5QhmvBXY5MB2EofH83ssNr9ssMEXERC5vC6F9bsZ5HYki9ZP1Uvje21WsgbFjTUQHJLoa22k4TV3d7yz",
+      "url": "https://explorer.solana.com/tx/35NGxaQS5QhmvBXY5MB2EofH83ssNr9ssMEXERC5vC6F9bsZ5HYki9ZP1Uvje21WsgbFjTUQHJLoa22k4TV3d7yz?cluster=devnet",
+      "payToDelta": "62500"
+    }
+  ]
+}

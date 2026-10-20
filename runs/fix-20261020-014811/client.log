@@ -1,0 +1,51 @@
+(node:49784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[fix] channel opened EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU https://explorer.solana.com/tx/5BN8MS9PAb96Mfujaos9kxjJazChM4Hk3c7Si6rNPJb9dBXAHmGTEPWTkbR26o7g75Dg9JJpBhAz9FCBjmbux8c1?cluster=devnet
+[fix] round 1: 8/8 paid requests succeeded
+[fix] round 2: 8/8 paid requests succeeded
+[fix] round 3: 8/8 paid requests succeeded
+[fix] redeem attempt 1: server charged 62500, onchain settled 62500, paid out 62500
+[fix] refund response {"success":true,"payer":"DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED","transaction":"3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE","network":"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1","amount":"437500","extra":{"channelState":{"channelId":"EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU","balance":"500000","totalClaimed":"62500","withdrawRequestedAt":0}}}
+{
+  "label": "fix",
+  "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+  "channelUrl": "https://explorer.solana.com/address/EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU?cluster=devnet",
+  "depositTx": "5BN8MS9PAb96Mfujaos9kxjJazChM4Hk3c7Si6rNPJb9dBXAHmGTEPWTkbR26o7g75Dg9JJpBhAz9FCBjmbux8c1",
+  "requests": 24,
+  "succeeded": 24,
+  "failed": 0,
+  "failureReasons": [],
+  "handlerServed": 24,
+  "storeWriteConflicts": 33,
+  "operations": {
+    "completed": 24,
+    "reserved": 0,
+    "completedActualSum": "60000"
+  },
+  "serverChannelChargedCumulative": "62500",
+  "serverChargedForWorkers": "60000",
+  "onchainSettledAfterRedeem": "62500",
+  "onchainDeposit": "500000",
+  "claimAndSettleTxs": [
+    {
+      "kind": "claim",
+      "tx": "3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC",
+      "url": "https://explorer.solana.com/tx/3Lt2yHAbhNVzkq194T6B8npNnczPnG5Ne9Gco54j4PhMUrsF2XQaHxd7E1XMiVvcahqwL8hBkwJVaJnRgkA97rNC?cluster=devnet"
+    }
+  ],
+  "refund": {
+    "success": true,
+    "payer": "DDioYdR7hcGrAcdM6yRSSXihBUAAf2a92kdGHLVnzUED",
+    "transaction": "3H2AnnhKWiWGVcMzJND7eS1eVFKiKCafsCpKpq2KWJbu5MhDFbKPrRrfabTt8dEYiq9L2HFmyrLxrap2aa6qgGqE",
+    "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+    "amount": "437500",
+    "extra": {
+      "channelState": {
+        "channelId": "EzP2BJvbBGXwL13zV3QektiWmmQvM44eXYeVqSRoEWVU",
+        "balance": "500000",
+        "totalClaimed": "62500",
+        "withdrawRequestedAt": 0
+      }
+    }
+  }
+}

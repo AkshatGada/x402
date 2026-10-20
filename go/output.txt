@@ -1,0 +1,14 @@
+== baseline scheme.go sha 669596b89ce3
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=20 reasons=[batch operation reservation changed] conflicts=20 completedOps=24 completedActual=6000 channelChargedForRequests=1000 heldReservations=20
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	2.309s
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=19 reasons=[batch operation reservation changed] conflicts=19 completedOps=24 completedActual=6000 channelChargedForRequests=1250 heldReservations=19
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	1.346s
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=19 reasons=[batch operation reservation changed] conflicts=19 completedOps=24 completedActual=6000 channelChargedForRequests=1250 heldReservations=19
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	1.324s
+== fix scheme.go sha 35fecd53751c
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=0 reasons=[] conflicts=186 completedOps=24 completedActual=6000 channelChargedForRequests=6000 heldReservations=0
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	1.639s
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=0 reasons=[] conflicts=175 completedOps=24 completedActual=6000 channelChargedForRequests=6000 heldReservations=0
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	1.346s
+zz_evidence_concurrent_test.go:177: EVIDENCE requests=24 failed=0 reasons=[] conflicts=174 completedOps=24 completedActual=6000 channelChargedForRequests=6000 heldReservations=0
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	1.345s
