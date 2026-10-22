@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 <checkout>/typescript/packages/mechanisms/svm
+
+ ✓ test/unit/batch.server-signer.test.ts (19 tests) 57ms
+ ✓ test/unit/batch.server.lifecycle.test.ts (23 tests) 50ms
+ ✓ test/unit/batch.server.delegated.test.ts (2 tests) 3ms
+ ✓ test/unit/batch.operation-store.test.ts (2 tests) 1ms
+
+ Test Files  4 passed (4)
+      Tests  46 passed (46)
+   Start at  22:49:46
+   Duration  767ms (transform 141ms, setup 0ms, collect 336ms, tests 112ms, environment 0ms, prepare 88ms)
+

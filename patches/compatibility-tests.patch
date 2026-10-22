@@ -1,0 +1,132 @@
+--- a/typescript/packages/mechanisms/svm/test/unit/batch.server-signer.test.ts
++++ b/typescript/packages/mechanisms/svm/test/unit/batch.server-signer.test.ts
+@@ -770,6 +770,7 @@
+ 
+   describe("failed charge cleanup", () => {
+     for (const scenario of [
++      { name: "postcommit operation completion failure with #3854", fault: "complete", sibling: true },
+       { name: "successful charge control", fault: "none", sibling: false },
+       { name: "handler cancellation control", fault: "cancel", sibling: false },
+       {
+@@ -924,6 +925,12 @@
+         });
+         if (scenario.fault === "cleanup-release")
+           vi.spyOn(operations, "release").mockRejectedValueOnce(new Error(cleanupMessage));
++        if (scenario.fault === "complete") {
++          vi.spyOn(operations, "complete").mockImplementationOnce(async () => {
++            committed = structuredClone((await store.get(channelId))!);
++            throw new Error("synthetic completion unavailable");
++          });
++        }
+         failSigning = ["signer", "cleanup-update", "cleanup-release"].includes(scenario.fault);
+         if (scenario.fault === "cancel") {
+           await resource
+@@ -935,7 +942,7 @@
+           ).toBe(true);
+         } else {
+           const message =
+-            scenario.fault === "limit"
++            scenario.fault === "complete" ? "synthetic completion unavailable" : scenario.fault === "limit"
+               ? BatchError.CUMULATIVE_AMOUNT_MISMATCH
+               : scenario.fault === "ambiguous"
+                 ? "synthetic channel write acknowledgement lost"
+@@ -975,9 +982,9 @@
+         }
+         const state = (await store.get(channelId))!;
+         expect(state.reservations).toEqual(siblingReservations);
+-        const charged = scenario.fault === "none" || scenario.fault === "ambiguous";
++        const charged = scenario.fault === "none" || scenario.fault === "ambiguous" || scenario.fault === "complete";
+         expect(state.chargedCumulativeAmount).toBe(charged ? 1400n : 1000n);
+-        if (scenario.fault === "ambiguous") {
++        if (scenario.fault === "ambiguous" || scenario.fault === "complete") {
+           expect(committed).toBeDefined();
+           expect(state).toEqual(committed);
+         } else if (!charged) {
+@@ -985,7 +992,7 @@
+           expect(state.highestVoucherSignature).toBe(initial.highestVoucherSignature);
+         }
+         expect((await operations.get(channelId, "cleanup-paid"))!.status).toBe(
+-          charged ? "completed" : "reserved",
++          charged && !["complete", "ambiguous"].includes(scenario.fault) ? "completed" : "reserved",
+         );
+         expect(recovery).not.toHaveBeenCalled();
+         expect(facade.settle).not.toHaveBeenCalled();
+--- a/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go
++++ b/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go
+@@ -825,6 +825,7 @@
+ 			name, fault string
+ 			sibling     bool
+ 		}{
++			{"postcommit operation completion failure with #3854", "complete", true},
+ 			{"successful charge control", "none", false},
+ 			{"handler cancellation control", "cancel", false},
+ 			{"signer failure releases capacity and permits close verification", "signer", false},
+@@ -836,7 +837,7 @@
+ 		} {
+ 			t.Run(scenario.name, func(t *testing.T) {
+ 				store := &cleanupChannelStore{MemoryChannelStore: NewMemoryChannelStore()}
+-				operations := &cleanupOperationStore{MemoryBatchOperationStore: NewMemoryBatchOperationStore()}
++				operations := &cleanupOperationStore{MemoryBatchOperationStore: NewMemoryBatchOperationStore(), store: store}
+ 				signing := &cleanupSigner{ReceiverAuthorizerSigner: operator}
+ 				scheme := NewBatchSvmScheme(&Config{Operator: signing, OperationStore: operations, ReceiverAuthorizer: receiverAuthorizer, Store: store})
+ 				open := types.PaymentPayload{Accepted: requirements(), Payload: serverDepositMap, X402Version: 2}
+@@ -898,6 +899,7 @@
+ 					}
+ 				}
+ 				store.calls = 0
++				operations.failComplete = scenario.fault == "complete"
+ 				store.failCleanup = scenario.fault == "cleanup-update"
+ 				store.loseAcknowledgement = scenario.fault == "ambiguous"
+ 				operations.failRelease = scenario.fault == "cleanup-release"
+@@ -921,6 +923,9 @@
+ 						if scenario.fault == "limit" {
+ 							message, reason = batchsettlement.ErrCumulativeAmountMismatch, batchsettlement.ErrCumulativeAmountMismatch
+ 						}
++						if scenario.fault == "complete" {
++							message = "synthetic completion unavailable"
++						}
+ 						if scenario.fault == "ambiguous" {
+ 							message = "synthetic channel write acknowledgement lost"
+ 						}
+@@ -943,13 +948,16 @@
+ 				state, err := store.Get(channelID)
+ 				require.NoError(t, err)
+ 				assert.Equal(t, siblingReservations, state.Reservations)
+-				charged := scenario.fault == "none" || scenario.fault == "ambiguous"
++				charged := scenario.fault == "none" || scenario.fault == "ambiguous" || scenario.fault == "complete"
+ 				wantCharge, wantStatus := uint64(1000), operationReserved
+ 				if charged {
+ 					wantCharge, wantStatus = 1400, operationCompleted
+ 				}
++				if scenario.fault == "complete" || scenario.fault == "ambiguous" {
++					wantStatus = operationReserved
++				}
+ 				assert.Equal(t, wantCharge, state.ChargedCumulativeAmount)
+-				if scenario.fault == "ambiguous" {
++				if scenario.fault == "ambiguous" || scenario.fault == "complete" {
+ 					require.NotNil(t, store.committed)
+ 					assert.Equal(t, *store.committed, *state)
+ 				} else if !charged {
+@@ -1078,7 +1086,21 @@
+ 
+ type cleanupOperationStore struct {
+ 	*MemoryBatchOperationStore
+-	failRelease bool
++	failRelease  bool
++	failComplete bool
++	store        *cleanupChannelStore
++}
++
++func (s *cleanupOperationStore) Complete(operation BatchOperation) error {
++	if s.failComplete {
++		committed, err := s.store.Get(operation.ChannelID)
++		if err != nil {
++			return err
++		}
++		s.store.committed = committed
++		return errors.New("synthetic completion unavailable")
++	}
++	return s.MemoryBatchOperationStore.Complete(operation)
+ }
+ 
+ func (s *cleanupOperationStore) Release(channelID, requestID string) error {

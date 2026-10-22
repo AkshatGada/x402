@@ -1,0 +1,11 @@
+Already up to date
+Done in 383ms using pnpm v11.25.0
+<checkout>/typescript/packages/mechanisms/svm/test/unit/batch.server-signer.baseline.typecheck.ts(471,22): error TS2352: Conversion of type 'void | { abort: true; reason: string; message?: string | undefined; } | { skip: true; result: SettleResponse; }' to type '{ result: { extra: { voucher: BatchVoucher; }; }; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ skip: true; result: SettleResponse; }' is not comparable to type '{ result: { extra: { voucher: BatchVoucher; }; }; }'.
+    The types of 'result.extra' are incompatible between these types.
+      Type 'Record<string, unknown> | undefined' is not comparable to type '{ voucher: BatchVoucher; }'.
+        Property 'voucher' is missing in type 'Record<string, unknown>' but required in type '{ voucher: BatchVoucher; }'.
+<checkout>/typescript/packages/mechanisms/svm/test/unit/batch.server-signer.baseline.typecheck.ts(726,7): error TS2322: Type '"handler_error"' is not assignable to type 'VerifiedPaymentCancellationReason'.
+undefined
+<checkout>/typescript/packages/mechanisms/svm:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 2: tsc --project <evidence-workdir>/typecheck-baseline.json

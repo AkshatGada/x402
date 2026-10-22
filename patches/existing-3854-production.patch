@@ -1,0 +1,109 @@
+diff --git a/go/mechanisms/svm/batch-settlement/server/scheme.go b/go/mechanisms/svm/batch-settlement/server/scheme.go
+index 04d8c013f6..e54dbb36b6 100644
+--- a/go/mechanisms/svm/batch-settlement/server/scheme.go
++++ b/go/mechanisms/svm/batch-settlement/server/scheme.go
+@@ -941,6 +941,9 @@ func (s *BatchSvmScheme) commitCharge(
+ 	patch ...func(ChannelState) ChannelState,
+ ) (*ChannelState, error) {
+ 	var committed ChannelState
++	var completed *BatchOperation
++	// The updater has no persistent side effects: a store may re-run it after a
++	// write conflict, so the operation is completed once the charge is committed.
+ 	_, err := s.store.Update(request.ChannelID, func(current *ChannelState) (ChannelState, error) {
+ 		if current == nil || !hasReservation(current, request.PendingID) {
+ 			return ChannelState{}, errors.New(ChannelBusy)
+@@ -957,16 +960,15 @@ func (s *BatchSvmScheme) commitCharge(
+ 		if err != nil {
+ 			return ChannelState{}, err
+ 		}
++		completed = nil
+ 		if request.RequestID != "" {
+-			if err := s.operations.Complete(BatchOperation{
++			completed = &BatchOperation{
+ 				Status:     operationCompleted,
+ 				ChannelID:  request.ChannelID,
+ 				RequestID:  request.RequestID,
+ 				Ceiling:    reservation.Ceiling,
+ 				Actual:     actual,
+ 				Cumulative: cumulative,
+-			}); err != nil {
+-				return ChannelState{}, err
+ 			}
+ 		}
+ 		next := *current
+@@ -988,6 +990,11 @@ func (s *BatchSvmScheme) commitCharge(
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	if completed != nil {
++		if err := s.operations.Complete(*completed); err != nil {
++			return nil, err
++		}
++	}
+ 	return &committed, nil
+ }
+ 
+diff --git a/typescript/packages/mechanisms/svm/src/batch-settlement/server/scheme.ts b/typescript/packages/mechanisms/svm/src/batch-settlement/server/scheme.ts
+index 74b1ab3d7f..87396a3521 100644
+--- a/typescript/packages/mechanisms/svm/src/batch-settlement/server/scheme.ts
++++ b/typescript/packages/mechanisms/svm/src/batch-settlement/server/scheme.ts
+@@ -60,7 +60,11 @@ import type {
+   CloseAuthorization,
+ } from "../types";
+ import { BATCH_SETTLEMENT_SCHEME, isBatchPayload, proofOf } from "../types";
+-import { type BatchOperationStore, MemoryBatchOperationStore } from "./operationStore";
++import {
++  type BatchOperation,
++  type BatchOperationStore,
++  MemoryBatchOperationStore,
++} from "./operationStore";
+ import { BatchChannelManager, type BatchChannelManagerConfig } from "./channelManager";
+ import { MemoryChannelStore } from "./storage";
+ import {
+@@ -1191,22 +1195,26 @@ export class BatchSvmScheme implements SchemeNetworkServer {
+     actual: bigint,
+     patch?: (current: ChannelState) => Partial<ChannelState>,
+   ): Promise<ChannelState> {
+-    return this.store.update(request.channelId, async current => {
++    let completed: Extract<BatchOperation, { status: "completed" }> | undefined;
++    // The updater has no persistent side effects. Completing the operation only
++    // after the commit keeps a failed or repeated channel write from leaving it
++    // completed without its charge.
++    const committed = await this.store.update(request.channelId, async current => {
+       const reservation = current?.reservations?.[request.pendingId];
+       if (!current || !reservation) throw new Error(CHANNEL_BUSY);
+       if (actual > reservation.ceiling) throw new Error(BatchError.CUMULATIVE_AMOUNT_MISMATCH);
+       const cumulative = current.chargedCumulativeAmount + actual;
+       const voucher = await this.voucherForCharge(proof, request.channelId, cumulative);
+-      if (request.requestId) {
+-        await this.operationStore.complete({
+-          actual,
+-          ceiling: reservation.ceiling,
+-          channelId: request.channelId,
+-          cumulative,
+-          requestId: request.requestId,
+-          status: "completed",
+-        });
+-      }
++      completed = request.requestId
++        ? {
++            actual,
++            ceiling: reservation.ceiling,
++            channelId: request.channelId,
++            cumulative,
++            requestId: request.requestId,
++            status: "completed",
++          }
++        : undefined;
+       return {
+         ...current,
+         ...patch?.(current),
+@@ -1217,6 +1225,8 @@ export class BatchSvmScheme implements SchemeNetworkServer {
+         signedMaxClaimable: BigInt(voucher.maxClaimableAmount),
+       };
+     });
++    if (completed) await this.operationStore.complete(completed);
++    return committed;
+   }
+ 
+   /**

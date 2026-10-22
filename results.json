@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-22",
+  "evidence_kind": "synthetic lifecycle/unit tests; no network payment execution",
+  "upstream_revision": "2b06a54edf2b239c3bcf97aa5e514edcea63d777",
+  "implementation_commit": "839967485f0179bc2aa05f692628067e5c1c37c5",
+  "implementation_branch": "codex/svm-abort-reservation-cleanup",
+  "evidence_branch": "codex/evidence-svm-failed-charge-cleanup",
+  "existing_pr_3854_head": "a409a72e0c714eed3ba0d5429bab25c38f47bb4a",
+  "tools": {
+    "node": "24.19.0",
+    "pnpm": "11.25.0",
+    "final_go": "1.24.13",
+    "initial_investigation_go": "1.27.3",
+    "golangci_lint": "2.7.2",
+    "goimports": "0.39.0",
+    "max_jobs": 2
+  },
+  "checks": {
+    "baseline_regressions_each_sdk": {
+      "passed": 3,
+      "failed": 5
+    },
+    "fixed_regressions_each_sdk": {
+      "passed": 8
+    },
+    "typescript_full_svm_unit_tests": {
+      "files": 54,
+      "passed": 1029,
+      "coverage": {
+        "statements": 94.12,
+        "branches": 90.21,
+        "functions": 96.02,
+        "lines": 94.12
+      }
+    },
+    "typescript_core_build": "passed including declarations",
+    "typescript_svm_build": "passed including declarations",
+    "typescript_changed_files_eslint": "passed",
+    "typescript_changed_files_prettier": "passed",
+    "go_server_build": "passed on Go1.24.13",
+    "go_server_race_coverage_test": {
+      "result": "passed",
+      "go": "1.24.13",
+      "statement_coverage_percent": 80.3
+    },
+    "go_server_golangci_lint": {
+      "version": "2.7.2",
+      "issues": 0,
+      "go": "1.24.13"
+    },
+    "go_changed_files_goimports": "passed",
+    "existing3854_compatibility_each_sdk": {
+      "passed": 9
+    },
+    "git_diff_check": "passed"
+  },
+  "additional_test_typecheck": "Two existing diagnostics at unchanged test-file lines471 (TS2352) and726 (TS2322), reproduced on upstream baseline; no new diagnostics. Standard core/SVM builds pass.",
+  "comparison_only": "Existing3854 production and temporary test augmentations removed from implementation. Ambiguous-write operation is reserved with3854 because completion is not reached; current upstream completes it inside the updater. Both retain committed accounting.",
+  "review": "Independent Astra high architecture and diff review; corrections applied. Reviewer did not independently execute tests and is not a maintainer approval.",
+  "limits": [
+    "No HTTP resource handler or adapter executed",
+    "No real funds, RPC payment execution, broadcast, payout or onchain close",
+    "Close assertions mean local verification only",
+    "No expiry-duration measurement or restart recovery",
+    "Manual policy aborts before SVM runs remain out of scope",
+    "No full-repository build or test claim"
+  ],
+  "privacy": "Only explicitly selected synthetic logs and patches included; no wallet files, credentials, signing keys or local-machine paths. Paths in logs replaced with placeholders; outcome lines retained.",
+  "evidence_review": "Astra high independently verified selected-file checksums, patch applicability and log/result consistency; three README framing/reproduction corrections applied. No independent test execution."
+}

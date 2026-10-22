@@ -1,0 +1,140 @@
+
+ RUN  v3.2.7 <checkout>/typescript/packages/mechanisms/svm
+
+ ❯ test/unit/batch.server-signer.test.ts (19 tests | 5 failed | 11 skipped) 46ms
+   ↓ batch server voucher signer boundaries > covers malformed top-level wire guards
+   ↓ batch server voucher signer boundaries > rejects malformed server and client wire combinations
+   ↓ batch server voucher signer boundaries > prevents using the wrong credential API for either signer mode
+   ↓ batch server voucher signer boundaries > enforces tracker and deposit-builder boundaries in both modes
+   ↓ batch server voucher signer boundaries > rejects malformed keys and a signer that returns no proof
+   ↓ batch server voucher signer boundaries > binds authorization to both the channel and operator
+   ↓ batch server voucher signer boundaries > rejects every server-mode term and proof mismatch
+   ↓ batch server voucher signer boundaries > opens and advances a server-signed channel through the server hook lifecycle
+   ↓ batch server voucher signer boundaries > fails verify closed when the store fails before the request is fenced
+   ↓ batch server voucher signer boundaries > reserves concurrent ceilings, completes out of order, and rejects reused ids
+   ✓ batch server voucher signer boundaries > failed charge cleanup > successful charge control 7ms
+   ✓ batch server voucher signer boundaries > failed charge cleanup > handler cancellation control 3ms
+   × batch server voucher signer boundaries > failed charge cleanup > signer failure releases capacity and permits close verification 8ms
+     → expected { '1792689584287:2': { …(4) } } to deeply equal {}
+   × batch server voucher signer boundaries > failed charge cleanup > signer failure preserves another request's reservation 4ms
+     → expected { '1792689584295:2': { …(4) }, …(1) } to deeply equal { '1792689584295:3': { …(4) } }
+   × batch server voucher signer boundaries > failed charge cleanup > over-ceiling charge releases its reservation 2ms
+     → expected { '1792689584298:2': { …(4) } } to deeply equal {}
+   × batch server voucher signer boundaries > failed charge cleanup > channel cleanup failure preserves the abort and can be retried 3ms
+     → expected SettleError: transaction_failed: syntheti… { …(6) } to match object { Object (errorMessage) }
+(6 matching properties omitted from actual)
+   × batch server voucher signer boundaries > failed charge cleanup > operation release failure preserves the abort and can be retried 3ms
+     → expected SettleError: transaction_failed: syntheti… { …(6) } to match object { Object (errorMessage) }
+(6 matching properties omitted from actual)
+   ✓ batch server voucher signer boundaries > failed charge cleanup > lost write acknowledgement preserves the committed charge and voucher 3ms
+   ↓ batch server voucher signer boundaries > enriches server-mode refunds with the stored operator voucher
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unit/batch.server-signer.test.ts > batch server voucher signer boundaries > failed charge cleanup > signer failure releases capacity and permits close verification
+AssertionError: expected { '1792689584287:2': { …(4) } } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "1792689584287:2": {
++     "ceiling": 4000n,
++     "expiresAt": 1792689884287,
++     "kind": "server",
++     "requestId": "cleanup-paid",
++   },
++ }
+
+ ❯ test/unit/batch.server-signer.test.ts:977:36
+    975|         }
+    976|         const state = (await store.get(channelId))!;
+    977|         expect(state.reservations).toEqual(siblingReservations);
+       |                                    ^
+    978|         const charged = scenario.fault === "none" || scenario.fault ==…
+    979|         expect(state.chargedCumulativeAmount).toBe(charged ? 1400n : 1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/unit/batch.server-signer.test.ts > batch server voucher signer boundaries > failed charge cleanup > signer failure preserves another request's reservation
+AssertionError: expected { '1792689584295:2': { …(4) }, …(1) } to deeply equal { '1792689584295:3': { …(4) } }
+
+- Expected
++ Received
+
+@@ -1,6 +1,12 @@
+  {
++   "1792689584295:2": {
++     "ceiling": 4000n,
++     "expiresAt": 1792689884295,
++     "kind": "server",
++     "requestId": "cleanup-paid",
++   },
+    "1792689584295:3": {
+      "ceiling": 1000n,
+      "expiresAt": 1792689884295,
+      "kind": "server",
+      "requestId": "cleanup-sibling",
+
+ ❯ test/unit/batch.server-signer.test.ts:977:36
+    975|         }
+    976|         const state = (await store.get(channelId))!;
+    977|         expect(state.reservations).toEqual(siblingReservations);
+       |                                    ^
+    978|         const charged = scenario.fault === "none" || scenario.fault ==…
+    979|         expect(state.chargedCumulativeAmount).toBe(charged ? 1400n : 1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/unit/batch.server-signer.test.ts > batch server voucher signer boundaries > failed charge cleanup > over-ceiling charge releases its reservation
+AssertionError: expected { '1792689584298:2': { …(4) } } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "1792689584298:2": {
++     "ceiling": 4000n,
++     "expiresAt": 1792689884298,
++     "kind": "server",
++     "requestId": "cleanup-paid",
++   },
++ }
+
+ ❯ test/unit/batch.server-signer.test.ts:977:36
+    975|         }
+    976|         const state = (await store.get(channelId))!;
+    977|         expect(state.reservations).toEqual(siblingReservations);
+       |                                    ^
+    978|         const charged = scenario.fault === "none" || scenario.fault ==…
+    979|         expect(state.chargedCumulativeAmount).toBe(charged ? 1400n : 1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/unit/batch.server-signer.test.ts > batch server voucher signer boundaries > failed charge cleanup > channel cleanup failure preserves the abort and can be retried
+ FAIL  test/unit/batch.server-signer.test.ts > batch server voucher signer boundaries > failed charge cleanup > operation release failure preserves the abort and can be retried
+AssertionError: expected SettleError: transaction_failed: syntheti… { …(6) } to match object { Object (errorMessage) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "errorMessage": "synthetic operator unavailable; reservation cleanup failed: invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable",
++ SettleError {
++   "errorMessage": "synthetic operator unavailable",
+  }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 3 passed | 11 skipped (19)
+   Start at  22:49:43
+   Duration  394ms (transform 148ms, setup 0ms, collect 251ms, tests 46ms, environment 0ms, prepare 31ms)
+
+undefined
+<checkout>/typescript/packages/mechanisms/svm:
+[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run test/unit/batch.server-signer.test.ts -t 'failed charge cleanup' '--coverage.enabled=false' '--maxWorkers=2' '--minWorkers=1' --no-file-parallelism

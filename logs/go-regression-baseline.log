@@ -1,0 +1,140 @@
+=== RUN   TestBatchServerVoucherSignerBoundaries
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/successful_charge_control
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/handler_cancellation_control
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification
+    voucher_signer_test.go:945: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:945
+        	Error:      	Not equal: 
+        	            	expected: map[string]server.ChannelReservation{}
+        	            	actual  : map[string]server.ChannelReservation{"1792689585858:2":server.ChannelReservation{Ceiling:0xfa0, ExpiresAt:1792689885858, RequestID:"cleanup-paid", Kind:"server"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,2 +1,8 @@
+        	            	-(map[string]server.ChannelReservation) {
+        	            	+(map[string]server.ChannelReservation) (len=1) {
+        	            	+ (string) (len=15) "1792689585858:2": (server.ChannelReservation) {
+        	            	+  Ceiling: (uint64) 4000,
+        	            	+  ExpiresAt: (int64) 1792689885858,
+        	            	+  RequestID: (string) (len=12) "cleanup-paid",
+        	            	+  Kind: (string) (len=6) "server"
+        	            	+ }
+        	            	 }
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification
+    voucher_signer_test.go:990: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:990
+        	Error:      	Received unexpected error:
+        	            	duplicate_settlement: duplicate_settlement
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation
+    voucher_signer_test.go:945: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:945
+        	Error:      	Not equal: 
+        	            	expected: map[string]server.ChannelReservation{"1792689585860:3":server.ChannelReservation{Ceiling:0x3e8, ExpiresAt:1792689885860, RequestID:"cleanup-sibling", Kind:"server"}}
+        	            	actual  : map[string]server.ChannelReservation{"1792689585860:2":server.ChannelReservation{Ceiling:0xfa0, ExpiresAt:1792689885860, RequestID:"cleanup-paid", Kind:"server"}, "1792689585860:3":server.ChannelReservation{Ceiling:0x3e8, ExpiresAt:1792689885860, RequestID:"cleanup-sibling", Kind:"server"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,2 +1,8 @@
+        	            	-(map[string]server.ChannelReservation) (len=1) {
+        	            	+(map[string]server.ChannelReservation) (len=2) {
+        	            	+ (string) (len=15) "1792689585860:2": (server.ChannelReservation) {
+        	            	+  Ceiling: (uint64) 4000,
+        	            	+  ExpiresAt: (int64) 1792689885860,
+        	            	+  RequestID: (string) (len=12) "cleanup-paid",
+        	            	+  Kind: (string) (len=6) "server"
+        	            	+ },
+        	            	  (string) (len=15) "1792689585860:3": (server.ChannelReservation) {
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation
+    voucher_signer_test.go:990: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:990
+        	Error:      	Received unexpected error:
+        	            	duplicate_settlement: duplicate_settlement
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation
+    voucher_signer_test.go:945: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:945
+        	Error:      	Not equal: 
+        	            	expected: map[string]server.ChannelReservation{}
+        	            	actual  : map[string]server.ChannelReservation{"1792689585862:2":server.ChannelReservation{Ceiling:0xfa0, ExpiresAt:1792689885862, RequestID:"cleanup-paid", Kind:"server"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,2 +1,8 @@
+        	            	-(map[string]server.ChannelReservation) {
+        	            	+(map[string]server.ChannelReservation) (len=1) {
+        	            	+ (string) (len=15) "1792689585862:2": (server.ChannelReservation) {
+        	            	+  Ceiling: (uint64) 4000,
+        	            	+  ExpiresAt: (int64) 1792689885862,
+        	            	+  RequestID: (string) (len=12) "cleanup-paid",
+        	            	+  Kind: (string) (len=6) "server"
+        	            	+ }
+        	            	 }
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation
+    voucher_signer_test.go:990: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:990
+        	Error:      	Received unexpected error:
+        	            	duplicate_settlement: duplicate_settlement
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried
+    voucher_signer_test.go:930: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:930
+        	Error:      	Not equal: 
+        	            	expected: "synthetic operator unavailable; reservation cleanup failed: invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable"
+        	            	actual  : "synthetic operator unavailable"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-synthetic operator unavailable; reservation cleanup failed: invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable
+        	            	+synthetic operator unavailable
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried
+    voucher_signer_test.go:936: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:936
+        	Error:      	Received unexpected error:
+        	            	invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried
+    voucher_signer_test.go:930: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:930
+        	Error:      	Not equal: 
+        	            	expected: "synthetic operator unavailable; reservation cleanup failed: invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable"
+        	            	actual  : "synthetic operator unavailable"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-synthetic operator unavailable; reservation cleanup failed: invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable
+        	            	+synthetic operator unavailable
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried
+    voucher_signer_test.go:934: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:934
+        	Error:      	Not equal: 
+        	            	expected: false
+        	            	actual  : true
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried
+    voucher_signer_test.go:936: 
+        	Error Trace:	<checkout>/go/mechanisms/svm/batch-settlement/server/voucher_signer_test.go:936
+        	Error:      	Received unexpected error:
+        	            	invalid_batch_settlement_svm_channel_state: synthetic cleanup unavailable
+        	Test:       	TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/lost_write_acknowledgement_preserves_the_committed_charge_and_voucher
+--- FAIL: TestBatchServerVoucherSignerBoundaries (0.02s)
+    --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup (0.01s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/successful_charge_control (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/handler_cancellation_control (0.00s)
+        --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification (0.00s)
+        --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation (0.00s)
+        --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation (0.00s)
+        --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried (0.00s)
+        --- FAIL: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/lost_write_acknowledgement_preserves_the_committed_charge_and_voucher (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	0.647s
+FAIL

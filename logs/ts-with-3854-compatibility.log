@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 <checkout>/typescript/packages/mechanisms/svm
+
+ ✓ test/unit/batch.server-signer.test.ts (20 tests | 11 skipped) 316ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed | 11 skipped (20)
+   Start at  22:48:12
+   Duration  1.25s (transform 417ms, setup 0ms, collect 728ms, tests 316ms, environment 0ms, prepare 63ms)
+

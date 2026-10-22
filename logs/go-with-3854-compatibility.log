@@ -1,0 +1,24 @@
+=== RUN   TestBatchServerVoucherSignerBoundaries
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/postcommit_operation_completion_failure_with_#3854
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/successful_charge_control
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/handler_cancellation_control
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried
+=== RUN   TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/lost_write_acknowledgement_preserves_the_committed_charge_and_voucher
+--- PASS: TestBatchServerVoucherSignerBoundaries (0.02s)
+    --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup (0.02s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/postcommit_operation_completion_failure_with_#3854 (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/successful_charge_control (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/handler_cancellation_control (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_releases_capacity_and_permits_close_verification (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/signer_failure_preserves_another_request's_reservation (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/over-ceiling_charge_releases_its_reservation (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/channel_cleanup_failure_preserves_the_abort_and_can_be_retried (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/operation_release_failure_preserves_the_abort_and_can_be_retried (0.00s)
+        --- PASS: TestBatchServerVoucherSignerBoundaries/failed_charge_cleanup/lost_write_acknowledgement_preserves_the_committed_charge_and_voucher (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	0.617s
