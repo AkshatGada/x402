@@ -123,7 +123,6 @@ func SealResponse(channelID, payer string, network x402.Network, transaction str
 		Network:     network,
 		Amount:      strconv.FormatUint(paidToReceiver, 10),
 		Extra: map[string]any{
-			"paidToReceiver": strconv.FormatUint(paidToReceiver, 10),
 			"channelState": batchsettlement.BatchChannelState{
 				ChannelID:    channelID,
 				Balance:      strconv.FormatUint(deposit, 10),

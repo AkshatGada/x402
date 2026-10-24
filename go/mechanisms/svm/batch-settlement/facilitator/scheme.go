@@ -835,6 +835,7 @@ func (f *BatchSvmScheme) sealDependencies() SealDependencies {
 
 func (f *BatchSvmScheme) defaultSealDependencies() SealDependencies {
 	return SealDependencies{
+		ReadDistributionAmount:  f.readDistributionAmount,
 		OnDistributionConfirmed: f.config.OnDistributionConfirmed,
 		PendingStore:            f.pendingStore,
 		ResolveTerms:            f.resolveTerms,

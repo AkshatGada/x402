@@ -3,7 +3,6 @@ package facilitator
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	solana "github.com/gagliardetto/solana-go"
@@ -38,6 +37,7 @@ type PreparedRefund struct {
 
 // SealDependencies are the scheme internals the seal path borrows.
 type SealDependencies struct {
+	ReadDistributionAmount   func(context.Context, string, string, []PreparedDistribution, types.PaymentRequirements) (uint64, error)
 	OnDistributionConfirmed  OnDistributionConfirmed
 	PendingStore             PendingSettlementStore
 	ResolveTerms             func(context.Context, batchsettlement.BatchChannelConfig, types.PaymentRequirements, VoucherModeBinding) (BatchTerms, error)
@@ -98,15 +98,18 @@ func SettleSeal(
 	if err := authenticateServer(ctx, deps, payload, requirements, terms, channelID, cumulative, intent, facilitatorContext); err != nil {
 		return nil, err
 	}
+	prepared := PreparedDistribution{ChannelID: channelID, ChannelConfig: payload.ChannelConfig, FeePayer: terms.FeePayer, Terms: terms}
 	key := fmt.Sprintf("batch:%s:%s:%s:%d", intent, network, channelID, cumulative)
-	if previous, ok, err := deps.PendingStore.Get(ctx, key+":result"); err != nil {
-		return nil, err
-	} else if ok {
-		var stored x402.SettleResponse
-		if err := json.Unmarshal([]byte(previous), &stored); err != nil {
+	for _, suffix := range []string{":result", ":close"} {
+		if previous, ok, err := deps.PendingStore.Get(ctx, key+suffix); err != nil {
 			return nil, err
+		} else if ok {
+			var stored x402.SettleResponse
+			if err := json.Unmarshal([]byte(previous), &stored); err != nil {
+				return nil, err
+			}
+			return completeSealDistribution(ctx, deps, key, &stored, prepared, requirements, intent), nil
 		}
-		return completeSealDistribution(ctx, deps, key, &stored, requirements, intent), nil
 	}
 	channel, err := deps.FetchChannel(ctx, network, channelID)
 	if err != nil {
@@ -198,10 +201,12 @@ func SettleSeal(
 	if err != nil {
 		return nil, err
 	}
-	if err := deps.PendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
+	// A delayed preliminary write must not overwrite an attributed result
+	// already persisted by another caller recovering the same broadcast.
+	if err := deps.PendingStore.Set(ctx, key+":close", string(encoded)); err != nil {
 		return nil, err
 	}
-	return completeSealDistribution(ctx, deps, key, sealed, requirements, intent), nil
+	return completeSealDistribution(ctx, deps, key, sealed, prepared, requirements, intent), nil
 }
 
 // completeSealDistribution finishes accounting from a persisted close result.
@@ -212,6 +217,7 @@ func completeSealDistribution(
 	deps SealDependencies,
 	key string,
 	response *x402.SettleResponse,
+	prepared PreparedDistribution,
 	requirements types.PaymentRequirements,
 	intent CloseIntent,
 ) *x402.SettleResponse {
@@ -237,7 +243,7 @@ func completeSealDistribution(
 	passes.mu.Unlock()
 
 	pass.response = response
-	if err := notifySealDistribution(ctx, deps, key, response, requirements, intent); err != nil {
+	if err := notifySealDistribution(ctx, deps, key, response, prepared, requirements, intent); err != nil {
 		pass.response = pending(err)
 	}
 	close(pass.done)
@@ -254,6 +260,7 @@ func notifySealDistribution(
 	deps SealDependencies,
 	key string,
 	response *x402.SettleResponse,
+	prepared PreparedDistribution,
 	requirements types.PaymentRequirements,
 	intent CloseIntent,
 ) error {
@@ -261,19 +268,65 @@ func notifySealDistribution(
 	if _, recorded, err := deps.PendingStore.Get(ctx, recordedKey); err != nil {
 		return err
 	} else if recorded {
+		// This caller may have loaded its response before another caller
+		// attributed and recorded the close. Return the corrected saved result.
+		encoded, exists, err := deps.PendingStore.Get(ctx, key+":result")
+		if err != nil {
+			return err
+		}
+		if !exists {
+			return fmt.Errorf("recorded close result is missing")
+		}
+		var stored x402.SettleResponse
+		if err := json.Unmarshal([]byte(encoded), &stored); err != nil {
+			return err
+		}
+		*response = stored
 		return nil
 	}
-	paid, ok := response.Extra["paidToReceiver"].(string)
-	if !ok {
-		if intent != CloseIntentSeal {
-			return errors.New("durable refund response is missing extra.paidToReceiver")
+	// Existing result fields may come from a stale pre-submit channel snapshot.
+	// Cache only transaction-attributed payouts so accounting retries do not
+	// require the RPC to retain that transaction's token balances indefinitely.
+	payoutKey := key + ":payout"
+	var paid uint64
+	if cached, exists, err := deps.PendingStore.Get(ctx, payoutKey); err != nil {
+		return err
+	} else if exists {
+		paid, err = paymentchannels.ParseU64(cached, "confirmed close payout")
+		if err != nil {
+			return err
 		}
-		paid = response.Amount
+	} else {
+		if deps.ReadDistributionAmount == nil {
+			return fmt.Errorf("confirmed transaction reader is required for close payout accounting")
+		}
+		paid, err = deps.ReadDistributionAmount(ctx, key, response.Transaction, []PreparedDistribution{prepared}, requirements)
+		if err != nil {
+			return err
+		}
+		if err := deps.PendingStore.Set(ctx, payoutKey, fmt.Sprintf("%d", paid)); err != nil {
+			return err
+		}
+	}
+	amount := fmt.Sprintf("%d", paid)
+	if response.Extra == nil {
+		response.Extra = make(map[string]any)
+	}
+	response.Extra["paidToReceiver"] = amount
+	if intent == CloseIntentSeal {
+		response.Amount = amount
+	}
+	encoded, err := json.Marshal(response)
+	if err != nil {
+		return err
+	}
+	if err := deps.PendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
+		return err
 	}
 	// Refund Amount belongs to the payer; the hook always receives the merchant
 	// payout. Copy scalar fields so a callback cannot overwrite the caller's Amount.
 	payout := *response
-	payout.Amount = paid
+	payout.Amount = amount
 	if err := deps.OnDistributionConfirmed(ctx, &payout, requirements); err != nil {
 		return err
 	}
