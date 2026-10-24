@@ -162,6 +162,18 @@ cleanup := scheme.CreateRentCleanupManager(svm.SolanaDevnetCAIP2)
 
 `GetExtra` advertises `feePayer` and, when idle cleanup is enabled, `maxIdleSecs`. It advertises `receiverAuthorizer` only when `DelegatedReceiverAuth` is set. `withdrawDelay` comes from the server. Production deployments should use a durable pending-settlement store and shared channel storage when running multiple replicas.
 
+### Payout accounting
+
+Set `Config.OnDistributionConfirmed` to record merchant payouts from distribution sweeps, `seal`, and cooperative `refund`. The callback receives the merchant payout in `response.Amount`, including a zero payout. The outward refund response still reports the payer's refund; close responses also store the merchant payout as string `extra.paidToReceiver`. For cooperative closes, the callback receives a struct copy; maps such as `Extra` remain shared and should be treated as read-only.
+
+For cooperative closes, the facilitator saves the confirmed close result before calling the hook, then saves a `:recorded` marker after the hook succeeds. A callback or marker-store failure returns `settlement_pending` with the original signature. Retrying the authenticated close, including through a new scheme with the same durable pending store and recoverable receiver binding, retries accounting from the saved result without fetching the closed account or submitting another transaction. With no hook configured, the result remains successful and unmarked, so a hook configured later can record it.
+
+Callbacks must atomically deduplicate ledger writes by `(network, transaction)`: a crash after a ledger write, a failed marker write, or another process may repeat the callback. Concurrent accounting is coalesced only within one process for schemes using the same store object. Canceling a waiting request does not cancel the request performing accounting.
+
+Older saved seal results can use their existing `amount` as the merchant payout. An unrecorded older refund without string `extra.paidToReceiver` returns pending when a hook is configured; reconcile its merchant payout and correct the durable record before retrying. The payer refund amount cannot identify that payout.
+
+This accounting recovery requires a saved close result and valid close authentication. It does not repair the existing window between broadcast completion and saving that result; a crash or failed result write in that window needs separate transaction reconciliation.
+
 ## Supported Networks
 
 Works on Solana networks where the payment-channels program is deployed:

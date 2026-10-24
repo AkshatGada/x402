@@ -3,6 +3,7 @@ package facilitator
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	solana "github.com/gagliardetto/solana-go"
@@ -37,6 +38,7 @@ type PreparedRefund struct {
 
 // SealDependencies are the scheme internals the seal path borrows.
 type SealDependencies struct {
+	OnDistributionConfirmed  OnDistributionConfirmed
 	PendingStore             PendingSettlementStore
 	ResolveTerms             func(context.Context, batchsettlement.BatchChannelConfig, types.PaymentRequirements, VoucherModeBinding) (BatchTerms, error)
 	ReadBinding              func(context.Context, string, string) (ChannelBinding, error)
@@ -104,7 +106,7 @@ func SettleSeal(
 		if err := json.Unmarshal([]byte(previous), &stored); err != nil {
 			return nil, err
 		}
-		return &stored, nil
+		return completeSealDistribution(ctx, deps, key, &stored, requirements, intent), nil
 	}
 	channel, err := deps.FetchChannel(ctx, network, channelID)
 	if err != nil {
@@ -199,7 +201,83 @@ func SettleSeal(
 	if err := deps.PendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
 		return nil, err
 	}
-	return sealed, nil
+	return completeSealDistribution(ctx, deps, key, sealed, requirements, intent), nil
+}
+
+// completeSealDistribution finishes accounting from a persisted close result.
+// Sharing a pass only coalesces callers in this process using the same store
+// object. Callbacks must still deduplicate transactions across retries/replicas.
+func completeSealDistribution(
+	ctx context.Context,
+	deps SealDependencies,
+	key string,
+	response *x402.SettleResponse,
+	requirements types.PaymentRequirements,
+	intent CloseIntent,
+) *x402.SettleResponse {
+	if deps.OnDistributionConfirmed == nil {
+		return response
+	}
+	pending := func(err error) *x402.SettleResponse {
+		return SettlementPending(response.Network, response.Payer, response.Transaction, err.Error())
+	}
+	passes := passesFor(deps.PendingStore)
+	passes.mu.Lock()
+	if existing := passes.inflight[key]; existing != nil {
+		passes.mu.Unlock()
+		select {
+		case <-existing.done:
+			return existing.response
+		case <-ctx.Done():
+			return pending(ctx.Err())
+		}
+	}
+	pass := &distributionPass{done: make(chan struct{})}
+	passes.inflight[key] = pass
+	passes.mu.Unlock()
+
+	pass.response = response
+	if err := notifySealDistribution(ctx, deps, key, response, requirements, intent); err != nil {
+		pass.response = pending(err)
+	}
+	close(pass.done)
+	passes.mu.Lock()
+	if passes.inflight[key] == pass {
+		delete(passes.inflight, key)
+	}
+	passes.mu.Unlock()
+	return pass.response
+}
+
+func notifySealDistribution(
+	ctx context.Context,
+	deps SealDependencies,
+	key string,
+	response *x402.SettleResponse,
+	requirements types.PaymentRequirements,
+	intent CloseIntent,
+) error {
+	recordedKey := key + ":recorded"
+	if _, recorded, err := deps.PendingStore.Get(ctx, recordedKey); err != nil {
+		return err
+	} else if recorded {
+		return nil
+	}
+	paid, ok := response.Extra["paidToReceiver"].(string)
+	if !ok {
+		if intent != CloseIntentSeal {
+			return errors.New("durable refund response is missing extra.paidToReceiver")
+		}
+		paid = response.Amount
+	}
+	// Refund Amount belongs to the payer; the hook always receives the merchant
+	// payout. Copy scalar fields so a callback cannot overwrite the caller's Amount.
+	payout := *response
+	payout.Amount = paid
+	if err := deps.OnDistributionConfirmed(ctx, &payout, requirements); err != nil {
+		return err
+	}
+	return deps.PendingStore.Set(ctx, recordedKey, "1")
 }
 
 // PrepareRefund validates a refund and picks the cooperative close or the payer-signed request_close.
