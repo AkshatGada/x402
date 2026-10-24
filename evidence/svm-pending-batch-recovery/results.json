@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-24",
+  "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "fix_commit": "b751b8d7dd2c28ce61f795612d1410c754f38a84",
+  "patch_sha256": "7b50e204eca5d53d7df925f3fb8162c2b106e42aee79961a981039e5452f362d",
+  "synthetic_only": true,
+  "baseline": {
+    "ts_exit": 1,
+    "go_exit": 1,
+    "stable_control": "passes",
+    "original_payout_recorded": false,
+    "new_payout_recorded": "1000",
+    "original_pending_record_retained": true
+  },
+  "fix": {
+    "ts_exit": 0,
+    "go_exit": 0,
+    "stable_control": "passes",
+    "recorded_payouts": [
+      "800",
+      "1000"
+    ],
+    "original_pending_record_retained": false,
+    "replacement_submission_for_original": false
+  },
+  "validation": {
+    "ts_unit_files": 54,
+    "ts_unit_tests": 1061,
+    "ts_esm_and_declarations_exit": 0,
+    "ts_cjs_exit": 0,
+    "ts_declaration_mirror_exit": 0,
+    "ts_eslint_exit": 0,
+    "ts_prettier_check_exit": 0,
+    "go_race_packages": 4,
+    "go_race_exit": 0,
+    "go_lint_exit": 0,
+    "go_lint_issues": 0,
+    "go_build_exit": 0,
+    "goimports_exit": 0,
+    "diff_check_exit": 0
+  },
+  "independent_reruns": {
+    "baseline_and_fix_ts_go": true,
+    "ts_unit_tests": 1061,
+    "ts_unit_files": 54,
+    "other_build_lint_and_go_race_logs": "inspected, not independently rerun"
+  },
+  "log_normalization": "Workspace/runtime prefixes replaced with placeholders and ANSI color escapes removed. No assertion or outcome text edited. Exit statuses are recorded here because successful build commands can have empty stdout.",
+  "portable_runner_validation": {
+    "go-baseline": {
+      "exit": 1,
+      "expected_exit": 1,
+      "expectation_met": true
+    },
+    "ts-baseline": {
+      "exit": 1,
+      "expected_exit": 1,
+      "expectation_met": true
+    },
+    "go-fix": {
+      "exit": 0,
+      "expected_exit": 0,
+      "expectation_met": true
+    },
+    "ts-fix": {
+      "exit": 0,
+      "expected_exit": 0,
+      "expectation_met": true
+    }
+  }
+}

@@ -1,0 +1,33 @@
+CLI Building entry: {"index":"src/index.ts","v1/index":"src/v1/index.ts","exact/client/index":"src/exact/client/index.ts","exact/server/index":"src/exact/server/index.ts","exact/facilitator/index":"src/exact/facilitator/index.ts","exact/v1/client/index":"src/exact/v1/client/index.ts","exact/v1/facilitator/index":"src/exact/v1/facilitator/index.ts","upto/client/index":"src/upto/client/index.ts","upto/server/index":"src/upto/server/index.ts","upto/facilitator/index":"src/upto/facilitator/index.ts","batch-settlement/client/index":"src/batch-settlement/client/index.ts","batch-settlement/server/index":"src/batch-settlement/server/index.ts","batch-settlement/facilitator/index":"src/batch-settlement/facilitator/index.ts"}
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Using tsup config: <checkout>/typescript/packages/mechanisms/svm/.pending-batch-build.config.ts
+CLI Target: es2020
+CJS Build start
+CJS dist/cjs/index.js                                  148.30 KB
+CJS dist/cjs/exact/facilitator/index.js                72.57 KB
+CJS dist/cjs/upto/server/index.js                      20.34 KB
+CJS dist/cjs/batch-settlement/client/index.js          95.51 KB
+CJS dist/cjs/v1/index.js                               11.17 KB
+CJS dist/cjs/batch-settlement/server/index.js          122.14 KB
+CJS dist/cjs/upto/facilitator/index.js                 137.31 KB
+CJS dist/cjs/upto/client/index.js                      26.45 KB
+CJS dist/cjs/exact/v1/client/index.js                  10.54 KB
+CJS dist/cjs/exact/server/index.js                     10.98 KB
+CJS dist/cjs/exact/client/index.js                     17.21 KB
+CJS dist/cjs/batch-settlement/facilitator/index.js     204.62 KB
+CJS dist/cjs/exact/v1/facilitator/index.js             22.10 KB
+CJS dist/cjs/exact/facilitator/index.js.map            175.46 KB
+CJS dist/cjs/index.js.map                              486.12 KB
+CJS dist/cjs/upto/server/index.js.map                  203.87 KB
+CJS dist/cjs/v1/index.js.map                           56.90 KB
+CJS dist/cjs/upto/client/index.js.map                  203.90 KB
+CJS dist/cjs/batch-settlement/client/index.js.map      365.74 KB
+CJS dist/cjs/batch-settlement/server/index.js.map      387.13 KB
+CJS dist/cjs/upto/facilitator/index.js.map             434.97 KB
+CJS dist/cjs/exact/v1/client/index.js.map              34.52 KB
+CJS dist/cjs/exact/client/index.js.map                 68.24 KB
+CJS dist/cjs/exact/server/index.js.map                 35.17 KB
+CJS dist/cjs/exact/v1/facilitator/index.js.map         62.78 KB
+CJS dist/cjs/batch-settlement/facilitator/index.js.map 598.16 KB
+CJS ⚡️ Build success in 43ms

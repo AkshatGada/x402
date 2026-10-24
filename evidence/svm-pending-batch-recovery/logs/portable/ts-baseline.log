@@ -1,0 +1,53 @@
+
+ RUN  v3.2.7 <checkout>/typescript/packages/mechanisms/svm
+
+ ❯ test/unit/batch.recovery.test.ts (17 tests | 1 failed | 16 skipped) 15ms
+   ↓ batch-settlement outcome recovery > recovers a completed claim after cleanup without recreating its lifecycle record
+   ↓ batch-settlement outcome recovery > recovers a restart between preparation and broadcast using identical bytes
+   ↓ batch-settlement outcome recovery > constrains post-confirmation reads to the transaction slot and retries a lagging RPC
+   ↓ batch-settlement outcome recovery > keeps unknown transactions pending and never builds replacement bytes
+   ↓ batch-settlement outcome recovery > retries a stale claim read after confirmation
+   ↓ batch-settlement outcome recovery > recovers a lost claim response after restart and never credits an unrelated watermark
+   ↓ batch-settlement outcome recovery > coalesces distributions across managers sharing the same reference store
+   ↓ batch-settlement outcome recovery > does not delete a successor transaction when an older completion finishes late
+   ↓ batch-settlement outcome recovery > recovers the actual payout after a lost response and restart without changing the request
+   ↓ batch-settlement outcome recovery > waits for transaction metadata instead of estimating payout from a stale snapshot
+   ↓ batch-settlement outcome recovery > retains the distribution when recording its payout fails
+   ↓ batch-settlement outcome recovery > recovers request_close after stale reads and remains replayable after cleanup
+   ↓ batch-settlement outcome recovery > retains exact transaction identity when recovered postconditions are still stale
+   ↓ batch-settlement outcome recovery > propagates terminal reconciliation responses for every recovered operation
+   ↓ batch-settlement outcome recovery > handles a concurrent completion race without rebuilding or rebroadcasting
+   ↓ batch-settlement outcome recovery > returns pending when completion storage fails and bounds postcondition polling
+   × recovers the original pending payout before regrouping with newly payable channels 14ms
+     → expected [ Array(1) ] to deeply equal [ …(2) ]
+ ✓ test/unit/batch.channelManager.test.ts (44 tests | 43 skipped) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unit/batch.recovery.test.ts > recovers the original pending payout before regrouping with newly payable channels
+AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd",
+    "AH4K1boxACFyUR8jhpiTGDtuAmZtze1ctLLMRds8zQq4G7JYVAFhHNGK8Gi4BxVe8XQsJZShASNV2qSL8srFkF9",
+  ]
+
+ ❯ test/unit/batch.recovery.test.ts:879:62
+    877|   expect((await manager.redeem()).distributed).toEqual([channelId, sec…
+    878|   expect((await local.get(channelId))?.payoutWatermark).toBe(1000n);
+    879|   expect(record.mock.calls.map(call => call[0].transaction)).toEqual([…
+       |                                                              ^
+    880|   expect(record.mock.calls.map(call => call[0].amount)).toEqual(["800"…
+    881|   expect(await pending.get(originalKey)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 1 passed | 59 skipped (61)
+   Start at  15:41:06
+   Duration  459ms (transform 147ms, setup 0ms, collect 280ms, tests 17ms, environment 0ms, prepare 51ms)
+

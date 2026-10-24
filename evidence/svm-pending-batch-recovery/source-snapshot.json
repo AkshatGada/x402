@@ -1,0 +1,21 @@
+{
+  "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "files": {
+    "go/.changes/unreleased/fixed-go-svm-pending-distribution-jobs.yaml": "04f36c8428c45b19285eb76e8ad08cb6d367fbc8845cfddf82915e6adfc5ddb7",
+    "go/mechanisms/svm/batch-settlement/README.md": "d0d7120fd7d48dcbe8f828e0705221b56647019d8179a4c16229ef7ed5becc2b",
+    "go/mechanisms/svm/batch-settlement/facilitator/recovery_test.go": "052a8bde1f9d487eee56e55533a68d646d21d979adcb84c82c8f8e18e644f3a6",
+    "go/mechanisms/svm/batch-settlement/server/channel_manager.go": "fb96b39be7fd731e785e0561af9646c3e10e947ad3fe46db85c4d485830343f1",
+    "go/mechanisms/svm/batch-settlement/server/distribution_job_store.go": "95f1d0677efe9b2d21d0526088152f3aacfcdfbc771ed73dae5a11a68d683602",
+    "go/mechanisms/svm/batch-settlement/server/distribution_job_store_test.go": "ca6dfd2b1398a4dd4f38452a3875987fd97d4a61c8e5bab990e39b177d8c34aa",
+    "typescript/.changeset/svm-pending-distribution-jobs.md": "6661921835781721c9cd0334aa2d3467f3b729c1526f63e372f60c059d35377c",
+    "typescript/packages/mechanisms/svm/src/batch-settlement/README.md": "d3d157d704b7ce65817ce704b74ba845284a58bcab93712630b36e2b450ecf36",
+    "typescript/packages/mechanisms/svm/src/batch-settlement/server/channelManager.ts": "83b9ff9c2dc111e38704dcd200a5860b5d4f1380dbec5c59a18d897893b63619",
+    "typescript/packages/mechanisms/svm/src/batch-settlement/server/distributionJobStore.ts": "e72e0ed66b56c873a12aa228d11a5f91627c8b9649871bc506a70d6182733b9a",
+    "typescript/packages/mechanisms/svm/src/batch-settlement/server/index.ts": "7780969be52c96b18e12a67196f643befbdc51d5b306bf94b71db12b388e5433",
+    "typescript/packages/mechanisms/svm/test/unit/batch.channelManager.edges.test.ts": "3e685008de3f3ba71f9c38a818b35c4a8caa6a78627ce453e5ef09a66bd938b4",
+    "typescript/packages/mechanisms/svm/test/unit/batch.channelManager.test.ts": "32d16d692e9c865d7a9fea8bd23fe41c6d642b31ab8bae980c10091ccce2e7c3",
+    "typescript/packages/mechanisms/svm/test/unit/batch.recovery.test.ts": "5a09a707895066c72972688d12c3218d93be5246dff09c6d793e5ec81350b3bd"
+  },
+  "patch_sha256": "7b50e204eca5d53d7df925f3fb8162c2b106e42aee79961a981039e5452f362d",
+  "fix_commit": "b751b8d7dd2c28ce61f795612d1410c754f38a84"
+}

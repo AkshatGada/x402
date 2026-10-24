@@ -1,0 +1,22 @@
+{
+  "go-baseline": {
+    "exit": 1,
+    "expected_exit": 1,
+    "expectation_met": true
+  },
+  "ts-baseline": {
+    "exit": 1,
+    "expected_exit": 1,
+    "expectation_met": true
+  },
+  "go-fix": {
+    "exit": 0,
+    "expected_exit": 0,
+    "expectation_met": true
+  },
+  "ts-fix": {
+    "exit": 0,
+    "expected_exit": 0,
+    "expectation_met": true
+  }
+}

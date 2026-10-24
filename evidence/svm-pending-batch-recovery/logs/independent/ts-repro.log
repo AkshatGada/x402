@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 <checkout>/typescript/packages/mechanisms/svm
+
+ ✓ test/unit/batch.recovery.test.ts (17 tests | 16 skipped) 16ms
+ ✓ test/unit/batch.channelManager.test.ts (44 tests | 43 skipped) 2ms
+
+ Test Files  2 passed (2)
+      Tests  2 passed | 59 skipped (61)
+   Start at  15:30:39
+   Duration  423ms (transform 136ms, setup 0ms, collect 252ms, tests 18ms, environment 0ms, prepare 45ms)
+

@@ -1,0 +1,2 @@
+# Preserve test-runner indentation and trailing whitespace in captured output.
+logs/** -whitespace

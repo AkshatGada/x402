@@ -1,0 +1,12 @@
+=== RUN   TestBatchSettlementOutcomeRecovery
+=== RUN   TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity
+=== RUN   TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity/stable_batch_recovers_the_original_transaction
+    recovery_test.go:1059: regroup=false original_pending=false callbacks=[97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd] amounts=[800] replacement_submissions=0
+=== RUN   TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity/recovers_the_original_transaction_before_changing_batches
+    recovery_test.go:1059: regroup=true original_pending=false callbacks=[97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd AH4K1boxACFyUR8jhpiTGDtuAmZtze1ctLLMRds8zQq4G7JYVAFhHNGK8Gi4BxVe8XQsJZShASNV2qSL8srFkF9] amounts=[800 1000] replacement_submissions=1
+--- PASS: TestBatchSettlementOutcomeRecovery (0.00s)
+    --- PASS: TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity (0.00s)
+        --- PASS: TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity/stable_batch_recovers_the_original_transaction (0.00s)
+        --- PASS: TestBatchSettlementOutcomeRecovery/pending_distribution_batch_identity/recovers_the_original_transaction_before_changing_batches (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.552s
