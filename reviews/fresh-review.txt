@@ -1,0 +1,43 @@
+x402 #3919 — fresh independent read-only re-audit
+
+Verdict
+No actionable introduced correctness defect found in the exact reviewed working tree. This is a bounded source and synthetic-test verdict, not proof of deployed Solana behavior. No fixes, production edits, commits, pushes, PR changes, comments, or external messages were made by this reviewer.
+
+Reviewed identity
+Checkout: <validation-directory> (physical <validation-directory>)
+HEAD: 4c444151ba0defa92c66d8fcab378d4484c2ea08
+Uncommitted correction SHA256: 7583e065ac27f96acad67e7d76b218d0256f6019d57a9f8dde9e9ec8bdca6c02
+Complete upstream 4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54..working-tree diff SHA256: e59c70c5358f01ff664212fa0ce0b817f9ae93707674e4efaffd4304179a8b06
+The correction patch and all eight file hashes matched audit-snapshot.json both before and after this review's test execution. Both git diff HEAD and the complete upstream diff were examined.
+
+Instructions and source review
+Read the supplied contribution-attribution instructions, .agents/skills/contributing/SKILL.md, CONTRIBUTING.md, go/CONTRIBUTING.md, relevant SVM batch-settlement specification sections, and package README. Independently traced production code before consulting independent-final-audit.txt.
+
+Close path findings by inspection
+- seal.go:83-111 resolves terms, derives the channel, verifies the voucher, and authenticates the close before either cache lookup. The new replay path does not bypass authentication.
+- seal.go:103-113 prefers attributed :result to preliminary :close. Fresh close writes at 204-209 cannot overwrite :result. notifySealDistribution reloads authoritative :result when :recorded is observed (267-285), handling the stale-local-response interleaving.
+- seal.go:290-333 persists the confirmed merchant amount in :payout, then the attributed :result, invokes the callback, and only then writes :recorded. Read/write/parse/reader/callback errors after the saved-close boundary flow to settlement_pending with the original signature. Once :payout is saved, retry does not require retained transaction metadata.
+- Seal Amount is updated from the verified amount. Cooperative-refund Amount remains the payer refund, while the callback's scalar copy carries merchant Amount. Shared Extra maps are explicitly documented read-only.
+- Nil callbacks return before attribution, capability checks, and marker reads. Unrecorded legacy results are reattributed; recorded legacy results are honored without another callback. Existing pre-persistence recovery limitations are not solved by this change.
+- Same-process/store-object owner/waiter publication uses the closed done channel for visibility; waiter cancellation leaves the owner running. Cross-process ledger deduplication is expressly the callback's responsibility.
+
+Shared reader / ordinary sweep
+scheme_flow.go:904-990 retains the sweep's recipient ATA derivation, slot retention, payer/treasury alias ambiguity handling, balance identity checks, and nonnegative delta calculation. Its two behavioral guard changes reject a returned RPC error and an absent recipient post-balance. attributeDistribution retains its cache, callback, result-save, and broadcast-completion ordering. Normal callers supply a nonempty prepared slice. No additional introduced ordinary-sweep regression was identified.
+
+Independent execution
+Command: sh <validation-directory> fixed
+Result: exit 0; all 54 TestBatchSettlementSeal leaf cases passed.
+Raw output: <validation-directory>
+Raw output SHA256: 8840da14bb95c904e155c7094e28d015735666b2dd97cc3f296deb1f53183233
+The provided script uses cached Go 1.24.13, GOPROXY=off, GOSUMDB=off, GOTOOLCHAIN=local, GOMAXPROCS=2, GOFLAGS=-p=2. No installation or live RPC was used.
+Independent git diff --check: clean, exit 0.
+
+Test adequacy
+The focused suite covers both close intents, amount separation, the synthetic public sweep/refund interleaving, callback/marker/attribution faults, metadata pruning after :payout, legacy results, expired authorization, stale-reader and delayed-preliminary-writer orderings, zero payouts, and owner/waiter success/failure/cancellation. Submission and metadata are synthetic; these tests do not execute the Solana program. Existing scoped four-package race/coverage, lint, and build logs and recorded zero exits were inspected, but those broader checks were not independently rerun in this re-audit. The full Go SDK suite was not run. Prior supplemental probe logs were inspected after independent tracing, not rerun.
+
+Separate compatibility / coverage question (not a confirmed defect)
+The zero-payout fixture at seal_test.go:942-959 retains a recipient post-token-balance entry. readDistributionAmount at scheme_flow.go:976-977 intentionally returns pending when that entry is missing. Local BuildDistributeInstruction only includes the derived recipient ATA, and the close path does not create it. This audit did not establish whether the deployed canonical program can successfully close with a zero recipient delta while that ATA is absent/uninitialized. Current upstream source was read for context, but it is not a pinned deployed-program proof. Therefore no defect is claimed from an artificially incomplete metadata fixture. A program-version-matched integration case would resolve this coverage/compatibility question.
+Context-only primary source: https://github.com/solana-foundation/payment-channels/blob/main/program/payment_channels/src/instructions/distribute.rs
+
+Explicit limits
+Recovery begins only after a close response has been saved; the existing broadcast-completion-to-first-close-save window remains. Callbacks must atomically deduplicate by network and signature, especially across storage failures or replicas. Already-recorded legacy ledger entries are not automatically reconciled. No live RPC, Solana execution, real funds, deployment validation, security/vulnerability hunting, full-SDK checks, installation, or publication was performed.

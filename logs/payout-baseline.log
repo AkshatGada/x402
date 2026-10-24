@@ -1,0 +1,47 @@
+Running payout-baseline with implementation ec95e3d91ba384908445a889319d3129d1fdfba8
+=== RUN   TestSweepRefundPayoutAttribution
+=== RUN   TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+    attribution_regression_probe_test.go:244: 
+        	Error Trace:	<validation-directory>:244
+        	Error:      	Not equal: 
+        	            	expected: "2000"
+        	            	actual  : "2500"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-2000
+        	            	+2500
+        	Test:       	TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+    attribution_regression_probe_test.go:245: 
+        	Error Trace:	<validation-directory>:245
+        	Error:      	Not equal: 
+        	            	expected: 0x9c4
+        	            	actual  : 0xbb8
+        	Test:       	TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+        	Messages:   	500 sweep plus 2000 refund payout
+    attribution_regression_probe_test.go:254: 
+        	Error Trace:	<validation-directory>:254
+        	Error:      	Not equal: 
+        	            	expected: "2000"
+        	            	actual  : "2500"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-2000
+        	            	+2500
+        	Test:       	TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+    attribution_regression_probe_test.go:255: 
+        	Error Trace:	<validation-directory>:255
+        	Error:      	Not equal: 
+        	            	expected: 0x9c4
+        	            	actual  : 0xbb8
+        	Test:       	TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+--- FAIL: TestSweepRefundPayoutAttribution (0.01s)
+    --- FAIL: TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.570s
+FAIL

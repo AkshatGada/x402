@@ -1,0 +1,25 @@
+Verdict: no outstanding introduced correctness finding in the reviewed final source. The two P2 response/durability races found during this audit are repaired. The change is ready for human review within the limits below; this is not a claim that passing tests establish all behavior.
+
+Reviewed snapshot
+HEAD: 4c444151ba0defa92c66d8fcab378d4484c2ea08 plus the frozen uncommitted correction.
+Correction patch SHA256: 7583e065ac27f96acad67e7d76b218d0256f6019d57a9f8dde9e9ec8bdca6c02.
+Combined diff from upstream 4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54 SHA256: e59c70c5358f01ff664212fa0ce0b817f9ae93707674e4efaffd4304179a8b06.
+The patch bytes and all eight source-file hashes match audit-snapshot.json before and after the independent final tests. Both the correction and the combined upstream change were reviewed.
+
+Findings resolved during this audit
+- P2: a caller could load an unrecorded legacy result, pause until another caller corrected and recorded it, then return its stale local response through the recorded guard. This affected seal Amount and close paidToReceiver, without a second callback. Final seal.go:267-285 reloads the saved result after observing :recorded; read/missing/decode errors remain pending through the existing wrapper. The independent saved-reader probe passes for seal and refund.
+- P2: two callers that both passed the absent-result lookup could recover the same signature, then a delayed initial result write could overwrite the attributed result after accounting was recorded. The ledger and verified payout cache stayed correct, but outward/durable payout fields were lost. The pre-phase d297b2ed snapshot fails the independent deterministic fresh-writer probe. Final seal.go:103-113 prefers :result then :close; seal.go:204-209 writes only preliminary :close; attribution alone writes :result at 323 before the hook and marker. The identical dual-key one-shot probe passes on the final snapshot. Separate keys also prevent the overwrite if the late writer crashes immediately after its preliminary save.
+
+Final source assessment
+The prior sweep/refund accounting error is repaired by attributing the actual confirmed transaction's recipient token-balance delta, rather than the pre-submit payout watermark. The shared reader retains the ordinary sweep's slot and payer/treasury ambiguity handling and now rejects a non-nil RPC error or a missing recipient post-balance. Missing/ambiguous evidence and attribution/store/callback errors return pending with the saved original signature.
+
+Close authentication precedes either durable-result lookup. Fresh confirmed closes persist :close, then verified :payout, attributed :result, callback, and finally :recorded. Cached payouts permit retry after transaction metadata is pruned. Refund Amount stays the payer's refund while the callback receives the merchant payout. Nil hooks avoid the new reader and accounting markers. Legacy :result replay remains supported; unrecorded legacy payout fields are reattributed, and recorded legacy results are not recorded again. Same-store owner/waiter publication and cancellation retain the stated process-local limits. No additional introduced regression was identified in the ordinary sweep refactor.
+
+Independent final execution
+- sh <validation-directory> fixed: exit 0, all 54 focused leaf cases pass (46 accounting/interleaving cases, the sweep/refund regression, and seven existing controls). Raw: independent-final-focused.log.
+- Saved-reader probe: exit 0, seal and refund pass. Raw: independent-recorded-replay-race-final.log.
+- Fresh-writer probe on preserved exact d297 production: expected exit 1; same probe on final production: exit 0. Raw: independent-concurrent-initial-result-baseline.log and independent-concurrent-initial-result-final.log. Identical probe source SHA256: c99d7eaf17696bfe2c9d0c7c40a948948a352d61821a2ccac814136c2949b7ae.
+- Inspected the implementer's final scoped four-package race, lint, and build logs and recorded zero exits; those broader checks were not independently rerun by this reviewer. Independent git diff --check is clean. The standalone sweep/refund source retains SHA256 8f7b8d9ce1e90e32e113b1f620a02dab05e2ef4e19af7474c1c710be00fd3485, with baseline failure/fixed success evidence.
+
+Limits and evidence housekeeping
+Tests use synthetic submission/confirmation and transaction-metadata fixtures; they do not execute the Solana program. No live RPC, transactions, funds, full Go SDK suite, or deployment validation was performed. The existing interval before the first close response is durably saved remains outside this recovery. Callbacks must still atomically deduplicate by network and signature across failures/replicas. Existing recorded legacy accounting is not automatically reconciled. Packaging note: the original report observed an outdated count of 50; results.json now records the verified 54 cases.

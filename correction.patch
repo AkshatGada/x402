@@ -1,0 +1,871 @@
+diff --git a/go/.changes/unreleased/fixed-go-svm-close-payout-accounting.yaml b/go/.changes/unreleased/fixed-go-svm-close-payout-accounting.yaml
+index 674efa33..1f0ec918 100644
+--- a/go/.changes/unreleased/fixed-go-svm-close-payout-accounting.yaml
++++ b/go/.changes/unreleased/fixed-go-svm-close-payout-accounting.yaml
+@@ -1,3 +1,3 @@
+ kind: fixed
+-body: Record SVM batch seal and cooperative-refund merchant payouts through OnDistributionConfirmed, and retry failed accounting from saved close results without resubmitting the payment.
++body: Record SVM batch seal and cooperative-refund merchant payouts through OnDistributionConfirmed, attribute their amounts from confirmed transaction balances, and retry failed accounting without resubmitting the payment.
+ time: 2026-10-24T12:00:00Z
+diff --git a/go/mechanisms/svm/batch-settlement/README.md b/go/mechanisms/svm/batch-settlement/README.md
+index f1b62121..169d39a2 100644
+--- a/go/mechanisms/svm/batch-settlement/README.md
++++ b/go/mechanisms/svm/batch-settlement/README.md
+@@ -164,15 +164,15 @@ cleanup := scheme.CreateRentCleanupManager(svm.SolanaDevnetCAIP2)
+ 
+ ### Payout accounting
+ 
+-Set `Config.OnDistributionConfirmed` to record merchant payouts from distribution sweeps, `seal`, and cooperative `refund`. The callback receives the merchant payout in `response.Amount`, including a zero payout. The outward refund response still reports the payer's refund; close responses also store the merchant payout as string `extra.paidToReceiver`. For cooperative closes, the callback receives a struct copy; maps such as `Extra` remain shared and should be treated as read-only.
++Set `Config.OnDistributionConfirmed` to record merchant payouts from sweeps, `seal`, and cooperative `refund`. Close accounting requires the signer's `GetConfirmedTransaction` capability: it attributes the merchant transfer from confirmed token balances, independently of the payer's refund and any intervening sweep. The callback receives that transfer in `response.Amount`, including zero; the outward refund amount remains unchanged. Attributed close responses store string `extra.paidToReceiver`. The callback gets a struct copy; maps such as `Extra` remain shared and should be read-only.
+ 
+-For cooperative closes, the facilitator saves the confirmed close result before calling the hook, then saves a `:recorded` marker after the hook succeeds. A callback or marker-store failure returns `settlement_pending` with the original signature. Retrying the authenticated close, including through a new scheme with the same durable pending store and recoverable receiver binding, retries accounting from the saved result without fetching the closed account or submitting another transaction. With no hook configured, the result remains successful and unmarked, so a hook configured later can record it.
++The facilitator saves a preliminary confirmed-close response under `:close` before attribution. It then saves the verified amount under `:payout`, writes the attributed `:result`, invokes the hook, and writes `:recorded` only after success. Preliminary writes cannot replace attributed results, and replay prefers `:result` over `:close`. Missing or ambiguous evidence, callback errors, and accounting-store failures return `settlement_pending` with the original signature. Authenticated replay uses the saved close result without fetching the closed account or submitting another transaction. Once `:payout` exists, retries no longer need transaction metadata. Without a hook, existing close-response behavior is preserved and no transaction reader or accounting marker is required.
+ 
+-Callbacks must atomically deduplicate ledger writes by `(network, transaction)`: a crash after a ledger write, a failed marker write, or another process may repeat the callback. Concurrent accounting is coalesced only within one process for schemes using the same store object. Canceling a waiting request does not cancel the request performing accounting.
++Unrecorded older results are reattributed from transaction evidence; their existing `amount` or `paidToReceiver` may reflect a stale channel snapshot. If that evidence is no longer available, reconciliation is required. Already-recorded results are not recorded again.
+ 
+-Older saved seal results can use their existing `amount` as the merchant payout. An unrecorded older refund without string `extra.paidToReceiver` returns pending when a hook is configured; reconcile its merchant payout and correct the durable record before retrying. The payer refund amount cannot identify that payout.
++Callbacks must atomically deduplicate ledger writes by `(network, transaction)`: a crash after a ledger write, a failed marker write, or another process may repeat the callback. Accounting is coalesced only within one process for schemes using the same store object. Canceling a waiter does not cancel the owner.
+ 
+-This accounting recovery requires a saved close result and valid close authentication. It does not repair the existing window between broadcast completion and saving that result; a crash or failed result write in that window needs separate transaction reconciliation.
++Recovery requires a saved close result and valid close authentication. The existing window between broadcast completion and saving that result remains outside this accounting recovery.
+ 
+ ## Supported Networks
+ 
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/responses.go b/go/mechanisms/svm/batch-settlement/facilitator/responses.go
+index 1af76c8d..d15f67a7 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/responses.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/responses.go
+@@ -123,7 +123,6 @@ func SealResponse(channelID, payer string, network x402.Network, transaction str
+ 		Network:     network,
+ 		Amount:      strconv.FormatUint(paidToReceiver, 10),
+ 		Extra: map[string]any{
+-			"paidToReceiver": strconv.FormatUint(paidToReceiver, 10),
+ 			"channelState": batchsettlement.BatchChannelState{
+ 				ChannelID:    channelID,
+ 				Balance:      strconv.FormatUint(deposit, 10),
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/scheme.go b/go/mechanisms/svm/batch-settlement/facilitator/scheme.go
+index 8761591f..4a228545 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/scheme.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/scheme.go
+@@ -835,6 +835,7 @@ func (f *BatchSvmScheme) sealDependencies() SealDependencies {
+ 
+ func (f *BatchSvmScheme) defaultSealDependencies() SealDependencies {
+ 	return SealDependencies{
++		ReadDistributionAmount:  f.readDistributionAmount,
+ 		OnDistributionConfirmed: f.config.OnDistributionConfirmed,
+ 		PendingStore:            f.pendingStore,
+ 		ResolveTerms:            f.resolveTerms,
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/scheme_flow.go b/go/mechanisms/svm/batch-settlement/facilitator/scheme_flow.go
+index ec909c60..ca354a37 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/scheme_flow.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/scheme_flow.go
+@@ -867,13 +867,48 @@ func (f *BatchSvmScheme) attributeDistribution(ctx context.Context, key, signatu
+ 		}
+ 		return &stored, nil
+ 	}
++	paid, err := f.readDistributionAmount(ctx, key, signature, prepared, requirements)
++	if err != nil {
++		return nil, err
++	}
++	response := &x402.SettleResponse{
++		Success:     true,
++		Network:     x402.Network(requirements.Network),
++		Transaction: signature,
++		Amount:      strconv.FormatUint(paid, 10),
++		Extra:       map[string]any{"channels": channelIDs(prepared)},
++	}
++	encoded, err := json.Marshal(response)
++	if err != nil {
++		return nil, err
++	}
++	if err := f.pendingStore.Set(ctx, "batch:transaction:"+requirements.Network+":"+signature+":result", string(encoded)); err != nil {
++		return nil, err
++	}
++	if f.config.OnDistributionConfirmed != nil {
++		if err := f.config.OnDistributionConfirmed(ctx, response, requirements); err != nil {
++			return nil, err
++		}
++	}
++	if err := f.pendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
++		return nil, err
++	}
++	if err := f.completeBroadcast(ctx, key, signature, requirements.Network); err != nil {
++		return nil, err
++	}
++	return response, nil
++}
++
++// readDistributionAmount attributes only the recipient transfer in the confirmed
++// transaction and retains its confirmation slot for subsequent channel reads.
++func (f *BatchSvmScheme) readDistributionAmount(ctx context.Context, key, signature string, prepared []PreparedDistribution, requirements types.PaymentRequirements) (uint64, error) {
+ 	reader, ok := f.raw.(svm.FacilitatorConfirmedTransactionReader)
+ 	if !ok {
+-		return nil, fmt.Errorf("getConfirmedTransaction is required for payout accounting")
++		return 0, fmt.Errorf("getConfirmedTransaction is required for payout accounting")
+ 	}
+ 	parsed, err := solana.SignatureFromBase58(signature)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	var evidence *svm.FacilitatorConfirmedTransaction
+ 	for attempt := 0; attempt < ChannelReadAttempts; attempt++ {
+@@ -883,48 +918,51 @@ func (f *BatchSvmScheme) attributeDistribution(ctx context.Context, key, signatu
+ 		}
+ 		if attempt+1 < ChannelReadAttempts {
+ 			if err := f.waitForChannelRead(ctx, attempt); err != nil {
+-				return nil, err
++				return 0, err
+ 			}
+ 		}
+ 	}
++	if err != nil {
++		return 0, err
++	}
+ 	if evidence == nil || evidence.Meta == nil || evidence.Meta.PreTokenBalances == nil || evidence.Meta.PostTokenBalances == nil {
+-		return nil, fmt.Errorf("payout transaction metadata is not visible yet")
++		return 0, fmt.Errorf("payout transaction metadata is not visible yet")
+ 	}
+ 	if evidence.Meta.Err != nil {
+-		return nil, &svm.TransactionOnchainFailureError{Message: "distribution transaction failed onchain"}
++		return 0, &svm.TransactionOnchainFailureError{Message: "distribution transaction failed onchain"}
+ 	}
+ 	f.rememberSlot(requirements.Network, evidence.Slot)
+ 	if err := f.pendingStore.Set(ctx, key+":slot", strconv.FormatUint(evidence.Slot, 10)); err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	tokenProgram, err := solana.PublicKeyFromBase58(prepared[0].Terms.TokenProgram)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	mint, err := solana.PublicKeyFromBase58(requirements.Asset)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	payTo, err := solana.PublicKeyFromBase58(requirements.PayTo)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	recipient, err := paymentchannels.FindATA(payTo, mint, tokenProgram)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	recipientIndex := indexOf(evidence.AccountKeys, recipient.String())
+ 	if recipientIndex < 0 {
+-		return nil, fmt.Errorf("recipient is absent from distribution transaction")
++		return 0, fmt.Errorf("recipient is absent from distribution transaction")
+ 	}
+ 	for _, item := range prepared {
+ 		owner, err := solana.PublicKeyFromBase58(item.ChannelID)
+ 		if err != nil {
+-			return nil, err
++			return 0, err
+ 		}
+ 		escrow, err := paymentchannels.FindATA(owner, mint, tokenProgram)
+ 		if err != nil {
+-			return nil, err
++			return 0, err
+ 		}
+ 		escrowIndex := indexOf(evidence.AccountKeys, escrow.String())
+ 		if escrowIndex < 0 {
+@@ -932,46 +970,24 @@ func (f *BatchSvmScheme) attributeDistribution(ctx context.Context, key, signatu
+ 		}
+ 		if !balanceHasAccount(evidence.Meta.PostTokenBalances, escrowIndex) &&
+ 			(item.ChannelConfig.Payer == requirements.PayTo || paymentchannels.TreasuryOwner(requirements.Network).String() == requirements.PayTo) {
+-			return nil, &PayoutAttributionAmbiguousError{}
++			return 0, &PayoutAttributionAmbiguousError{}
+ 		}
+ 	}
++	if !balanceHasAccount(evidence.Meta.PostTokenBalances, recipientIndex) {
++		return 0, fmt.Errorf("recipient token balance is absent from payout transaction metadata")
++	}
+ 	pre, err := tokenBalance(evidence.Meta.PreTokenBalances, recipientIndex, requirements)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	post, err := tokenBalance(evidence.Meta.PostTokenBalances, recipientIndex, requirements)
+ 	if err != nil {
+-		return nil, err
++		return 0, err
+ 	}
+ 	if post < pre {
+-		return nil, fmt.Errorf("negative recipient payout")
+-	}
+-	response := &x402.SettleResponse{
+-		Success:     true,
+-		Network:     x402.Network(requirements.Network),
+-		Transaction: signature,
+-		Amount:      strconv.FormatUint(post-pre, 10),
+-		Extra:       map[string]any{"channels": channelIDs(prepared)},
++		return 0, fmt.Errorf("negative recipient payout")
+ 	}
+-	encoded, err := json.Marshal(response)
+-	if err != nil {
+-		return nil, err
+-	}
+-	if err := f.pendingStore.Set(ctx, "batch:transaction:"+requirements.Network+":"+signature+":result", string(encoded)); err != nil {
+-		return nil, err
+-	}
+-	if f.config.OnDistributionConfirmed != nil {
+-		if err := f.config.OnDistributionConfirmed(ctx, response, requirements); err != nil {
+-			return nil, err
+-		}
+-	}
+-	if err := f.pendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
+-		return nil, err
+-	}
+-	if err := f.completeBroadcast(ctx, key, signature, requirements.Network); err != nil {
+-		return nil, err
+-	}
+-	return response, nil
++	return post - pre, nil
+ }
+ 
+ func (f *BatchSvmScheme) settleRefund(ctx context.Context, payload batchsettlement.BatchRefundPayload, requirements types.PaymentRequirements, facilitatorContext any) (*x402.SettleResponse, error) {
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/seal.go b/go/mechanisms/svm/batch-settlement/facilitator/seal.go
+index 86d33a0a..96a0cdc9 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/seal.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/seal.go
+@@ -3,7 +3,6 @@ package facilitator
+ import (
+ 	"context"
+ 	"encoding/json"
+-	"errors"
+ 	"fmt"
+ 
+ 	solana "github.com/gagliardetto/solana-go"
+@@ -38,6 +37,7 @@ type PreparedRefund struct {
+ 
+ // SealDependencies are the scheme internals the seal path borrows.
+ type SealDependencies struct {
++	ReadDistributionAmount   func(context.Context, string, string, []PreparedDistribution, types.PaymentRequirements) (uint64, error)
+ 	OnDistributionConfirmed  OnDistributionConfirmed
+ 	PendingStore             PendingSettlementStore
+ 	ResolveTerms             func(context.Context, batchsettlement.BatchChannelConfig, types.PaymentRequirements, VoucherModeBinding) (BatchTerms, error)
+@@ -98,15 +98,18 @@ func SettleSeal(
+ 	if err := authenticateServer(ctx, deps, payload, requirements, terms, channelID, cumulative, intent, facilitatorContext); err != nil {
+ 		return nil, err
+ 	}
++	prepared := PreparedDistribution{ChannelID: channelID, ChannelConfig: payload.ChannelConfig, FeePayer: terms.FeePayer, Terms: terms}
+ 	key := fmt.Sprintf("batch:%s:%s:%s:%d", intent, network, channelID, cumulative)
+-	if previous, ok, err := deps.PendingStore.Get(ctx, key+":result"); err != nil {
+-		return nil, err
+-	} else if ok {
+-		var stored x402.SettleResponse
+-		if err := json.Unmarshal([]byte(previous), &stored); err != nil {
++	for _, suffix := range []string{":result", ":close"} {
++		if previous, ok, err := deps.PendingStore.Get(ctx, key+suffix); err != nil {
+ 			return nil, err
++		} else if ok {
++			var stored x402.SettleResponse
++			if err := json.Unmarshal([]byte(previous), &stored); err != nil {
++				return nil, err
++			}
++			return completeSealDistribution(ctx, deps, key, &stored, prepared, requirements, intent), nil
+ 		}
+-		return completeSealDistribution(ctx, deps, key, &stored, requirements, intent), nil
+ 	}
+ 	channel, err := deps.FetchChannel(ctx, network, channelID)
+ 	if err != nil {
+@@ -198,10 +201,12 @@ func SettleSeal(
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	if err := deps.PendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
++	// A delayed preliminary write must not overwrite an attributed result
++	// already persisted by another caller recovering the same broadcast.
++	if err := deps.PendingStore.Set(ctx, key+":close", string(encoded)); err != nil {
+ 		return nil, err
+ 	}
+-	return completeSealDistribution(ctx, deps, key, sealed, requirements, intent), nil
++	return completeSealDistribution(ctx, deps, key, sealed, prepared, requirements, intent), nil
+ }
+ 
+ // completeSealDistribution finishes accounting from a persisted close result.
+@@ -212,6 +217,7 @@ func completeSealDistribution(
+ 	deps SealDependencies,
+ 	key string,
+ 	response *x402.SettleResponse,
++	prepared PreparedDistribution,
+ 	requirements types.PaymentRequirements,
+ 	intent CloseIntent,
+ ) *x402.SettleResponse {
+@@ -237,7 +243,7 @@ func completeSealDistribution(
+ 	passes.mu.Unlock()
+ 
+ 	pass.response = response
+-	if err := notifySealDistribution(ctx, deps, key, response, requirements, intent); err != nil {
++	if err := notifySealDistribution(ctx, deps, key, response, prepared, requirements, intent); err != nil {
+ 		pass.response = pending(err)
+ 	}
+ 	close(pass.done)
+@@ -254,6 +260,7 @@ func notifySealDistribution(
+ 	deps SealDependencies,
+ 	key string,
+ 	response *x402.SettleResponse,
++	prepared PreparedDistribution,
+ 	requirements types.PaymentRequirements,
+ 	intent CloseIntent,
+ ) error {
+@@ -261,19 +268,65 @@ func notifySealDistribution(
+ 	if _, recorded, err := deps.PendingStore.Get(ctx, recordedKey); err != nil {
+ 		return err
+ 	} else if recorded {
++		// This caller may have loaded its response before another caller
++		// attributed and recorded the close. Return the corrected saved result.
++		encoded, exists, err := deps.PendingStore.Get(ctx, key+":result")
++		if err != nil {
++			return err
++		}
++		if !exists {
++			return fmt.Errorf("recorded close result is missing")
++		}
++		var stored x402.SettleResponse
++		if err := json.Unmarshal([]byte(encoded), &stored); err != nil {
++			return err
++		}
++		*response = stored
+ 		return nil
+ 	}
+-	paid, ok := response.Extra["paidToReceiver"].(string)
+-	if !ok {
+-		if intent != CloseIntentSeal {
+-			return errors.New("durable refund response is missing extra.paidToReceiver")
++	// Existing result fields may come from a stale pre-submit channel snapshot.
++	// Cache only transaction-attributed payouts so accounting retries do not
++	// require the RPC to retain that transaction's token balances indefinitely.
++	payoutKey := key + ":payout"
++	var paid uint64
++	if cached, exists, err := deps.PendingStore.Get(ctx, payoutKey); err != nil {
++		return err
++	} else if exists {
++		paid, err = paymentchannels.ParseU64(cached, "confirmed close payout")
++		if err != nil {
++			return err
++		}
++	} else {
++		if deps.ReadDistributionAmount == nil {
++			return fmt.Errorf("confirmed transaction reader is required for close payout accounting")
+ 		}
+-		paid = response.Amount
++		paid, err = deps.ReadDistributionAmount(ctx, key, response.Transaction, []PreparedDistribution{prepared}, requirements)
++		if err != nil {
++			return err
++		}
++		if err := deps.PendingStore.Set(ctx, payoutKey, fmt.Sprintf("%d", paid)); err != nil {
++			return err
++		}
++	}
++	amount := fmt.Sprintf("%d", paid)
++	if response.Extra == nil {
++		response.Extra = make(map[string]any)
++	}
++	response.Extra["paidToReceiver"] = amount
++	if intent == CloseIntentSeal {
++		response.Amount = amount
++	}
++	encoded, err := json.Marshal(response)
++	if err != nil {
++		return err
++	}
++	if err := deps.PendingStore.Set(ctx, key+":result", string(encoded)); err != nil {
++		return err
+ 	}
+ 	// Refund Amount belongs to the payer; the hook always receives the merchant
+ 	// payout. Copy scalar fields so a callback cannot overwrite the caller's Amount.
+ 	payout := *response
+-	payout.Amount = paid
++	payout.Amount = amount
+ 	if err := deps.OnDistributionConfirmed(ctx, &payout, requirements); err != nil {
+ 		return err
+ 	}
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/seal_accounting_test.go b/go/mechanisms/svm/batch-settlement/facilitator/seal_accounting_test.go
+index b1469331..48fda966 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/seal_accounting_test.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/seal_accounting_test.go
+@@ -4,15 +4,17 @@ import (
+ 	"context"
+ 	"errors"
+ 	"sync"
++	"sync/atomic"
+ )
+ 
+ // Faults are consumed by sequential requests; the concurrent tests use the
+ // synchronized in-memory store directly.
+ type closeAccountingFaultStore struct {
+ 	PendingSettlementStore
+-	marker  string
+-	failGet bool
+-	failSet bool
++	marker   string
++	failGet  bool
++	failSet  bool
++	writeKey string
+ }
+ 
+ func (s *closeAccountingFaultStore) Get(ctx context.Context, key string) (string, bool, error) {
+@@ -24,6 +26,10 @@ func (s *closeAccountingFaultStore) Get(ctx context.Context, key string) (string
+ }
+ 
+ func (s *closeAccountingFaultStore) Set(ctx context.Context, key, value string) error {
++	if key == s.writeKey {
++		s.writeKey = ""
++		return errors.New("attribution write failed")
++	}
+ 	if key == s.marker && s.failSet {
+ 		s.failSet = false
+ 		return errors.New("accounting marker write failed")
+@@ -43,3 +49,47 @@ func (c *closeAccountingWaitContext) Done() <-chan struct{} {
+ 	c.once.Do(func() { close(c.waiting) })
+ 	return c.Context.Done()
+ }
++
++// Pause the first result read after capturing its value, without locking later
++// reads. Another caller can finish accounting while this caller holds old data.
++type closeResultReadBarrierStore struct {
++	PendingSettlementStore
++	key     string
++	paused  atomic.Bool
++	loaded  chan struct{}
++	release chan struct{}
++}
++
++func (s *closeResultReadBarrierStore) Get(ctx context.Context, key string) (string, bool, error) {
++	value, exists, err := s.PendingSettlementStore.Get(ctx, key)
++	if key == s.key && s.paused.CompareAndSwap(false, true) {
++		close(s.loaded)
++		select {
++		case <-s.release:
++		case <-ctx.Done():
++			return "", false, ctx.Err()
++		}
++	}
++	return value, exists, err
++}
++
++// Gate a tagged caller's first write across either close-record key.
++type closeInitialWriteBarrierStore struct {
++	PendingSettlementStore
++	key     string
++	paused  atomic.Bool
++	reached chan struct{}
++	release chan struct{}
++}
++
++func (s *closeInitialWriteBarrierStore) Set(ctx context.Context, key, value string) error {
++	if (key == s.key+":close" || key == s.key+":result") && ctx.Value(s) == true && s.paused.CompareAndSwap(false, true) {
++		close(s.reached)
++		select {
++		case <-s.release:
++		case <-ctx.Done():
++			return ctx.Err()
++		}
++	}
++	return s.PendingSettlementStore.Set(ctx, key, value)
++}
+diff --git a/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go b/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go
+index 497886bb..550f4059 100644
+--- a/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go
++++ b/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go
+@@ -100,11 +100,13 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 		}
+ 		return channel
+ 	}
+-	const signature = "signature"
++	signature := solana.Signature{7}.String()
+ 	type sealFixture struct {
+-		scheme  *BatchSvmScheme
+-		storage *activityRecordingStorage
+-		submits []submitCall
++		signer      *capabilitySigner
++		transaction *svm.FacilitatorConfirmedTransaction
++		scheme      *BatchSvmScheme
++		storage     *activityRecordingStorage
++		submits     []submitCall
+ 	}
+ 	facilitator := func(t *testing.T, channel *generated.Channel, bound bool, configs ...Config) *sealFixture {
+ 		t.Helper()
+@@ -124,7 +126,18 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 			cfg = configs[0]
+ 		}
+ 		cfg.ChannelStorage = storage
+-		scheme := NewBatchSvmScheme(context.Background(), newScriptedSigner(t, 1), &cfg)
++		paid := uint64(0)
++		if channel.Settlement.PayoutWatermark < 3_000 {
++			paid = 3_000 - channel.Settlement.PayoutWatermark
++		}
++		fixture.transaction = lifecyclePayoutEvidence(t, channelID, requirements.PayTo, requirements.Asset, "100", uintString(100+paid))
++		fixture.transaction.Meta.PreTokenBalances[1].UITokenAmount.Amount = uintString(channel.Deposit - channel.Settlement.PayoutWatermark)
++		fixture.transaction.Meta.PostTokenBalances = fixture.transaction.Meta.PostTokenBalances[:1]
++		fixture.signer = &capabilitySigner{scriptedSigner: newScriptedSigner(t, 1), confirmed: func(context.Context, solana.Signature, string) (*svm.FacilitatorConfirmedTransaction, error) {
++			return fixture.transaction, nil
++		}}
++		scheme := NewBatchSvmScheme(context.Background(), fixture.signer, &cfg)
++		scheme.hooks.waitForChannelRead = func(int) error { return nil }
+ 		terms := BatchTerms{
+ 			FeePayer:           feePayer.PublicKey().String(),
+ 			ReceiverAuthorizer: authorizer.PublicKey().String(),
+@@ -361,6 +374,64 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 		assert.Equal(t, batchsettlement.ErrCloseState, response.ErrorReason)
+ 	})
+ 
++	t.Run("accounts only the refund payout after an intervening sweep", func(t *testing.T) {
++		program := live(func(ch *generated.Channel) { ch.Status = uint8(generated.ChannelStatus_Open); ch.ClosureStartedAt = 0 })
++		snapshot := *program
++		var ledgerPaid uint64
++		var signatures []string
++		cfg := Config{OnDistributionConfirmed: func(_ context.Context, response *x402.SettleResponse, _ types.PaymentRequirements) error {
++			ledgerPaid += mustParseU64(t, response.Amount)
++			signatures = append(signatures, response.Transaction)
++			return nil
++		}}
++		refund := facilitator(t, &snapshot, true, cfg)
++		sweep := facilitator(t, program, true, cfg)
++		sweepSignature := solana.Signature{8}.String()
++		sweep.transaction = lifecyclePayoutEvidence(t, channelID, requirements.PayTo, requirements.Asset, "100", "600")
++		submitSweep := sweep.scheme.hooks.submitRedemption
++		sweep.scheme.hooks.submitRedemption = func(ctx context.Context, fee, net string, instructions []solana.Instruction, key, payer string) (durableResult, error) {
++			result, err := submitSweep(ctx, fee, net, instructions, key, payer)
++			result.Signature = sweepSignature
++			return result, err
++		}
++		submitRefund := refund.scheme.hooks.submitRedemption
++		refund.scheme.hooks.submitRedemption = func(ctx context.Context, fee, net string, instructions []solana.Instruction, key, payer string) (durableResult, error) {
++			// Run the public sweep flow after the refund reads its channel snapshot.
++			// Program transitions and confirmed token balances are synthetic.
++			response := settle(t, sweep.scheme, batchsettlement.BatchSettlePayload{
++				Type:     batchsettlement.PayloadTypeSettle,
++				Channels: []batchsettlement.BatchSettleChannel{{ChannelID: channelID, ChannelConfig: config}},
++			})
++			require.True(t, response.Success)
++			require.Equal(t, "500", response.Amount)
++			program.Settlement.PayoutWatermark = program.Settlement.Settled
++			merchantPaid := uint64(3_000) - program.Settlement.PayoutWatermark
++			refund.transaction = lifecyclePayoutEvidence(t, channelID, requirements.PayTo, requirements.Asset, "600", uintString(600+merchantPaid))
++			refund.transaction.Meta.PostTokenBalances = refund.transaction.Meta.PostTokenBalances[:1]
++			return submitRefund(ctx, fee, net, instructions, key, payer)
++		}
++		voucher := sealPayload(t, 3_000)
++		response := settle(t, refund.scheme, batchsettlement.BatchRefundPayload{
++			Type: batchsettlement.PayloadTypeRefund, ChannelConfig: config,
++			Voucher: &voucher.Voucher, CloseAuthorization: voucher.CloseAuthorization,
++		})
++		require.True(t, response.Success)
++		assert.Equal(t, "7000", response.Amount)
++		assert.Equal(t, "2000", response.Extra["paidToReceiver"])
++		assert.Equal(t, uint64(2_500), ledgerPaid, "500 sweep plus 2000 refund payout")
++		assert.Equal(t, []string{sweepSignature, signature}, signatures)
++		assert.Len(t, sweep.submits, 1)
++		assert.Len(t, refund.submits, 1)
++		again := settle(t, refund.scheme, batchsettlement.BatchRefundPayload{
++			Type: batchsettlement.PayloadTypeRefund, ChannelConfig: config,
++			Voucher: &voucher.Voucher, CloseAuthorization: voucher.CloseAuthorization,
++		})
++		assert.True(t, again.Success)
++		assert.Equal(t, "2000", again.Extra["paidToReceiver"])
++		assert.Equal(t, uint64(2_500), ledgerPaid)
++		assert.Len(t, refund.submits, 1)
++	})
++
+ 	t.Run("close accounting", func(t *testing.T) {
+ 		for _, intent := range []CloseIntent{CloseIntentSeal, CloseIntentRefund} {
+ 			t.Run(string(intent), func(t *testing.T) {
+@@ -425,7 +496,7 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 					store := NewInMemoryPendingSettlementStore()
+ 					fixture := facilitator(t, channel, true, Config{PendingSettlementStore: store})
+ 					require.True(t, settle(t, fixture.scheme, payload).Success)
+-					saved, exists, err := store.Get(context.Background(), key+":result")
++					saved, exists, err := store.Get(context.Background(), key+":close")
+ 					require.NoError(t, err)
+ 					require.True(t, exists)
+ 
+@@ -444,7 +515,7 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 					assert.Equal(t, batchsettlement.ErrCloseAuthorization, response.ErrorReason)
+ 					assert.Contains(t, response.ErrorMessage, "outside its validity window")
+ 					assert.Zero(t, calls, "a saved result must not bypass close authentication")
+-					after, exists, err := store.Get(context.Background(), key+":result")
++					after, exists, err := store.Get(context.Background(), key+":close")
+ 					require.NoError(t, err)
+ 					assert.True(t, exists)
+ 					assert.Equal(t, saved, after)
+@@ -476,6 +547,9 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 						require.NoError(t, err)
+ 						assert.False(t, recorded)
+ 						replay := restarted(t, cfg)
++						if fault == "callback" || fault == "marker write" {
++							replay.signer.confirmed = nil // transaction metadata may no longer be retained
++						}
+ 						response = settle(t, replay.scheme, payload)
+ 						require.True(t, response.Success)
+ 						assert.Equal(t, outwardAmount, response.Amount)
+@@ -484,6 +558,9 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 							wantCalls = 1
+ 						}
+ 						assert.Equal(t, wantCalls, calls)
++						if fault == "callback" || fault == "marker write" {
++							assert.Zero(t, replay.signer.confirmedCalls, "retry uses durably attributed payout")
++						}
+ 						assert.True(t, settle(t, replay.scheme, payload).Success)
+ 						assert.Equal(t, wantCalls, calls)
+ 						assert.Len(t, fixture.submits, 1)
+@@ -527,20 +604,242 @@ func TestBatchSettlementSeal(t *testing.T) {
+ 							return nil
+ 						}})
+ 						response := settle(t, replay.scheme, payload)
+-						if intent == CloseIntentRefund && !recorded {
+-							assert.False(t, response.Success)
+-							assert.Equal(t, x402.ErrSettlementPending, response.ErrorReason)
+-							assert.Contains(t, response.ErrorMessage, "paidToReceiver")
+-							assert.Equal(t, 0, calls)
+-						} else {
+-							assert.True(t, response.Success)
+-							wantCalls := 1
+-							if recorded {
+-								wantCalls = 0
++						assert.True(t, response.Success)
++						wantCalls := 1
++						if recorded {
++							wantCalls = 0
++						}
++						assert.Equal(t, wantCalls, calls)
++						assert.Equal(t, signature, response.Transaction)
++						assert.Empty(t, replay.submits)
++					})
++				}
++
++				t.Run("reattributes unrecorded legacy payout fields", func(t *testing.T) {
++					store := NewInMemoryPendingSettlementStore()
++					fixture := facilitator(t, channel, true, Config{PendingSettlementStore: store})
++					old := settle(t, fixture.scheme, payload)
++					require.True(t, old.Success)
++					old.Extra["paidToReceiver"] = "9999"
++					if intent == CloseIntentSeal {
++						old.Amount = "9999"
++					}
++					encoded, err := json.Marshal(old)
++					require.NoError(t, err)
++					require.NoError(t, store.Set(context.Background(), key+":result", string(encoded)))
++					calls := 0
++					replay := restarted(t, Config{PendingSettlementStore: store, OnDistributionConfirmed: func(_ context.Context, response *x402.SettleResponse, _ types.PaymentRequirements) error {
++						calls++
++						assert.Equal(t, "2500", response.Amount)
++						return nil
++					}})
++					response := settle(t, replay.scheme, payload)
++					assert.True(t, response.Success)
++					assert.Equal(t, outwardAmount, response.Amount)
++					assert.Equal(t, "2500", response.Extra["paidToReceiver"])
++					assert.Equal(t, 1, calls)
++					assert.Empty(t, replay.submits)
++				})
++
++				t.Run("refreshes a replay loaded before accounting completes", func(t *testing.T) {
++					inner := NewInMemoryPendingSettlementStore()
++					seed := facilitator(t, channel, true, Config{PendingSettlementStore: inner})
++					old := settle(t, seed.scheme, payload)
++					require.True(t, old.Success)
++					old.Extra["paidToReceiver"] = "9999"
++					if intent == CloseIntentSeal {
++						old.Amount = "9999"
++					}
++					encoded, err := json.Marshal(old)
++					require.NoError(t, err)
++					require.NoError(t, inner.Set(context.Background(), key+":result", string(encoded)))
++					store := &closeResultReadBarrierStore{PendingSettlementStore: inner, key: key + ":result", loaded: make(chan struct{}), release: make(chan struct{}, 1)}
++					defer close(store.release)
++					var calls atomic.Int32
++					cfg := Config{PendingSettlementStore: store, OnDistributionConfirmed: func(context.Context, *x402.SettleResponse, types.PaymentRequirements) error { calls.Add(1); return nil }}
++					delayed, owner := restarted(t, cfg), restarted(t, cfg)
++					ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
++					defer cancel()
++					type outcome struct {
++						response *x402.SettleResponse
++						err      error
++					}
++					done := make(chan outcome, 1)
++					payment := types.PaymentPayload{X402Version: 2, Accepted: requirements, Payload: asMap(t, payload)}
++					go func() {
++						response, err := delayed.scheme.Settle(ctx, payment, requirements, nil)
++						done <- outcome{response, err}
++					}()
++					select {
++					case <-store.loaded:
++					case <-ctx.Done():
++						t.Fatal("replay never loaded the old result")
++					}
++					completed := settle(t, owner.scheme, payload)
++					require.True(t, completed.Success)
++					require.Equal(t, "2500", completed.Extra["paidToReceiver"])
++					store.release <- struct{}{}
++					select {
++					case result := <-done:
++						require.NoError(t, result.err)
++						require.True(t, result.response.Success)
++						assert.Equal(t, completed, result.response, "already-recorded replay must return the authoritative result")
++					case <-ctx.Done():
++						t.Fatal("delayed replay did not finish")
++					}
++					assert.Equal(t, int32(1), calls.Load())
++					assert.Empty(t, delayed.submits)
++					assert.Empty(t, owner.submits)
++				})
++
++				t.Run("late preliminary write preserves the attributed result", func(t *testing.T) {
++					store := &closeInitialWriteBarrierStore{PendingSettlementStore: NewInMemoryPendingSettlementStore(), key: key, reached: make(chan struct{}), release: make(chan struct{}, 1)}
++					defer close(store.release)
++					var calls atomic.Int32
++					cfg := Config{PendingSettlementStore: store, OnDistributionConfirmed: func(context.Context, *x402.SettleResponse, types.PaymentRequirements) error { calls.Add(1); return nil }}
++					owner, late := facilitator(t, channel, true, cfg), facilitator(t, channel, true, cfg)
++					ownerReady, allowOwner := make(chan struct{}), make(chan struct{}, 1)
++					defer close(allowOwner)
++					submit := owner.scheme.hooks.submitRedemption
++					owner.scheme.hooks.submitRedemption = func(ctx context.Context, fee, net string, instructions []solana.Instruction, key, payer string) (durableResult, error) {
++						close(ownerReady)
++						select {
++						case <-allowOwner:
++						case <-ctx.Done():
++							return durableResult{}, ctx.Err()
++						}
++						return submit(ctx, fee, net, instructions, key, payer)
++					}
++					ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
++					defer cancel()
++					payment := types.PaymentPayload{X402Version: 2, Accepted: requirements, Payload: asMap(t, payload)}
++					type outcome struct {
++						response *x402.SettleResponse
++						err      error
++					}
++					ownerDone, lateDone := make(chan outcome, 1), make(chan outcome, 1)
++					go func() {
++						response, err := owner.scheme.Settle(ctx, payment, requirements, nil)
++						ownerDone <- outcome{response, err}
++					}()
++					select {
++					case <-ownerReady:
++					case <-ctx.Done():
++						t.Fatal("owner never captured the channel snapshot")
++					}
++					// Both callers pass the empty-result lookup before either completes.
++					// Submission/recovery hooks return the same broadcast signature.
++					go func() {
++						response, err := late.scheme.Settle(context.WithValue(ctx, store, true), payment, requirements, nil)
++						lateDone <- outcome{response, err}
++					}()
++					select {
++					case <-store.reached:
++					case <-ctx.Done():
++						t.Fatal("late caller never reached its preliminary write")
++					}
++					allowOwner <- struct{}{}
++					select {
++					case result := <-ownerDone:
++						require.NoError(t, result.err)
++						require.True(t, result.response.Success)
++						require.Equal(t, "2500", result.response.Extra["paidToReceiver"])
++					case <-ctx.Done():
++						t.Fatal("owner did not finish accounting")
++					}
++					store.release <- struct{}{}
++					select {
++					case result := <-lateDone:
++						require.NoError(t, result.err)
++						require.True(t, result.response.Success)
++						assert.Equal(t, outwardAmount, result.response.Amount)
++						assert.Equal(t, "2500", result.response.Extra["paidToReceiver"])
++					case <-ctx.Done():
++						t.Fatal("late caller did not finish")
++					}
++					encoded, exists, err := store.Get(ctx, key+":result")
++					require.NoError(t, err)
++					require.True(t, exists)
++					var saved x402.SettleResponse
++					require.NoError(t, json.Unmarshal([]byte(encoded), &saved))
++					assert.Equal(t, "2500", saved.Extra["paidToReceiver"])
++					assert.Equal(t, int32(1), calls.Load())
++					assert.Len(t, owner.submits, 1)
++					assert.Len(t, late.submits, 1)
++				})
++
++				for _, fault := range []string{"metadata unavailable", "metadata error", "missing recipient balance", "ambiguous payout", "reader absent", "dependency absent", "payout write", "result write", "malformed payout"} {
++					t.Run("pending attribution after "+fault, func(t *testing.T) {
++						store := &closeAccountingFaultStore{PendingSettlementStore: NewInMemoryPendingSettlementStore()}
++						if fault == "payout write" {
++							store.writeKey = key + ":payout"
++						}
++						if fault == "result write" {
++							store.writeKey = key + ":result"
++						}
++						if fault == "malformed payout" {
++							require.NoError(t, store.Set(context.Background(), key+":payout", "invalid"))
++						}
++						calls := 0
++						cfg := Config{PendingSettlementStore: store, OnDistributionConfirmed: func(_ context.Context, response *x402.SettleResponse, _ types.PaymentRequirements) error {
++							calls++
++							assert.Equal(t, "2500", response.Amount)
++							return nil
++						}}
++						fixture := facilitator(t, channel, true, cfg)
++						switch fault {
++						case "metadata unavailable":
++							fixture.signer.confirmed = nil
++						case "metadata error":
++							fixture.signer.confirmed = func(context.Context, solana.Signature, string) (*svm.FacilitatorConfirmedTransaction, error) {
++								return fixture.transaction, errors.New("metadata read failed")
++							}
++						case "missing recipient balance":
++							fixture.transaction.Meta.PreTokenBalances = []svm.FacilitatorTokenBalance{}
++							fixture.transaction.Meta.PostTokenBalances = []svm.FacilitatorTokenBalance{}
++						case "reader absent":
++							fixture.scheme.raw = newScriptedSigner(t, 1)
++						case "dependency absent", "ambiguous payout":
++							fixture.scheme.hooks.sealDependencies = func() SealDependencies {
++								deps := fixture.scheme.defaultSealDependencies()
++								deps.NowSeconds = func() int64 { return sealNow }
++								deps.ReadDistributionAmount = nil
++								if fault == "ambiguous payout" {
++									deps.ReadDistributionAmount = func(context.Context, string, string, []PreparedDistribution, types.PaymentRequirements) (uint64, error) {
++										return 0, &PayoutAttributionAmbiguousError{}
++									}
++								}
++								return deps
+ 							}
+-							assert.Equal(t, wantCalls, calls)
+ 						}
++						response := settle(t, fixture.scheme, payload)
++						require.False(t, response.Success)
++						assert.Equal(t, x402.ErrSettlementPending, response.ErrorReason)
+ 						assert.Equal(t, signature, response.Transaction)
++						assert.Zero(t, calls)
++						_, saved, err := store.Get(context.Background(), key+":close")
++						require.NoError(t, err)
++						assert.True(t, saved, "preserve preliminary close before attempting attribution")
++						_, recorded, err := store.Get(context.Background(), key+":recorded")
++						require.NoError(t, err)
++						assert.False(t, recorded)
++						if fault == "malformed payout" {
++							assert.Zero(t, fixture.signer.confirmedCalls, "invalid cache cannot fall back to a snapshot or RPC")
++							require.NoError(t, store.Delete(context.Background(), key+":payout"))
++						}
++						replay := restarted(t, cfg)
++						if fault == "result write" {
++							replay.signer.confirmed = nil
++						}
++						response = settle(t, replay.scheme, payload)
++						require.True(t, response.Success)
++						assert.Equal(t, outwardAmount, response.Amount)
++						assert.Equal(t, "2500", response.Extra["paidToReceiver"])
++						assert.Equal(t, 1, calls)
++						if fault == "result write" {
++							assert.Zero(t, replay.signer.confirmedCalls)
++						}
++						assert.Len(t, fixture.submits, 1)
+ 						assert.Empty(t, replay.submits)
+ 					})
+ 				}

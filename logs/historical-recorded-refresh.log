@@ -1,0 +1,52 @@
+=== RUN   TestBatchSettlementSeal
+=== RUN   TestBatchSettlementSeal/close_accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/refreshes_a_replay_loaded_before_accounting_completes
+    seal_test.go:686: 
+        	Error Trace:	<validation-directory>:686
+        	Error:      	Not equal: 
+        	            	expected: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"HDdKg45beUUdDEndv9V1rmBqWo6KuQ8YWuXYCgFkpLQc", Transaction:"97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"2500", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}{"channelState":map[string]interface {}{"balance":"10000", "channelId":"4NTxVWxT5xXdYfRpGofGWrSf5e5NdsWpbTdWwqnfQt8f", "totalClaimed":"3000", "withdrawRequestedAt":0}, "paidToReceiver":"2500"}}
+        	            	actual  : &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"HDdKg45beUUdDEndv9V1rmBqWo6KuQ8YWuXYCgFkpLQc", Transaction:"97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"9999", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}{"channelState":map[string]interface {}{"balance":"10000", "channelId":"4NTxVWxT5xXdYfRpGofGWrSf5e5NdsWpbTdWwqnfQt8f", "totalClaimed":"3000", "withdrawRequestedAt":0}, "paidToReceiver":"9999"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -7,3 +7,3 @@
+        	            	  Network: (x402.Network) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        	            	- Amount: (string) (len=4) "2500",
+        	            	+ Amount: (string) (len=4) "9999",
+        	            	  Extensions: (map[string]interface {}) <nil>,
+        	            	@@ -17,3 +17,3 @@
+        	            	   },
+        	            	-  (string) (len=14) "paidToReceiver": (string) (len=4) "2500"
+        	            	+  (string) (len=14) "paidToReceiver": (string) (len=4) "9999"
+        	            	  }
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/refreshes_a_replay_loaded_before_accounting_completes
+        	Messages:   	already-recorded replay must return the authoritative result
+=== RUN   TestBatchSettlementSeal/close_accounting/refund
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/refreshes_a_replay_loaded_before_accounting_completes
+    seal_test.go:686: 
+        	Error Trace:	<validation-directory>:686
+        	Error:      	Not equal: 
+        	            	expected: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"HDdKg45beUUdDEndv9V1rmBqWo6KuQ8YWuXYCgFkpLQc", Transaction:"97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"7000", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}{"channelState":map[string]interface {}{"balance":"10000", "channelId":"4NTxVWxT5xXdYfRpGofGWrSf5e5NdsWpbTdWwqnfQt8f", "totalClaimed":"3000", "withdrawRequestedAt":0}, "paidToReceiver":"2500"}}
+        	            	actual  : &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"HDdKg45beUUdDEndv9V1rmBqWo6KuQ8YWuXYCgFkpLQc", Transaction:"97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"7000", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}{"channelState":map[string]interface {}{"balance":"10000", "channelId":"4NTxVWxT5xXdYfRpGofGWrSf5e5NdsWpbTdWwqnfQt8f", "totalClaimed":"3000", "withdrawRequestedAt":0}, "paidToReceiver":"9999"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -17,3 +17,3 @@
+        	            	   },
+        	            	-  (string) (len=14) "paidToReceiver": (string) (len=4) "2500"
+        	            	+  (string) (len=14) "paidToReceiver": (string) (len=4) "9999"
+        	            	  }
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/refreshes_a_replay_loaded_before_accounting_completes
+        	Messages:   	already-recorded replay must return the authoritative result
+--- FAIL: TestBatchSettlementSeal (0.01s)
+    --- FAIL: TestBatchSettlementSeal/close_accounting (0.01s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/seal (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/refreshes_a_replay_loaded_before_accounting_completes (0.00s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/refund (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/refreshes_a_replay_loaded_before_accounting_completes (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.576s
+FAIL

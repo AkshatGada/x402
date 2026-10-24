@@ -1,0 +1,39 @@
+=== RUN   TestBatchSettlementSeal
+=== RUN   TestBatchSettlementSeal/close_accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/late_preliminary_write_preserves_the_attributed_result
+    seal_test.go:756: 
+        	Error Trace:	<validation-directory>:756
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/late_preliminary_write_preserves_the_attributed_result
+    seal_test.go:765: 
+        	Error Trace:	<validation-directory>:765
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/late_preliminary_write_preserves_the_attributed_result
+=== RUN   TestBatchSettlementSeal/close_accounting/refund
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/late_preliminary_write_preserves_the_attributed_result
+    seal_test.go:756: 
+        	Error Trace:	<validation-directory>:756
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/late_preliminary_write_preserves_the_attributed_result
+    seal_test.go:765: 
+        	Error Trace:	<validation-directory>:765
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/late_preliminary_write_preserves_the_attributed_result
+--- FAIL: TestBatchSettlementSeal (0.01s)
+    --- FAIL: TestBatchSettlementSeal/close_accounting (0.01s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/seal (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/late_preliminary_write_preserves_the_attributed_result (0.00s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/refund (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/late_preliminary_write_preserves_the_attributed_result (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.717s
+FAIL

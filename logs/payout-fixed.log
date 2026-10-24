@@ -1,0 +1,7 @@
+Running payout-fixed with implementation ec95e3d91ba384908445a889319d3129d1fdfba8
+=== RUN   TestSweepRefundPayoutAttribution
+=== RUN   TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep
+--- PASS: TestSweepRefundPayoutAttribution (0.01s)
+    --- PASS: TestSweepRefundPayoutAttribution/accounts_only_the_refund_payout_after_an_intervening_sweep (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.570s

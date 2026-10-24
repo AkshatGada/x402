@@ -1,0 +1,4 @@
+=== RUN   TestConcurrentCloseInitialResultWrite
+--- PASS: TestConcurrentCloseInitialResultWrite (0.01s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.561s

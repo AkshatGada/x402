@@ -1,0 +1,8 @@
+=== RUN   TestCloseRecordedSnapshotReplay
+=== RUN   TestCloseRecordedSnapshotReplay/seal
+=== RUN   TestCloseRecordedSnapshotReplay/refund
+--- PASS: TestCloseRecordedSnapshotReplay (0.00s)
+    --- PASS: TestCloseRecordedSnapshotReplay/seal (0.00s)
+    --- PASS: TestCloseRecordedSnapshotReplay/refund (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.546s

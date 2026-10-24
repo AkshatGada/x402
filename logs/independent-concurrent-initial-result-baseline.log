@@ -1,0 +1,19 @@
+=== RUN   TestConcurrentCloseInitialResultWrite
+    independent_concurrent_initial_result_test.go:273: 
+        	Error Trace:	<validation-directory>:273
+        	Error:      	Not equal: 
+        	            	expected: string("2000")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestConcurrentCloseInitialResultWrite
+        	Messages:   	a late initial write must not discard transaction-attributed payout
+    independent_concurrent_initial_result_test.go:286: 
+        	Error Trace:	<validation-directory>:286
+        	Error:      	Not equal: 
+        	            	expected: string("2000")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestConcurrentCloseInitialResultWrite
+        	Messages:   	recorded result must preserve verified payout
+--- FAIL: TestConcurrentCloseInitialResultWrite (0.01s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.550s
+FAIL
