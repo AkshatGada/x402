@@ -1,0 +1,311 @@
+{
+  "issue": "https://github.com/x402-foundation/x402/issues/3919",
+  "upstream_revision": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "implementation_commit": "4c444151ba0defa92c66d8fcab378d4484c2ea08",
+  "implementation_branch": "codex/go-svm-close-accounting",
+  "evidence_branch": "codex/evidence-go-svm-close-accounting",
+  "test_kind": "synthetic local Go scheme lifecycle, mocked submission and confirmation; no RPC or live transactions",
+  "baseline": {
+    "existing_close_controls_passed": 7,
+    "accounting_passed": 4,
+    "accounting_failed": 18,
+    "cases": [
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/accepts_only_a_well-formed_seal_payload"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/applies_the_final_voucher_with_settle_and_seal_and_a_sealed_distribute_in_one_transaction"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/seals_at_the_current_watermark_without_a_precompile_when_the_voucher_equals_settled"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/refuses_channels_that_are_not_closing_or_whose_grace_period_has_elapsed"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/authenticates_the_server_through_the_receiver_authorizer_bound_at_deposit"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/refunds_an_open_channel_cooperatively_with_the_server-authorized_voucher"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/rejects_saved-result_replay_after_close_authorization_expires"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_callback"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_read"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_write"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/nil_callback_leaves_result_available_for_later_accounting"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=true"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=false"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=true"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/rejects_saved-result_replay_after_close_authorization_expires"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_callback"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_read"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_write"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/nil_callback_leaves_result_available_for_later_accounting"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=true"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=false"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=true"
+      },
+      {
+        "result": "FAIL",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/rejects_a_claim_against_a_closing_channel_with_the_dedicated_code"
+      }
+    ]
+  },
+  "fixed": {
+    "existing_close_controls_passed": 7,
+    "accounting_passed": 22,
+    "accounting_failed": 0,
+    "cases": [
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/accepts_only_a_well-formed_seal_payload"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/applies_the_final_voucher_with_settle_and_seal_and_a_sealed_distribute_in_one_transaction"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/seals_at_the_current_watermark_without_a_precompile_when_the_voucher_equals_settled"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/refuses_channels_that_are_not_closing_or_whose_grace_period_has_elapsed"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/authenticates_the_server_through_the_receiver_authorizer_bound_at_deposit"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/refunds_an_open_channel_cooperatively_with_the_server-authorized_voucher"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/rejects_saved-result_replay_after_close_authorization_expires"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_callback"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_read"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_write"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/nil_callback_leaves_result_available_for_later_accounting"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=true"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=true"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/rejects_saved-result_replay_after_close_authorization_expires"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_callback"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_read"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_write"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/nil_callback_leaves_result_available_for_later_accounting"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=true"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=false"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=true"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout"
+      },
+      {
+        "result": "PASS",
+        "name": "TestBatchSettlementSeal/rejects_a_claim_against_a_closing_channel_with_the_dedicated_code"
+      }
+    ]
+  },
+  "checks": {
+    "batch_settlement_race_coverage": "4 packages passed",
+    "golangci_lint_2_7_2": "0 issues",
+    "scoped_build": "passed",
+    "goimports": "clean",
+    "git_diff_check": "clean"
+  },
+  "probe": {
+    "seal": {
+      "merchant_payout": "2500",
+      "outward_amount": "2500",
+      "baseline_callbacks": 0,
+      "fixed_callbacks": 1,
+      "submissions_baseline_and_fixed": 1
+    },
+    "refund": {
+      "merchant_payout": "2500",
+      "outward_amount": "7000",
+      "baseline_callbacks": 0,
+      "fixed_callbacks": 1,
+      "submissions_baseline_and_fixed": 1
+    }
+  },
+  "limitations": [
+    "Recovery starts after :result is saved; pre-existing pre-result crash/storage window remains.",
+    "Ledger must atomically deduplicate by network and transaction; same-process coalescing requires the same store object.",
+    "Unrecorded legacy refund without paidToReceiver needs external reconciliation.",
+    "Replay requires valid close authentication and recoverable receiver binding."
+  ],
+  "expired_authorization_replay": {
+    "intents": [
+      "seal",
+      "refund"
+    ],
+    "boundary": "now equals validBefore",
+    "callback_calls": 0,
+    "extra_submissions": 0,
+    "saved_result_unchanged": true,
+    "recorded_marker_written": false
+  },
+  "review": {
+    "ai_assisted_implementation": true,
+    "independent_ai_reviews": 2,
+    "introduced_defects_reported": 0,
+    "second_reviewer_independently_reran_accounting_cases": 20,
+    "expired_authorization_cases_added_after_review": 2,
+    "all_22_cases_rerun_after_addition": true,
+    "second_reviewer_separate_raw_log": false
+  },
+  "scope": {
+    "live_rpc": false,
+    "live_transactions": false,
+    "real_funds": false,
+    "full_sdk_test_suite_run": false,
+    "max_parallel_jobs": 2
+  },
+  "sanitization": "Local checkout/tool paths replaced with placeholders; test results and diagnostics retained."
+}

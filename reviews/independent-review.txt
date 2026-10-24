@@ -1,0 +1,23 @@
+Independent second AI audit of x402 #3919 local fix
+
+Reviewer: a second AI reviewer, independent of the implementation and earlier design/diff audit.
+Verdict: no actionable introduced defects found; suitable for the stated scope.
+
+Reviewed: complete tracked/untracked diff, surrounding Go and TypeScript parity code, callback and marker recovery, merchant versus payer amounts, authentication before saved-result replay, legacy results, no-hook compatibility, same-store coalescing and canceled waiters.
+
+Independent checks:
+- sh <evidence>/checks.sh fixed
+- TestBatchSettlementSeal passed, including 20 accounting cases and existing close controls.
+- git diff --check passed.
+- Reviewer reported no source edits. The independent rerun passed without a separately saved raw output log; original recorded baseline/fix logs remain available.
+
+Material limits confirmed:
+- Recovery begins after :result persistence; pre-existing earlier crash window remains.
+- Ledger callbacks must atomically deduplicate by network and transaction.
+- Coalescing is process-local and depends on the same store object.
+- Replay requires valid authentication and recoverable receiver binding.
+- Legacy refunds without paidToReceiver need reconciliation.
+
+Optional coverage suggestion (not a defect): add explicit invalid/expired-authentication replay rejection against an already-saved result. Current code authenticates before reading the saved result. No additional source changes were made for this audit.
+
+Follow-up completed after review: expired-authorization saved-result replay tests were added for seal and refund. Both pass on baseline and fixed code; the updated fixed suite passes all 22 accounting cases.

@@ -1,0 +1,19 @@
+Independent audit: first independent AI reviewer
+
+Design audit completed before production edits. Static implementation review and follow-up review completed after edits. first independent AI reviewer did not execute tests; implementation assistant executed the recorded checks.
+
+Verdict: legitimate accounting hook gap, GO for narrow parity with merged TypeScript #3606; no blocking production defect found.
+
+Required and implemented:
+- Preserve merchant/payer Amount distinction; save string paidToReceiver.
+- Persist close result before callback; save recorded marker only after callback success.
+- Retry callback/marker failures from saved result with original signature and no replacement transaction.
+- Nil callback remains successful/unmarked; legacy seal may use Amount; legacy refund must never use payer refund as merchant payout.
+- Same-store process-local coalescing, canceled waiters independent of owner, atomic transaction deduplication required in operator ledger.
+- Preserve authentication before cached-result replay.
+
+Follow-up corrections implemented and approved:
+- Deterministic noncanceled waiter test covers owner's success and failure, shared signature/status/amount, and later retry. Uses channels and an instrumented context instead of sleep timing.
+- Scope struct-copy documentation to cooperative closes; maps remain shared/read-only.
+
+Explicitly excluded: pre-result crash-window redesign, cross-process exactly-once guarantees, unilateral request_close callbacks, map mutation isolation, and any change to prior PR attribution.

@@ -1,0 +1,204 @@
+=== RUN   TestBatchSettlementSeal
+=== RUN   TestBatchSettlementSeal/accepts_only_a_well-formed_seal_payload
+=== RUN   TestBatchSettlementSeal/applies_the_final_voucher_with_settle_and_seal_and_a_sealed_distribute_in_one_transaction
+=== RUN   TestBatchSettlementSeal/seals_at_the_current_watermark_without_a_precompile_when_the_voucher_equals_settled
+=== RUN   TestBatchSettlementSeal/refuses_channels_that_are_not_closing_or_whose_grace_period_has_elapsed
+=== RUN   TestBatchSettlementSeal/authenticates_the_server_through_the_receiver_authorizer_bound_at_deposit
+=== RUN   TestBatchSettlementSeal/refunds_an_open_channel_cooperatively_with_the_server-authorized_voucher
+=== RUN   TestBatchSettlementSeal/close_accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:410: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:410
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:411: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:411
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:414: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:414
+        	Error:      	Should be true
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:419: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:419
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/rejects_saved-result_replay_after_close_authorization_expires
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/recovers_after_callback
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/recovers_after_callback
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_read
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_read
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_write
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_write
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/nil_callback_leaves_result_available_for_later_accounting
+    seal_test.go:504: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:504
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/nil_callback_leaves_result_available_for_later_accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=false
+    seal_test.go:541: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:541
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=false
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=true
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=false
+    seal_test.go:586: owner never entered accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=true
+    seal_test.go:586: owner never entered accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout
+    seal_test.go:654: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:654
+        	Error:      	Not equal: 
+        	            	expected: string("0")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout
+    seal_test.go:660: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:660
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout
+=== RUN   TestBatchSettlementSeal/close_accounting/refund
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:410: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:410
+        	Error:      	Not equal: 
+        	            	expected: string("2500")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:411: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:411
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:414: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:414
+        	Error:      	Should be true
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay
+    seal_test.go:419: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:419
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/rejects_saved-result_replay_after_close_authorization_expires
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/recovers_after_callback
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/recovers_after_callback
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_read
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_read
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_write
+    seal_test.go:472: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:472
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_write
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/nil_callback_leaves_result_available_for_later_accounting
+    seal_test.go:504: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:504
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/nil_callback_leaves_result_available_for_later_accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false
+    seal_test.go:531: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:531
+        	Error:      	Should be false
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false
+    seal_test.go:532: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:532
+        	Error:      	Not equal: 
+        	            	expected: "settlement_pending"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-settlement_pending
+        	            	+
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false
+    seal_test.go:533: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:533
+        	Error:      	"" does not contain "paidToReceiver"
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=true
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=false
+    seal_test.go:586: owner never entered accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=true
+    seal_test.go:586: owner never entered accounting
+=== RUN   TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout
+    seal_test.go:654: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:654
+        	Error:      	Not equal: 
+        	            	expected: string("0")
+        	            	actual  : <nil>(<nil>)
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout
+    seal_test.go:660: 
+        	Error Trace:	<implementation>/go/mechanisms/svm/batch-settlement/facilitator/seal_test.go:660
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout
+=== RUN   TestBatchSettlementSeal/rejects_a_claim_against_a_closing_channel_with_the_dedicated_code
+--- FAIL: TestBatchSettlementSeal (20.03s)
+    --- PASS: TestBatchSettlementSeal/accepts_only_a_well-formed_seal_payload (0.00s)
+    --- PASS: TestBatchSettlementSeal/applies_the_final_voucher_with_settle_and_seal_and_a_sealed_distribute_in_one_transaction (0.00s)
+    --- PASS: TestBatchSettlementSeal/seals_at_the_current_watermark_without_a_precompile_when_the_voucher_equals_settled (0.00s)
+    --- PASS: TestBatchSettlementSeal/refuses_channels_that_are_not_closing_or_whose_grace_period_has_elapsed (0.00s)
+    --- PASS: TestBatchSettlementSeal/authenticates_the_server_through_the_receiver_authorizer_bound_at_deposit (0.00s)
+    --- PASS: TestBatchSettlementSeal/refunds_an_open_channel_cooperatively_with_the_server-authorized_voucher (0.00s)
+    --- FAIL: TestBatchSettlementSeal/close_accounting (20.02s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/seal (10.01s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/records_merchant_payout_and_skips_recorded_replay (0.00s)
+            --- PASS: TestBatchSettlementSeal/close_accounting/seal/rejects_saved-result_replay_after_close_authorization_expires (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/recovers_after_callback (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_read (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/recovers_after_marker_write (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/nil_callback_leaves_result_available_for_later_accounting (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=false (0.00s)
+            --- PASS: TestBatchSettlementSeal/close_accounting/seal/legacy_result_recorded=true (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=false (5.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/same-store_accounting_coalesces_owner_failure=true (5.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/seal/records_a_zero_merchant_payout (0.00s)
+        --- FAIL: TestBatchSettlementSeal/close_accounting/refund (10.01s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/records_merchant_payout_and_skips_recorded_replay (0.00s)
+            --- PASS: TestBatchSettlementSeal/close_accounting/refund/rejects_saved-result_replay_after_close_authorization_expires (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/recovers_after_callback (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_read (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/recovers_after_marker_write (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/nil_callback_leaves_result_available_for_later_accounting (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=false (0.00s)
+            --- PASS: TestBatchSettlementSeal/close_accounting/refund/legacy_result_recorded=true (0.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=false (5.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/same-store_accounting_coalesces_owner_failure=true (5.00s)
+            --- FAIL: TestBatchSettlementSeal/close_accounting/refund/records_a_zero_merchant_payout (0.00s)
+    --- PASS: TestBatchSettlementSeal/rejects_a_claim_against_a_closing_channel_with_the_dedicated_code (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	20.574s
+FAIL

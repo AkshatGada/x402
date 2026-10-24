@@ -1,0 +1,27 @@
+=== RUN   TestInvestigateGoCloseAccounting
+=== RUN   TestInvestigateGoCloseAccounting/seal
+    next_contribution_probe_test.go:210: first close: intent=seal response_amount=2500 merchant_payout=2500 callbacks=0 broadcasts=1
+    next_contribution_probe_test.go:215: durable replay: intent=seal response_amount=2500 callbacks=0 broadcasts=1
+    next_contribution_probe_test.go:216: 
+        	Error Trace:	<upstream>/go/mechanisms/svm/batch-settlement/facilitator/next_contribution_probe_test.go:216
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestInvestigateGoCloseAccounting/seal
+        	Messages:   	a confirmed merchant payout should reach the configured accounting callback
+=== RUN   TestInvestigateGoCloseAccounting/refund
+    next_contribution_probe_test.go:210: first close: intent=refund response_amount=7000 merchant_payout=2500 callbacks=0 broadcasts=1
+    next_contribution_probe_test.go:215: durable replay: intent=refund response_amount=7000 callbacks=0 broadcasts=1
+    next_contribution_probe_test.go:216: 
+        	Error Trace:	<upstream>/go/mechanisms/svm/batch-settlement/facilitator/next_contribution_probe_test.go:216
+        	Error:      	Not equal: 
+        	            	expected: 1
+        	            	actual  : 0
+        	Test:       	TestInvestigateGoCloseAccounting/refund
+        	Messages:   	a confirmed merchant payout should reach the configured accounting callback
+--- FAIL: TestInvestigateGoCloseAccounting (0.00s)
+    --- FAIL: TestInvestigateGoCloseAccounting/seal (0.00s)
+    --- FAIL: TestInvestigateGoCloseAccounting/refund (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.691s
+FAIL

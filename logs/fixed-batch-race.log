@@ -1,0 +1,4 @@
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement	1.592s	coverage: 41.9% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/client	2.193s	coverage: 77.2% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	9.346s	coverage: 76.3% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	2.053s	coverage: 79.4% of statements

@@ -1,0 +1,12 @@
+=== RUN   TestInvestigateGoCloseAccounting
+=== RUN   TestInvestigateGoCloseAccounting/seal
+    close_accounting_probe_test.go:210: first close: intent=seal response_amount=2500 merchant_payout=2500 callbacks=1 broadcasts=1
+    close_accounting_probe_test.go:215: durable replay: intent=seal response_amount=2500 callbacks=1 broadcasts=1
+=== RUN   TestInvestigateGoCloseAccounting/refund
+    close_accounting_probe_test.go:210: first close: intent=refund response_amount=7000 merchant_payout=2500 callbacks=1 broadcasts=1
+    close_accounting_probe_test.go:215: durable replay: intent=refund response_amount=7000 callbacks=1 broadcasts=1
+--- PASS: TestInvestigateGoCloseAccounting (0.01s)
+    --- PASS: TestInvestigateGoCloseAccounting/seal (0.00s)
+    --- PASS: TestInvestigateGoCloseAccounting/refund (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	0.550s
