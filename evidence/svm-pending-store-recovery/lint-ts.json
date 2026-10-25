@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/exact/facilitator/scheme.ts",
+    "test/unit/pendingSettlement.test.ts"
+  ],
+  "cwd": "<fix-checkout>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 1.61
+}

@@ -1,0 +1,35 @@
+Independent final audit — SVM pending-store read recovery
+Date: 2026-10-25
+Reviewer: fresh independent final-review subagent, separate from the implementer and earlier audit. No production/test edits, commits, pushes, PRs, or external messages performed.
+Checkout: <fix-checkout>
+Baseline: 4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54
+
+Disposition: no blocking production correctness findings. One low-severity evidence wording finding was corrected and rechecked before this report.
+
+Scope and reasoning
+- Read the complete six-file tracked diff, both untracked SDK changelog fragments, surrounding settlement/reconciliation code, cache implementations, test fixtures, contributing skill, root CONTRIBUTING.md and Go CONTRIBUTING.md. The root guide's typescript/CONTRIBUTING.md link is absent in this checkout; this is pre-existing.
+- Go exact returns the original Get error before inspecting hit, deleting pending data, acquiring a new dedup entry, verification, signing, sending or confirmation. A partial signature/hit plus error cannot be consumed. Existing cache state is not touched by this error branch.
+- Go upto helper returns (nil, false, err) on Get failure, and BOTH deposit and claim public paths check err != nil || hit. Thus an infrastructure error cannot accidentally fall through into channel validation/new settlement, and no store delete/write happens on this error path. Existing preliminary payload/authentication checks retain their ordering.
+- TS acquires/checks dedup state synchronously before its first await. The catch encloses only pendingStore.get, deletes only when this invocation acquired the entry (isCachedDuplicate=false), and rethrows the same value. Pending-record deletion and reconciliation remain outside the catch. The change therefore repairs a failed initial lookup without clearing the existing owner's entry when a duplicate lookup fails. Existing TTL expiration/generation ownership limitations are expressly outside this bounded patch.
+- Tests meaningfully distinguish the baseline bug: Go checks original error, nil result, store preservation and recovery; exact also counts simulation/sign/send/confirm, and an existing pending-lock test verifies no additional send. Upto uses public Settle for both deposit and claim and both miss/error and partial-hit/error. TS first-attempt failure followed by successful retry fails on baseline. The pending-signature and deferred A/B/C concurrent-owner cases are controls, correctly documented as passing on baseline; the latter would reject an unconditional cache-delete fix. These mocked tests establish control flow and recovery, not a live-chain double charge.
+
+Independently executed, sequentially coordinated with parent
+1. audit-fix-ts: pendingSettlement.test.ts, 15/15 pass, exit 0.
+2. audit-baseline-ts: identical test file against pinned production sources, 1 fail/14 pass, exit 1. Failure is fresh retry success=false at line 131, consistent with the leaked dedup entry.
+3. audit-fix-go: go test -count=1 -v -run PendingStoreReadError for exact/upto facilitator packages, all seven leaf cases pass, exit 0.
+4. audit-baseline-go: same test selection and byte-identical tests against pinned production files, all seven leaf cases fail, exit 1. Failures establish swallowed errors/partial-result consumption and state mutation, rather than an environment setup failure.
+5. audit-race-go: go test -race -count=1 for both complete exact/upto facilitator packages, both pass, exit 0.
+Exact commands, cwd, duration and status are in audit-*.json, with raw output in matching .log files. Used existing runner/cached dependencies; Go mock RPC tests were approved for loopback servers. No dependency installation or live RPC activity was required.
+6. Independently executed hash/assertion checks: checkout HEAD equals pinned revision; all three baseline production files byte-match git show of that revision; all three fixed production hashes match source-manifest.json; all three test files are byte-identical across baseline/fix and match recorded hashes; current git diff matches both implementation.patch and its recorded hash; both changelog evidence copies match the untracked files; baseline/fix tsc diagnostic logs are byte-identical. git diff --check passed.
+
+Reviewed evidence only (not independently rerun in this final audit)
+- Full TS SVM unit suite: 54 files/1,030 tests pass.
+- All 15 tested Go SVM packages pass (generated package has no tests).
+- Scoped Go lint/build, changed TS source/test lint, TS tsup build/declaration mirroring and formatting metadata.
+- TS tsc --noEmit has five diagnostics and exit 2 on both baseline/fix. Their log contents are identical; full tsc success must not be claimed. Two errors concern signatureVerification.ts types and three concern index.test.ts. This audit verified equality, not a fresh tsc execution.
+
+Resolved evidence finding (low severity; no production fix needed)
+README.txt originally said no private keys were used. Existing fixtures generate ephemeral keys and sign synthetic transactions (exact pending_settlement_test.go:114-161; upto utils_test.go:54-58 and 548-558), so the absolute statement was inaccurate. Parent changed it to state only ephemeral test keys were used and no production credentials, real-user keys or funded wallets were used. I reread the corrected text. The audit paragraph also now distinguishes earlier review-only audits from these independent reruns. No further evidence correction identified.
+
+Limits
+Scope is pending-store Get failures and their immediate state/retry handling. No claim is made about distributed atomic locking, TTL-generation ownership, live settlement economics, newly audited security properties, or a clean whole-repository typecheck. No speculative redesign or unrelated production change is recommended. Existing attribution on PR #3892 was not touched.

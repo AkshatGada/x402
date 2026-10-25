@@ -1,0 +1,12 @@
+{
+  "command": [
+    "golangci-lint",
+    "run",
+    "--concurrency=2",
+    "./mechanisms/svm/exact/facilitator/...",
+    "./mechanisms/svm/upto/facilitator/..."
+  ],
+  "cwd": "<fix-checkout>/go",
+  "exit_code": 0,
+  "seconds": 3.56
+}

@@ -1,0 +1,3 @@
+# Preserve test output formatting and patch context as evidence.
+*.log -whitespace
+*.patch -whitespace

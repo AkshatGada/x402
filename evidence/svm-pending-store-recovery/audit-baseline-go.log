@@ -1,0 +1,355 @@
+=== RUN   TestExactSettle_PendingStoreReadError
+=== RUN   TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:421: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:421
+        	Error:      	Expected error with "pending store unavailable" in chain but got nil.
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:422: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:422
+        	Error:      	Expected nil, but got: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"HZFCVcSP2eFhxscmdXup1jj3Ddf1Tt9cRfTmWwKoMEaa", Transaction:"1111111111111111111111111111111111111111111111111111111111111111", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}(nil)}
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:423: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:423
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:424: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:424
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:425: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:425
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:426: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:426
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:427: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:427
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:431: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:431
+        	Error:      	Should be true
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:432: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:432
+        	Error:      	Not equal: 
+        	            	expected: "97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd
+        	            	+
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+    pending_settlement_test.go:436: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:436
+        	Error:      	Received unexpected error:
+        	            	duplicate_settlement: duplicate transaction
+        	Test:       	TestExactSettle_PendingStoreReadError/no_result
+=== RUN   TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:421: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:421
+        	Error:      	Expected error with "pending store unavailable" in chain but got nil.
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:422: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:422
+        	Error:      	Expected nil, but got: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"9qn9HkJPC6MwGjRh7mpe4gsc9HDUNayP6M8zSZe8RNX5", Transaction:"97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd", Network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Amount:"", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}(nil)}
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:426: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:426
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:427: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:427
+        	Error:      	Should be zero, but was 2
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:431: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:431
+        	Error:      	Should be true
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:432: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:432
+        	Error:      	Not equal: 
+        	            	expected: "97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd
+        	            	+
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:439: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:439
+        	Error:      	Not equal: 
+        	            	expected: "97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd"
+        	            	actual  : "1111111111111111111111111111111111111111111111111111111111111111"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-97oQ1XTamJ6rQzNGcikXEKXuu3kHVgdnuAfgd4FsVV6oMUGMJPbcFKc9cMzg3LZJzLMtGN8ytkx3n78fVeF6eqd
+        	            	+1111111111111111111111111111111111111111111111111111111111111111
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+    pending_settlement_test.go:440: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:440
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestExactSettle_PendingStoreReadError/partial_result_with_error
+--- FAIL: TestExactSettle_PendingStoreReadError (0.00s)
+    --- FAIL: TestExactSettle_PendingStoreReadError/no_result (0.00s)
+    --- FAIL: TestExactSettle_PendingStoreReadError/partial_result_with_error (0.00s)
+=== RUN   TestExactSettle_PendingStoreReadErrorPreservesExistingLock
+    pending_settlement_test.go:461: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go:461
+        	Error:      	Target error should be in err chain:
+        	            	expected: "pending store unavailable"
+        	            	in chain: "duplicate_settlement: duplicate transaction"
+        	Test:       	TestExactSettle_PendingStoreReadErrorPreservesExistingLock
+--- FAIL: TestExactSettle_PendingStoreReadErrorPreservesExistingLock (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator	0.496s
+=== RUN   TestUptoSettle_PendingStoreReadError
+=== RUN   TestUptoSettle_PendingStoreReadError/deposit
+=== RUN   TestUptoSettle_PendingStoreReadError/deposit/no_result
+    pending_settlement_test.go:340: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:340
+        	Error:      	Target error should be in err chain:
+        	            	expected: "pending store unavailable"
+        	            	in chain: "invalid_upto_svm_channel_state: channel D5BKB71fasgLdnD2hBigKuozRiyNcaAH7inkJrN9TtoL does not exist"
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/no_result
+    pending_settlement_test.go:342: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:342
+        	Error:      	Should be empty, but was [   
+        	            	   ├─ Signatures[len=2]
+        	            	   │    ├─ 2NMo7aAU3pAjHX53K4i1vW63V4t8pXEfdNotCbYN7QUaA3Q8yr2F54bm6eAZ8NgPnDK7tAS6byus9FJttB2WAkhH
+        	            	   │    └─ 5BRJK1X5sjFizjs4mqRx2znXeMcgjU6hnsoVa3mcw1REagmHreEqVM3cCeNoBQUZRRELAYZPK1CzEoZCeGaPuPjE
+        	            	   ├─ Message
+        	            	   │    ├─ Version: v0
+        	            	   │    ├─ RecentBlockhash: SysvarRent111111111111111111111111111111111
+        	            	   │    ├─ AccountKeys[len=15]
+        	            	   │    │    ├─ DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF
+        	            	   │    │    ├─ 6BzbTfHtaR7NRNvKoai63d73t2xDKncxyFnmzdbu6MMt
+        	            	   │    │    ├─ D5BKB71fasgLdnD2hBigKuozRiyNcaAH7inkJrN9TtoL
+        	            	   │    │    ├─ 86i2eGt2TofFGz3A5GYFaMvLph1Hybn6YGSvzbfvVC6o
+        	            	   │    │    ├─ FmT2c2Fjdi2TRKs6YHAmXCMEoLxeuE7sa9AduZXZ98Ue
+        	            	   │    │    ├─ 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+        	            	   │    │    ├─ 2rFT7WL9ZG1ajewCfmgpktUEYyLnMq27t9fc8MgQLjGn
+        	            	   │    │    ├─ TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+        	            	   │    │    ├─ 11111111111111111111111111111111
+        	            	   │    │    ├─ SysvarRent111111111111111111111111111111111
+        	            	   │    │    ├─ ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL
+        	            	   │    │    ├─ 75c2huVzDW1Eq4kD86by5392sjdJzuAT195XNgP2f2tX
+        	            	   │    │    ├─ CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX
+        	            	   │    │    ├─ ComputeBudget111111111111111111111111111111
+        	            	   │    │    └─ MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr
+        	            	   │    ├─ AddressTableLookups[len=0]
+        	            	   │    └─ Header
+        	            	   │       ├─ NumRequiredSignatures: 2
+        	            	   │       ├─ NumReadonlySignedAccounts: 0
+        	            	   │       └─ NumReadonlyUnsignedAccounts: 10
+        	            	   └─ Instructions[len=4]
+        	            	      ├─ Program: ComputeBudget ComputeBudget111111111111111111111111111111
+        	            	      │    └─ Instruction: SetComputeUnitLimit
+        	            	      │       └─ Params
+        	            	      │          └─ Units: (uint32) 200000
+        	            	      ├─ Program: ComputeBudget ComputeBudget111111111111111111111111111111
+        	            	      │    └─ Instruction: SetComputeUnitPrice
+        	            	      │       └─ Params
+        	            	      │          └─ MicroLamports: (uint64) 1
+        	            	      ├─ cannot decode instruction for CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX program: instruction decoder not found
+        	            	      │    └─ Program: <unknown> CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX
+        	            	      │       └─ Instruction: <unknown>
+        	            	      │          ├─ data[len=67 bytes]
+        	            	      │          │    └─ {1, 42, 0, 0, 0, 0, 0, 0, 0, 16, 39, 0, 0, 0, 0, 0, 0, 16, 14, 0, 0, 64, 63, 83, 20, 0, 0, 0, 0, 1, 0, 0, 0, 34, 159, 134, 83, 200, 59, 51, 148, 111, 70, 130, 166, 60, 195, 88, 120, 131, 250, 92, 94, 37, 142, 73, 187, 204, 157, 185, 0, 96, 161, 4, 247, 16, 39}(len=67)
+        	            	      │          └─ accounts[len=14]
+        	            	      │             ├─ accounts[0]: 6BzbTfHtaR7NRNvKoai63d73t2xDKncxyFnmzdbu6MMt [WRITE, SIGN] 
+        	            	      │             ├─ accounts[1]: DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF [WRITE, SIGN] 
+        	            	      │             ├─ accounts[2]: DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF [WRITE, SIGN] 
+        	            	      │             ├─ accounts[3]: 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU [] 
+        	            	      │             ├─ accounts[4]: 2rFT7WL9ZG1ajewCfmgpktUEYyLnMq27t9fc8MgQLjGn [] 
+        	            	      │             ├─ accounts[5]: D5BKB71fasgLdnD2hBigKuozRiyNcaAH7inkJrN9TtoL [WRITE] 
+        	            	      │             ├─ accounts[6]: 86i2eGt2TofFGz3A5GYFaMvLph1Hybn6YGSvzbfvVC6o [WRITE] 
+        	            	      │             ├─ accounts[7]: FmT2c2Fjdi2TRKs6YHAmXCMEoLxeuE7sa9AduZXZ98Ue [WRITE] 
+        	            	      │             ├─ accounts[8]: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA [] 
+        	            	      │             ├─ accounts[9]: 11111111111111111111111111111111 [] 
+        	            	      │             ├─ accounts[10]: SysvarRent111111111111111111111111111111111 [] 
+        	            	      │             ├─ accounts[11]: ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL [] 
+        	            	      │             ├─ accounts[12]: 75c2huVzDW1Eq4kD86by5392sjdJzuAT195XNgP2f2tX [] 
+        	            	      │             └─ accounts[13]: CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX [] 
+        	            	      └─ cannot decode instruction for MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr program: instruction decoder not found
+        	            	         └─ Program: <unknown> MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr
+        	            	            └─ Instruction: <unknown>
+        	            	               ├─ data[len=32 bytes]
+        	            	               │    └─ {56, 50, 100, 97, 54, 56, 100, 53, 55, 49, 99, 52, 98, 56, 55, 97, 97, 53, 53, 53, 101, 54, 49, 50, 53, 100, 54, 48, 54, 53, 99, 99}(len=32)
+        	            	               └─ accounts[len=0]
+        	            	]
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/no_result
+    pending_settlement_test.go:343: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:343
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/no_result
+    pending_settlement_test.go:357: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:357
+        	Error:      	Should be empty, but was [   
+        	            	   ├─ Signatures[len=2]
+        	            	   │    ├─ 2NMo7aAU3pAjHX53K4i1vW63V4t8pXEfdNotCbYN7QUaA3Q8yr2F54bm6eAZ8NgPnDK7tAS6byus9FJttB2WAkhH
+        	            	   │    └─ 5BRJK1X5sjFizjs4mqRx2znXeMcgjU6hnsoVa3mcw1REagmHreEqVM3cCeNoBQUZRRELAYZPK1CzEoZCeGaPuPjE
+        	            	   ├─ Message
+        	            	   │    ├─ Version: v0
+        	            	   │    ├─ RecentBlockhash: SysvarRent111111111111111111111111111111111
+        	            	   │    ├─ AccountKeys[len=15]
+        	            	   │    │    ├─ DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF
+        	            	   │    │    ├─ 6BzbTfHtaR7NRNvKoai63d73t2xDKncxyFnmzdbu6MMt
+        	            	   │    │    ├─ D5BKB71fasgLdnD2hBigKuozRiyNcaAH7inkJrN9TtoL
+        	            	   │    │    ├─ 86i2eGt2TofFGz3A5GYFaMvLph1Hybn6YGSvzbfvVC6o
+        	            	   │    │    ├─ FmT2c2Fjdi2TRKs6YHAmXCMEoLxeuE7sa9AduZXZ98Ue
+        	            	   │    │    ├─ 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+        	            	   │    │    ├─ 2rFT7WL9ZG1ajewCfmgpktUEYyLnMq27t9fc8MgQLjGn
+        	            	   │    │    ├─ TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+        	            	   │    │    ├─ 11111111111111111111111111111111
+        	            	   │    │    ├─ SysvarRent111111111111111111111111111111111
+        	            	   │    │    ├─ ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL
+        	            	   │    │    ├─ 75c2huVzDW1Eq4kD86by5392sjdJzuAT195XNgP2f2tX
+        	            	   │    │    ├─ CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX
+        	            	   │    │    ├─ ComputeBudget111111111111111111111111111111
+        	            	   │    │    └─ MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr
+        	            	   │    ├─ AddressTableLookups[len=0]
+        	            	   │    └─ Header
+        	            	   │       ├─ NumRequiredSignatures: 2
+        	            	   │       ├─ NumReadonlySignedAccounts: 0
+        	            	   │       └─ NumReadonlyUnsignedAccounts: 10
+        	            	   └─ Instructions[len=4]
+        	            	      ├─ Program: ComputeBudget ComputeBudget111111111111111111111111111111
+        	            	      │    └─ Instruction: SetComputeUnitLimit
+        	            	      │       └─ Params
+        	            	      │          └─ Units: (uint32) 200000
+        	            	      ├─ Program: ComputeBudget ComputeBudget111111111111111111111111111111
+        	            	      │    └─ Instruction: SetComputeUnitPrice
+        	            	      │       └─ Params
+        	            	      │          └─ MicroLamports: (uint64) 1
+        	            	      ├─ cannot decode instruction for CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX program: instruction decoder not found
+        	            	      │    └─ Program: <unknown> CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX
+        	            	      │       └─ Instruction: <unknown>
+        	            	      │          ├─ data[len=67 bytes]
+        	            	      │          │    └─ {1, 42, 0, 0, 0, 0, 0, 0, 0, 16, 39, 0, 0, 0, 0, 0, 0, 16, 14, 0, 0, 64, 63, 83, 20, 0, 0, 0, 0, 1, 0, 0, 0, 34, 159, 134, 83, 200, 59, 51, 148, 111, 70, 130, 166, 60, 195, 88, 120, 131, 250, 92, 94, 37, 142, 73, 187, 204, 157, 185, 0, 96, 161, 4, 247, 16, 39}(len=67)
+        	            	      │          └─ accounts[len=14]
+        	            	      │             ├─ accounts[0]: 6BzbTfHtaR7NRNvKoai63d73t2xDKncxyFnmzdbu6MMt [WRITE, SIGN] 
+        	            	      │             ├─ accounts[1]: DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF [WRITE, SIGN] 
+        	            	      │             ├─ accounts[2]: DCnKaUwKu8ryXJTVR4fbU4taKw7hscAF8En8Rw8AU6GF [WRITE, SIGN] 
+        	            	      │             ├─ accounts[3]: 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU [] 
+        	            	      │             ├─ accounts[4]: 2rFT7WL9ZG1ajewCfmgpktUEYyLnMq27t9fc8MgQLjGn [] 
+        	            	      │             ├─ accounts[5]: D5BKB71fasgLdnD2hBigKuozRiyNcaAH7inkJrN9TtoL [WRITE] 
+        	            	      │             ├─ accounts[6]: 86i2eGt2TofFGz3A5GYFaMvLph1Hybn6YGSvzbfvVC6o [WRITE] 
+        	            	      │             ├─ accounts[7]: FmT2c2Fjdi2TRKs6YHAmXCMEoLxeuE7sa9AduZXZ98Ue [WRITE] 
+        	            	      │             ├─ accounts[8]: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA [] 
+        	            	      │             ├─ accounts[9]: 11111111111111111111111111111111 [] 
+        	            	      │             ├─ accounts[10]: SysvarRent111111111111111111111111111111111 [] 
+        	            	      │             ├─ accounts[11]: ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL [] 
+        	            	      │             ├─ accounts[12]: 75c2huVzDW1Eq4kD86by5392sjdJzuAT195XNgP2f2tX [] 
+        	            	      │             └─ accounts[13]: CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX [] 
+        	            	      └─ cannot decode instruction for MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr program: instruction decoder not found
+        	            	         └─ Program: <unknown> MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr
+        	            	            └─ Instruction: <unknown>
+        	            	               ├─ data[len=32 bytes]
+        	            	               │    └─ {56, 50, 100, 97, 54, 56, 100, 53, 55, 49, 99, 52, 98, 56, 55, 97, 97, 53, 53, 53, 101, 54, 49, 50, 53, 100, 54, 48, 54, 53, 99, 99}(len=32)
+        	            	               └─ accounts[len=0]
+        	            	]
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/no_result
+    pending_settlement_test.go:358: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:358
+        	Error:      	Should be zero, but was 1
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/no_result
+=== RUN   TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:340: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:340
+        	Error:      	Expected error with "pending store unavailable" in chain but got nil.
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:341: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:341
+        	Error:      	Expected nil, but got: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"GJfcomWhBZ1SMcWyaHV6pKPQDfKdi1nf8rLZNAYHEupN", Transaction:"3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp", Network:"solana-devnet", Amount:"10000", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}(nil)}
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:344: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:344
+        	Error:      	Should be zero, but was 2
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:348: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:348
+        	Error:      	Should be true
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:349: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:349
+        	Error:      	Not equal: 
+        	            	expected: "3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp
+        	            	+
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+    pending_settlement_test.go:353: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:353
+        	Error:      	Received unexpected error:
+        	            	invalid_upto_svm_channel_state: channel 9VBJrrEnvJAuHoHxoyUNMsc2rJLVxUk2YkJ43ou9Z7Dh does not exist
+        	Test:       	TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error
+=== RUN   TestUptoSettle_PendingStoreReadError/claim
+=== RUN   TestUptoSettle_PendingStoreReadError/claim/no_result
+    pending_settlement_test.go:340: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:340
+        	Error:      	Target error should be in err chain:
+        	            	expected: "pending store unavailable"
+        	            	in chain: "invalid_upto_svm_channel_state: channel Fjte4apK4yX2bDHXXnQ7kMpoTZprVhx6v3gsU688HuWv does not exist"
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/no_result
+=== RUN   TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:340: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:340
+        	Error:      	Expected error with "pending store unavailable" in chain but got nil.
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:341: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:341
+        	Error:      	Expected nil, but got: &x402.SettleResponse{Success:true, ErrorReason:"", ErrorMessage:"", Payer:"FfZNrydQQMjkw69a4u6YKSVt3K6gbgR1GiuqoRVUavA4", Transaction:"3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp", Network:"solana-devnet", Amount:"1858", Extensions:map[string]interface {}(nil), ExtensionResponses:map[string]interface {}(nil), Extra:map[string]interface {}(nil)}
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:344: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:344
+        	Error:      	Should be zero, but was 2
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:348: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:348
+        	Error:      	Should be true
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:349: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:349
+        	Error:      	Not equal: 
+        	            	expected: "3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp
+        	            	+
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+    pending_settlement_test.go:353: 
+        	Error Trace:	<baseline-checkout>/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go:353
+        	Error:      	Received unexpected error:
+        	            	invalid_upto_svm_channel_state: channel 3fJwgVVUUJ1epxSg9KktGJCdWxgPXWCrjFERyDRQ2amc does not exist
+        	Test:       	TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error
+--- FAIL: TestUptoSettle_PendingStoreReadError (12.05s)
+    --- FAIL: TestUptoSettle_PendingStoreReadError/deposit (6.03s)
+        --- FAIL: TestUptoSettle_PendingStoreReadError/deposit/no_result (3.01s)
+        --- FAIL: TestUptoSettle_PendingStoreReadError/deposit/partial_result_with_error (3.01s)
+    --- FAIL: TestUptoSettle_PendingStoreReadError/claim (6.02s)
+        --- FAIL: TestUptoSettle_PendingStoreReadError/claim/no_result (3.01s)
+        --- FAIL: TestUptoSettle_PendingStoreReadError/claim/partial_result_with_error (3.01s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/upto/facilitator	12.905s
+FAIL

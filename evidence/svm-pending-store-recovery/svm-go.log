@@ -1,0 +1,16 @@
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm	0.661s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement	0.852s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/client	0.569s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/facilitator	7.852s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/batch-settlement/server	0.793s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/client	0.519s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator	0.464s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/server	0.493s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/v1/client	0.509s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/v1/facilitator	0.505s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/paymentchannels	0.560s
+?   	github.com/x402-foundation/x402/go/v2/mechanisms/svm/paymentchannels/generated	[no test files]
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/upto	0.479s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/upto/client	0.516s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/upto/facilitator	6.969s
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/upto/server	0.503s

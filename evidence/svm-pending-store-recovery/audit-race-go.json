@@ -1,0 +1,13 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-race",
+    "-count=1",
+    "./mechanisms/svm/exact/facilitator",
+    "./mechanisms/svm/upto/facilitator"
+  ],
+  "cwd": "<fix-checkout>/go",
+  "exit_code": 0,
+  "seconds": 9.88
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-count=1",
+    "-v",
+    "-run",
+    "PendingStoreReadError",
+    "./mechanisms/svm/exact/facilitator",
+    "./mechanisms/svm/upto/facilitator"
+  ],
+  "cwd": "<baseline-checkout>/go",
+  "exit_code": 1,
+  "seconds": 13.24
+}

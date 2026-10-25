@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "node_modules/prettier/bin/prettier.cjs",
+    "--write",
+    "src/exact/facilitator/scheme.ts",
+    "test/unit/pendingSettlement.test.ts"
+  ],
+  "cwd": "<fix-checkout>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.14
+}

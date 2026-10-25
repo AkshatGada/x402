@@ -1,0 +1,11 @@
+{
+  "command": [
+    "goimports",
+    "-w",
+    "mechanisms/svm/exact/facilitator/scheme.go",
+    "mechanisms/svm/upto/facilitator/scheme.go"
+  ],
+  "cwd": "<fix-checkout>/go",
+  "exit_code": 0,
+  "seconds": 0.04
+}

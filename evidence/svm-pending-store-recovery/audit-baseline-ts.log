@@ -1,0 +1,139 @@
+
+ RUN  v3.2.7 <baseline-checkout>/typescript/packages/mechanisms/svm
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > cache-miss + confirmTransaction fails: returns settlement_pending and populates the store keyed by the message hash
+Failed to confirm transaction: Error: rpc: confirmation timeout
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:196:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > cache-miss + confirmTransaction fails onchain (terminal): returns transaction_failed and releases the dedup lock
+Transaction failed onchain: TransactionOnchainFailureError: Transaction failed onchain: {}
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:216:9
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > cache-miss + confirmTransaction fails onchain (terminal): returns transaction_failed and releases the dedup lock
+Transaction failed onchain: TransactionOnchainFailureError: Transaction failed onchain: {}
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:216:9
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > cache-hit + confirmTransaction fails onchain during reconciliation (terminal): returns transaction_failed
+Transaction failed onchain during reconciliation: TransactionOnchainFailureError: Transaction failed onchain: {}
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:241:9
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > send failure (never broadcast) never touches the store
+Failed to send transaction: Error: rpc send failed
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:332:60
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > returns a terminal failure when the pending store cannot persist a confirm-timeout signature
+Failed to confirm transaction: Error: rpc: confirmation timeout
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:351:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > stringifies a non-Error store failure when persisting pending settlement
+Failed to confirm transaction: Error: rpc: confirmation timeout
+    at <baseline-checkout>/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts:368:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file://<cached-typescript>/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ ❯ test/unit/pendingSettlement.test.ts (15 tests | 1 failed) 10ms
+   ✓ ErrSettlementPending wire contract (SVM exact) > equals the settlement_pending wire literal the transport layers mirror 0ms
+   × ExactSvmScheme pending-settlement store integration > releases its new lock after a pending-store read error so recovery can retry 4ms
+     → expected false to be true // Object.is equality
+   ✓ ExactSvmScheme pending-settlement store integration > preserves a pending signature during a read outage and reconciles after recovery 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > a duplicate's read error cannot release the in-flight owner's lock 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-miss + broadcast success: leaves no pending entry 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-miss + confirmTransaction fails: returns settlement_pending and populates the store keyed by the message hash 1ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-miss + confirmTransaction fails onchain (terminal): returns transaction_failed and releases the dedup lock 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-hit + confirmTransaction fails onchain during reconciliation (terminal): returns transaction_failed 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-hit: skips verify/sign/send entirely and reconciles against the cached signature 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > cache-hit: still-unconfirmed reconciliation returns settlement_pending again and preserves the store entry 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > terminal verify failure never touches the store 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > send failure (never broadcast) never touches the store 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > returns a terminal failure when the pending store cannot persist a confirm-timeout signature 1ms
+   ✓ ExactSvmScheme pending-settlement store integration > stringifies a non-Error store failure when persisting pending settlement 0ms
+   ✓ ExactSvmScheme pending-settlement store integration > uses a fresh in-memory store by default when none is provided 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unit/pendingSettlement.test.ts > ExactSvmScheme pending-settlement store integration > releases its new lock after a pending-store read error so recovery can retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/unit/pendingSettlement.test.ts:131:29
+    129| 
+    130|     const retried = await facilitator.settle(payload, requirements);
+    131|     expect(retried.success).toBe(true);
+       |                             ^
+    132|     expect(mockSigner.sendTransaction).toHaveBeenCalledTimes(1);
+    133|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  11:57:29
+   Duration  181ms (transform 48ms, setup 0ms, collect 88ms, tests 10ms, environment 0ms, prepare 24ms)
+

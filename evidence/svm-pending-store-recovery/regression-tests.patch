@@ -1,0 +1,279 @@
+diff --git a/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go b/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go
+index c3ab3ada..6f43b66f 100644
+--- a/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go
++++ b/go/mechanisms/svm/exact/facilitator/pending_settlement_test.go
+@@ -367,3 +367,106 @@ func messageHashForPayload(t *testing.T, payload types.PaymentPayload) string {
+ 	require.NoError(t, err)
+ 	return key
+ }
++
++// readErrorPendingStore models a transient read failure independently of writes.
++type readErrorPendingStore struct {
++	x402.PendingSettlementStore
++	readErr    error
++	partialHit bool
++	deletes    int
++	writes     int
++}
++
++func (s *readErrorPendingStore) Get(ctx context.Context, key string) (string, bool, error) {
++	if s.readErr != nil {
++		if s.partialHit {
++			signature, hit, _ := s.PendingSettlementStore.Get(ctx, key)
++			return signature, hit, s.readErr
++		}
++		return "", false, s.readErr
++	}
++	return s.PendingSettlementStore.Get(ctx, key)
++}
++
++func (s *readErrorPendingStore) Set(ctx context.Context, key, signature string) error {
++	s.writes++
++	return s.PendingSettlementStore.Set(ctx, key, signature)
++}
++
++func (s *readErrorPendingStore) Delete(ctx context.Context, key string) error {
++	s.deletes++
++	return s.PendingSettlementStore.Delete(ctx, key)
++}
++
++func TestExactSettle_PendingStoreReadError(t *testing.T) {
++	for _, partialHit := range []bool{false, true} {
++		name := "no result"
++		if partialHit {
++			name = "partial result with error"
++		}
++		t.Run(name, func(t *testing.T) {
++			ctx := context.Background()
++			payload, requirements, facilitatorAddr := buildValidExactSvmFixture(t)
++			signer := &mockExactSvmSigner{addresses: []solana.PublicKey{facilitatorAddr}}
++			scheme := NewExactSvmScheme(signer)
++			readErr := errors.New("pending store unavailable")
++			backing := x402.NewInMemoryPendingSettlementStore()
++			store := &readErrorPendingStore{PendingSettlementStore: backing, readErr: readErr, partialHit: partialHit}
++			scheme.SetPendingSettlementStore(store)
++			key := messageHashForPayload(t, payload)
++			prior := solana.SignatureFromBytes(append([]byte{7}, make([]byte, 63)...)).String()
++			require.NoError(t, backing.Set(ctx, key, prior))
++
++			response, err := scheme.Settle(ctx, payload, requirements, nil)
++			assert.ErrorIs(t, err, readErr)
++			assert.Nil(t, response)
++			assert.Zero(t, signer.simulateCalls)
++			assert.Zero(t, signer.signCalls)
++			assert.Zero(t, signer.sendCalls)
++			assert.Zero(t, signer.confirmCalls)
++			assert.Zero(t, store.deletes)
++			assert.Zero(t, store.writes)
++			signature, hit, err := backing.Get(ctx, key)
++			require.NoError(t, err)
++			assert.True(t, hit)
++			assert.Equal(t, prior, signature)
++
++			store.readErr = nil
++			response, err = scheme.Settle(ctx, payload, requirements, nil)
++			require.NoError(t, err)
++			require.NotNil(t, response)
++			assert.True(t, response.Success)
++			assert.Equal(t, prior, response.Transaction)
++			assert.Zero(t, signer.sendCalls)
++		})
++	}
++}
++
++func TestExactSettle_PendingStoreReadErrorPreservesExistingLock(t *testing.T) {
++	ctx := context.Background()
++	payload, requirements, facilitatorAddr := buildValidExactSvmFixture(t)
++	signer := &mockExactSvmSigner{
++		addresses:     []solana.PublicKey{facilitatorAddr},
++		sendSignature: solana.SignatureFromBytes(append([]byte{8}, make([]byte, 63)...)),
++		confirmErr:    errors.New("confirmation timeout"),
++	}
++	scheme := NewExactSvmScheme(signer)
++	store := &readErrorPendingStore{PendingSettlementStore: x402.NewInMemoryPendingSettlementStore()}
++	scheme.SetPendingSettlementStore(store)
++	_, err := scheme.Settle(ctx, payload, requirements, nil)
++	require.ErrorContains(t, err, "settlement_pending")
++	readErr := errors.New("pending store unavailable")
++	store.readErr = readErr
++	_, err = scheme.Settle(ctx, payload, requirements, nil)
++	assert.ErrorIs(t, err, readErr)
++	assert.Equal(t, 1, signer.sendCalls)
++	assert.True(t, scheme.settlementCache.IsDuplicate(messageHashForPayload(t, payload)))
++	store.readErr = nil
++	signer.confirmErr = nil
++	response, err := scheme.Settle(ctx, payload, requirements, nil)
++	require.NoError(t, err)
++	require.NotNil(t, response)
++	assert.True(t, response.Success)
++	assert.Equal(t, signer.sendSignature.String(), response.Transaction)
++	assert.Equal(t, 1, signer.sendCalls)
++}
+diff --git a/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go b/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go
+index 54aab743..4631af88 100644
+--- a/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go
++++ b/go/mechanisms/svm/upto/facilitator/pending_settlement_test.go
+@@ -274,3 +274,90 @@ func TestClaimSettle_PendingSettlementStore_MalformedSignatureDropsEntry(t *test
+ 	require.NoError(t, getErr)
+ 	assert.False(t, ok, "a malformed entry must be dropped, not retried forever")
+ }
++
++// readErrorPendingStore models a transient read failure independently of writes.
++type readErrorPendingStore struct {
++	x402.PendingSettlementStore
++	readErr    error
++	partialHit bool
++	deletes    int
++	writes     int
++}
++
++func (s *readErrorPendingStore) Get(ctx context.Context, key string) (string, bool, error) {
++	if s.readErr != nil {
++		if s.partialHit {
++			signature, hit, _ := s.PendingSettlementStore.Get(ctx, key)
++			return signature, hit, s.readErr
++		}
++		return "", false, s.readErr
++	}
++	return s.PendingSettlementStore.Get(ctx, key)
++}
++
++func (s *readErrorPendingStore) Set(ctx context.Context, key, signature string) error {
++	s.writes++
++	return s.PendingSettlementStore.Set(ctx, key, signature)
++}
++
++func (s *readErrorPendingStore) Delete(ctx context.Context, key string) error {
++	s.deletes++
++	return s.PendingSettlementStore.Delete(ctx, key)
++}
++
++func TestUptoSettle_PendingStoreReadError(t *testing.T) {
++	for _, claim := range []bool{false, true} {
++		name := "deposit"
++		if claim {
++			name = "claim"
++		}
++		t.Run(name, func(t *testing.T) {
++			for _, partialHit := range []bool{false, true} {
++				name := "no result"
++				if partialHit {
++					name = "partial result with error"
++				}
++				t.Run(name, func(t *testing.T) {
++					ctx := context.Background()
++					signer := newMockSigner(t, 1)
++					stub := newStubRPC(t)
++					fixture := newPaymentFixture(t, signer)
++					scheme := newScheme(signer, stub, nil)
++					payload, requirements := fixture.payload, fixture.requirements
++					key := depositCacheKey(requirements.Network, fixture.channelID.String())
++					if claim {
++						payload, requirements = fixture.claimPayload(t, 1858), fixture.claimRequirements(1858)
++						key = settlementCacheKey(requirements.Network, fixture.channelID.String())
++					}
++					readErr := errors.New("pending store unavailable")
++					backing := x402.NewInMemoryPendingSettlementStore()
++					store := &readErrorPendingStore{PendingSettlementStore: backing, readErr: readErr, partialHit: partialHit}
++					scheme.pendingStore = store
++					prior := "3vZ9Q4mF1x1sVEnTkGqwKN1JcgmXCzXfDMz6WrPPBhKtNBbNaRiJ8CT9jkuoAJyGVUvHNNbCTUmzL6yEsSm4x9wp"
++					require.NoError(t, backing.Set(ctx, key, prior))
++
++					response, err := scheme.Settle(ctx, payload, requirements, nil)
++					assert.ErrorIs(t, err, readErr)
++					assert.Nil(t, response)
++					assert.Empty(t, signer.sentTransactions())
++					assert.Zero(t, stub.simulations())
++					assert.Zero(t, store.deletes)
++					assert.Zero(t, store.writes)
++					signature, hit, err := backing.Get(ctx, key)
++					require.NoError(t, err)
++					assert.True(t, hit)
++					assert.Equal(t, prior, signature)
++
++					store.readErr = nil
++					response, err = scheme.Settle(ctx, payload, requirements, nil)
++					require.NoError(t, err)
++					require.NotNil(t, response)
++					assert.True(t, response.Success)
++					assert.Equal(t, prior, response.Transaction)
++					assert.Empty(t, signer.sentTransactions())
++					assert.Zero(t, stub.simulations())
++				})
++			}
++		})
++	}
++}
+diff --git a/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts b/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts
+index aa900711..491781fe 100644
+--- a/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts
++++ b/typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts
+@@ -114,6 +114,68 @@ describe("ExactSvmScheme pending-settlement store integration", () => {
+     vi.restoreAllMocks();
+   });
+ 
++  it("releases its new lock after a pending-store read error so recovery can retry", async () => {
++    const readError = new Error("pending store unavailable");
++    vi.spyOn(store, "get").mockRejectedValueOnce(readError);
++    const deleteEntry = vi.spyOn(store, "delete");
++    const facilitator = setupFacilitator();
++    const payload = makePayload("readFailureTx==");
++
++    await expect(facilitator.settle(payload, requirements)).rejects.toBe(readError);
++    expect(mockSigner.signTransaction).not.toHaveBeenCalled();
++    expect(mockSigner.sendTransaction).not.toHaveBeenCalled();
++    expect(mockSigner.confirmTransaction).not.toHaveBeenCalled();
++    expect(deleteEntry).not.toHaveBeenCalled();
++
++    const retried = await facilitator.settle(payload, requirements);
++    expect(retried.success).toBe(true);
++    expect(mockSigner.sendTransaction).toHaveBeenCalledTimes(1);
++  });
++
++  it("preserves a pending signature during a read outage and reconciles after recovery", async () => {
++    const facilitator = setupFacilitator();
++    const payload = makePayload("pendingReadFailureTx==");
++    const key = svmUtils.transactionMessageHash(
++      svmUtils.decodeTransactionFromPayload(payload.payload as never),
++    );
++    await store.set(key, "priorSignature");
++    const readError = new Error("pending store unavailable");
++    vi.spyOn(store, "get").mockRejectedValueOnce(readError);
++    const deleteEntry = vi.spyOn(store, "delete");
++
++    await expect(facilitator.settle(payload, requirements)).rejects.toBe(readError);
++    expect(deleteEntry).not.toHaveBeenCalled();
++    expect(await store.get(key)).toBe("priorSignature");
++    const retried = await facilitator.settle(payload, requirements);
++    expect(retried.success).toBe(true);
++    expect(retried.transaction).toBe("priorSignature");
++    expect(mockSigner.signTransaction).not.toHaveBeenCalled();
++    expect(mockSigner.sendTransaction).not.toHaveBeenCalled();
++  });
++
++  it("a duplicate's read error cannot release the in-flight owner's lock", async () => {
++    let finishLookup!: (signature: string | undefined) => void;
++    const blockedLookup = new Promise<string | undefined>(resolve => {
++      finishLookup = resolve;
++    });
++    const readError = new Error("pending store unavailable");
++    vi.spyOn(store, "get").mockReturnValueOnce(blockedLookup).mockRejectedValueOnce(readError);
++    const facilitator = setupFacilitator();
++    const payload = makePayload("concurrentReadFailureTx==");
++    const owner = facilitator.settle(payload, requirements);
++
++    try {
++      await expect(facilitator.settle(payload, requirements)).rejects.toBe(readError);
++      const duplicate = await facilitator.settle(payload, requirements);
++      expect(duplicate.errorReason).toBe(Errors.ErrDuplicateSettlement);
++      expect(mockSigner.sendTransaction).not.toHaveBeenCalled();
++    } finally {
++      finishLookup(undefined);
++    }
++    expect((await owner).success).toBe(true);
++    expect(mockSigner.sendTransaction).toHaveBeenCalledTimes(1);
++  });
++
+   it("cache-miss + broadcast success: leaves no pending entry", async () => {
+     const facilitator = setupFacilitator();
+     const payload = makePayload("cacheMissSuccessTx==");

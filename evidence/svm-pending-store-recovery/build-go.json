@@ -1,0 +1,10 @@
+{
+  "command": [
+    "go",
+    "build",
+    "./mechanisms/svm/..."
+  ],
+  "cwd": "<fix-checkout>/go",
+  "exit_code": 0,
+  "seconds": 0.16
+}

@@ -1,0 +1,25 @@
+{
+  "baseline_revision": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "tests_identical": true,
+  "test_sha256": {
+    "go/mechanisms/svm/exact/facilitator/pending_settlement_test.go": "1300e855d659aebd8b8a1047bcbf9565ab7788e4286deb7a26d430d5fd89743b",
+    "go/mechanisms/svm/upto/facilitator/pending_settlement_test.go": "81ba7011da6dcd73a3fd721de0fb6d42820b41c42d0612e693a353e0a1170a99",
+    "typescript/packages/mechanisms/svm/test/unit/pendingSettlement.test.ts": "ecfaab892ee2eb2a0711728eab4bb07d276d1d60eb687d9ec7ad75c1e909d546"
+  },
+  "production": {
+    "go/mechanisms/svm/exact/facilitator/scheme.go": {
+      "baseline": "875e416946f1d1edfb3efb30003c2e0f48d43e7ad373e665c9191cbcc9293056",
+      "fix": "2c42c7a2cadeaab27af371c2bc32b3d087c9b88a877d66118e32b9b54bbd699b"
+    },
+    "go/mechanisms/svm/upto/facilitator/scheme.go": {
+      "baseline": "01f9fcffcd7fb7b25661c7706c5c915ba0d0128a60a9902539d6d7f78a6f1436",
+      "fix": "172e9eb9ae45d8b56b5c3fff95cbb6bfe9b814a9e4d2f634754d553cc1367c05"
+    },
+    "typescript/packages/mechanisms/svm/src/exact/facilitator/scheme.ts": {
+      "baseline": "005a9a6a48fb6b491aecc3e1f60e864e593a25f67df9626223ba7ab311126c9f",
+      "fix": "f47c6a1017afb02ce8baae5d36ca924799617ed09472b5fda47ec0d08793a13b"
+    }
+  },
+  "diff_sha256": "f7d872fb8fd8b8f44e92247e0c7ff2746474509d6b7dcd1419dfe5ba7b6a00e1",
+  "typescript_baseline_and_fix_diagnostics_identical": true
+}

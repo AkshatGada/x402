@@ -1,0 +1,9 @@
+{
+  "command": [
+    "node",
+    "../../../scripts/mirror-cjs-dts.mjs"
+  ],
+  "cwd": "<fix-checkout>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.03
+}

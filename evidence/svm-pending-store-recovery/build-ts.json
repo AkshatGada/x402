@@ -1,0 +1,9 @@
+{
+  "command": [
+    "node",
+    "node_modules/tsup/dist/cli-default.js"
+  ],
+  "cwd": "<fix-checkout>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 8.3
+}
