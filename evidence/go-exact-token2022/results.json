@@ -1,0 +1,111 @@
+{
+  "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "source_commit": "a39311277f3ada94d3999f155d660caab72b06af",
+  "source_signature_verified_locally": true,
+  "test_sha256": "64a48e75b4c03d34c6fd7d51b3d566831ffdefab4fcd351a19e04c1637d616b1",
+  "patch_sha256": "30662d5055aca5432cf07b2a583aabbcbc510487ad867576412e4c4e6fc8777a",
+  "fixed_scheme_sha256": "625ee032e7d3472c4a668d6024aeab7132028ce63a34678898f0e7a87e3edcea",
+  "upstream_scheme_sha256": "889f98cf857a6323d75c955b462c7c4ad0c16e7934ba0e2d70482817f1107bc1",
+  "toolchain": "go version go1.24.13 darwin/arm64",
+  "environment": {
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "-p=2",
+    "GOMODCACHE": "existing local cache",
+    "GOCACHE": "existing local cache"
+  },
+  "independent_regression_runs": [
+    {
+      "label": "fixed",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-parallel=2",
+        "-v",
+        "-run",
+        "^TestCreatePaymentPayloadUsesMintTokenProgram$",
+        "./mechanisms/svm/exact/client"
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 0,
+      "elapsed_seconds": 2.765
+    },
+    {
+      "label": "baseline",
+      "command": [
+        "go",
+        "test",
+        "-overlay=$EVIDENCE/astra-independent/baseline-overlay.json",
+        "-race",
+        "-count=1",
+        "-parallel=2",
+        "-v",
+        "-run",
+        "^TestCreatePaymentPayloadUsesMintTokenProgram$",
+        "./mechanisms/svm/exact/client"
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 1,
+      "elapsed_seconds": 0.975
+    }
+  ],
+  "scoped_checks": {
+    "audit-exact-race": {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-cover",
+        "-count=1",
+        "-parallel=2",
+        "./mechanisms/svm/exact/...",
+        "./mechanisms/svm"
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 0,
+      "elapsed_seconds": 6.413,
+      "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54"
+    },
+    "audit-exact-build": {
+      "command": [
+        "go",
+        "build",
+        "./mechanisms/svm/exact/..."
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 0,
+      "elapsed_seconds": 0.129,
+      "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54"
+    },
+    "audit-exact-lint": {
+      "command": [
+        "golangci-lint",
+        "run",
+        "--concurrency=2",
+        "./mechanisms/svm/exact/..."
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 0,
+      "elapsed_seconds": 1.395,
+      "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54"
+    },
+    "audit-format": {
+      "command": [
+        "goimports",
+        "-l",
+        "mechanisms/svm/exact/client/scheme.go",
+        "mechanisms/svm/exact/client/token_program_test.go"
+      ],
+      "cwd": "$SOURCE/go",
+      "exit_code": 0,
+      "elapsed_seconds": 0.051,
+      "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54"
+    }
+  },
+  "log_transform": "Local checkout paths replaced with $SOURCE and $EVIDENCE; the absolute Go executable path replaced with go; assertions and results unchanged.",
+  "limits": "Synthetic extension-free mint; construction and signing only; no live RPC, simulation, transactions, or funds."
+}

@@ -1,0 +1,39 @@
+{
+  "source": "a39311277f3ada94d3999f155d660caab72b06af",
+  "base": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "runs": [
+    {
+      "label": "fixed",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-parallel=2",
+        "-v",
+        "-run",
+        "^TestCreatePaymentPayloadUsesMintTokenProgram$",
+        "./mechanisms/svm/exact/client"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.017
+    },
+    {
+      "label": "baseline",
+      "command": [
+        "go",
+        "test",
+        "-overlay=$OUTPUT/baseline-overlay.json",
+        "-race",
+        "-count=1",
+        "-parallel=2",
+        "-v",
+        "-run",
+        "^TestCreatePaymentPayloadUsesMintTokenProgram$",
+        "./mechanisms/svm/exact/client"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.852
+    }
+  ]
+}

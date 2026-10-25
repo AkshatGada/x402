@@ -1,0 +1,26 @@
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_token
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_after_token_2022
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+--- PASS: TestCreatePaymentPayloadUsesMintTokenProgram (0.02s)
+    --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential (0.01s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_token (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022 (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_after_token_2022 (0.00s)
+    --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022 (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022 (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/client	1.529s

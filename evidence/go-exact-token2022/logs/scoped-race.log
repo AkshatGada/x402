@@ -1,0 +1,6 @@
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/client	1.683s	coverage: 68.4% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator	2.115s	coverage: 67.9% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/server	1.505s	coverage: 60.5% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/v1/client	1.597s	coverage: 64.0% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/v1/facilitator	1.502s	coverage: 46.0% of statements
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/svm	1.509s	coverage: 30.1% of statements

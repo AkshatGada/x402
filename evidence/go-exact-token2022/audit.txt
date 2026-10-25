@@ -1,0 +1,37 @@
+Independent final audit — Go exact-SVM Token-2022 fix
+Date: 2026-10-25
+Reviewer: current independent astra_token2022_final_audit agent in Codex.
+Implementation: parent Codex session. This review used shell/Python inspection and cached Go 1.24.13 (darwin/arm64) race tests. No Claude work or co-author credit is claimed.
+
+VERDICT
+Approved for the bounded v2 exact-client transaction-construction fix. No blocking correctness, security, signing, concurrency, or compatibility defect found in the reviewed three-file diff. No production correction is required by this audit. This verdict does not assert live-chain settlement, all Token-2022 extension support, maintainer acceptance, or completion of full-repository checks.
+
+REVIEWED SNAPSHOT
+Source: $SOURCE
+HEAD: 4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54
+Patch SHA256: 30662d5055aca5432cf07b2a583aabbcbc510487ad867576412e4c4e6fc8777a
+Regression-test SHA256: 64a48e75b4c03d34c6fd7d51b3d566831ffdefab4fcd351a19e04c1637d616b1
+Read contributing skill, Go CONTRIBUTING.md, root AI contribution policy, pinned exact-SVM specification and TypeScript exact client, full changed source/test/changelog, mint cache, facilitator validation, and solana-go v1.14.0 implementation.
+
+CORRECTNESS
+- scheme.go:110-123: owner/token-program/mint PDA seeds and the associated-token-account program are correct. The legacy dependency helper uses identical seeds with the legacy TokenProgramID hardcoded; therefore substituting the fetched program preserves legacy derivation and fixes Token-2022. The exact facilitator uses the same program-aware derivation. No cross-package channel dependency or shared-API expansion is needed.
+- scheme.go:164-180: the existing validated TransferChecked builder retains its discriminator, little-endian amount, decimals, account order, writable source/destination, readonly mint and owner-signature requirement. solana.NewInstruction directly retains those account metas and data and stores its own program ID. Neither Data() nor Accounts() uses token.ProgramID. No global setter or decoder registry mutation is introduced; per-instruction selection is safe for mixed clients/programs.
+- scheme.go:172-177: serialization failures return an existing transfer-build error category instead of being ignored. Existing mint-owner validation, versioned message construction, fee payer, memo and partial signing remain intact.
+- token_program_test.go:21-150: the initialized 82-byte mint fixture is adequate for ordinary extension-free tokens. Tests invoke the real client and deserialize its wire transaction; they validate the program, both ATAs, mint, authority, amount, decimals, fee payer, supplied blockhash, memo, and cryptographic client signature. Final lines 122-129 additionally assert all four resolved accounts' writable/signer flags. Sequential legacy/Token-2022/legacy coverage detects lasting global state changes; shared-client parallel cases and race instrumentation exercise concurrency. Go 1.24 loop-variable semantics and the locked mint cache are appropriate.
+- Changelog accurately describes program-aware payment construction. Extension-specific account lists, transfer fees/hooks, ATA creation, and frozen v1 source remain outside this bounded change.
+
+INDEPENDENT EXECUTION
+Preserved commands, environment, upstream source, overlay and logs are in astra-independent/ beside this report. Final verification metadata is final-verification.json; final logs are fixed-final.log and baseline-final.log. Earlier *-permitted logs cover the pre-hardening test; fixed.log/baseline.log preserve the initial sandbox denials. The final hardened test was rerun independently on both code variants.
+1. Extracted the pinned upstream scheme.go with git show into evidence scratch and created a Go overlay mapping only that production file. The identical final test and other package source remain in place; no source checkout was changed.
+2. Fixed source: go test -race -count=1 -parallel=2 -v -run '^TestCreatePaymentPayloadUsesMintTokenProgram$' ./mechanisms/svm/exact/client: exit 0; all six leaf cases pass.
+3. Same test with the pinned-upstream scheme overlay: exit 1; only transfer-program, source-ATA and destination-ATA assertions fail for Token-2022, in sequential and parallel modes. All four legacy leaves pass. No race diagnostic occurs.
+4. Initial sandbox attempts could not bind the loopback httptest listener; their logs are retained separately. Permitted reruns above used the same commands, cached dependencies, GOTOOLCHAIN=local, GOPROXY=off, GOSUMDB=off, GOMAXPROCS=2 and GOFLAGS=-p=2. The bind failures are environment failures, not bug evidence.
+
+EVIDENCE REVIEW
+Before account-flag hardening, the working diff/test were byte-identical to saved evidence, all 18 stable artifact checksums verified, and all shared temporary/stable files matched. The final source/test hashes above are independently computed after hardening and recorded in final-verification.json; parent must refresh archived patch/test copies and manifest to this final snapshot. The original broader logs substantiate six passing relevant race-test packages, scoped exact build and lint (zero issues), and clean formatting/diff checks. I inspected those original broader checks rather than rerunning them. The parent additionally reports rerunning those scoped checks successfully after the account-flag hardening; its final evidence refresh should preserve those separately attributable results. Independent overlay reproduction closes the original baseline metadata's lack of a recorded baseline source snapshot.
+
+REVIEW FOLLOW-UP
+The parent implemented the optional account-meta hardening in token_program_test.go:122-129. I inspected all eight assertions and independently reran the resulting final test against fixed and upstream production code. They are correct for the distinct-address fixture. No actionable findings remain. A canonical fixed cross-SDK PDA vector could further decouple expected addresses from the implementation formula, but is unnecessary for this fix and should not expand its scope.
+
+LIMITS AND HANDOFF
+No live RPC, simulation, submission, funded execution, dependency installs, source edits, commits, pushes, maintainer messages, or PR changes were performed by this reviewer. The original checkout and PR #3892 attribution were not changed. The report's availability refresh contains a saved GitHub search response; this audit did not repeat public searches or independently inspect every nearby PR, so absence of unpublished/other public fixes is not established. Maintainer acceptance remains a judgment, not evidence. Full-repository build/test/lint and a human review before a non-draft PR remain distinct from this scoped technical approval. Parent should refresh the older report's audit provenance and regenerate artifact hashes when adding this report or changing tests.

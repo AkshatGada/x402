@@ -1,0 +1,137 @@
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_token
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022
+    token_program_test.go:117: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:117
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0x6, 0xdd, 0xf6, 0xe1, 0xee, 0x75, 0x8f, 0xde, 0x18, 0x42, 0x5d, 0xbc, 0xe4, 0x6c, 0xcd, 0xda, 0xb6, 0x1a, 0xfc, 0x4d, 0x83, 0xb9, 0xd, 0x27, 0xfe, 0xbd, 0xf9, 0x28, 0xd8, 0xa1, 0x8b, 0xfc}
+        	            	actual  : solana.PublicKey{0x6, 0xdd, 0xf6, 0xe1, 0xd7, 0x65, 0xa1, 0x93, 0xd9, 0xcb, 0xe1, 0x46, 0xce, 0xeb, 0x79, 0xac, 0x1c, 0xb4, 0x85, 0xed, 0x5f, 0x5b, 0x37, 0x91, 0x3a, 0x8c, 0xf5, 0x85, 0x7e, 0xff, 0x0, 0xa9}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  06 dd f6 e1 ee 75 8f de  18 42 5d bc e4 6c cd da  |.....u...B]..l..|
+        	            	- 00000010  b6 1a fc 4d 83 b9 0d 27  fe bd f9 28 d8 a1 8b fc  |...M...'...(....|
+        	            	+ 00000000  06 dd f6 e1 d7 65 a1 93  d9 cb e1 46 ce eb 79 ac  |.....e.....F..y.|
+        	            	+ 00000010  1c b4 85 ed 5f 5b 37 91  3a 8c f5 85 7e ff 00 a9  |...._[7.:...~...|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022
+        	Messages:   	transfer program must match the mint owner
+    token_program_test.go:118: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:118
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0xaf, 0x94, 0x0, 0x23, 0xcd, 0xaf, 0x8b, 0x62, 0xec, 0x10, 0x2c, 0xb4, 0xfa, 0xd5, 0xc, 0x52, 0xb6, 0x67, 0x96, 0x17, 0xd4, 0x47, 0x30, 0xbf, 0x8f, 0x59, 0x32, 0x66, 0xfd, 0xb6, 0x17, 0x9c}
+        	            	actual  : solana.PublicKey{0x5e, 0xd5, 0x57, 0x2d, 0xf0, 0xae, 0x9a, 0x50, 0x57, 0x75, 0xe0, 0x19, 0xcf, 0xcb, 0x59, 0xab, 0xb8, 0x41, 0xdd, 0xed, 0x7a, 0xe2, 0x73, 0x6, 0x66, 0x48, 0x95, 0x5, 0xe3, 0xfc, 0x9, 0x26}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  af 94 00 23 cd af 8b 62  ec 10 2c b4 fa d5 0c 52  |...#...b..,....R|
+        	            	- 00000010  b6 67 96 17 d4 47 30 bf  8f 59 32 66 fd b6 17 9c  |.g...G0..Y2f....|
+        	            	+ 00000000  5e d5 57 2d f0 ae 9a 50  57 75 e0 19 cf cb 59 ab  |^.W-...PWu....Y.|
+        	            	+ 00000010  b8 41 dd ed 7a e2 73 06  66 48 95 05 e3 fc 09 26  |.A..z.s.fH.....&|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022
+        	Messages:   	source ATA must use the mint's token program
+    token_program_test.go:119: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:119
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0x9e, 0xe1, 0x59, 0xe9, 0xf0, 0xc, 0xe7, 0x59, 0xb, 0xa6, 0xb9, 0x91, 0x19, 0xec, 0x90, 0xae, 0x5a, 0x88, 0xca, 0x98, 0x34, 0x59, 0x6a, 0x4a, 0x9a, 0x39, 0x8, 0x97, 0xb3, 0x65, 0x1b, 0x16}
+        	            	actual  : solana.PublicKey{0xf3, 0x94, 0x18, 0x97, 0x91, 0xe, 0x7b, 0xd5, 0xde, 0x20, 0xb3, 0x80, 0x25, 0xcc, 0xe0, 0x53, 0x75, 0x8, 0x62, 0x4, 0xda, 0x79, 0x4b, 0xb4, 0x62, 0x4e, 0xca, 0xb8, 0x6f, 0xe3, 0xb6, 0xa9}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  9e e1 59 e9 f0 0c e7 59  0b a6 b9 91 19 ec 90 ae  |..Y....Y........|
+        	            	- 00000010  5a 88 ca 98 34 59 6a 4a  9a 39 08 97 b3 65 1b 16  |Z...4YjJ.9...e..|
+        	            	+ 00000000  f3 94 18 97 91 0e 7b d5  de 20 b3 80 25 cc e0 53  |......{.. ..%..S|
+        	            	+ 00000010  75 08 62 04 da 79 4b b4  62 4e ca b8 6f e3 b6 a9  |u.b..yK.bN..o...|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022
+        	Messages:   	destination ATA must use the mint's token program
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_after_token_2022
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+=== RUN   TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== PAUSE TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022
+=== NAME  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+    token_program_test.go:117: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:117
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0x6, 0xdd, 0xf6, 0xe1, 0xee, 0x75, 0x8f, 0xde, 0x18, 0x42, 0x5d, 0xbc, 0xe4, 0x6c, 0xcd, 0xda, 0xb6, 0x1a, 0xfc, 0x4d, 0x83, 0xb9, 0xd, 0x27, 0xfe, 0xbd, 0xf9, 0x28, 0xd8, 0xa1, 0x8b, 0xfc}
+        	            	actual  : solana.PublicKey{0x6, 0xdd, 0xf6, 0xe1, 0xd7, 0x65, 0xa1, 0x93, 0xd9, 0xcb, 0xe1, 0x46, 0xce, 0xeb, 0x79, 0xac, 0x1c, 0xb4, 0x85, 0xed, 0x5f, 0x5b, 0x37, 0x91, 0x3a, 0x8c, 0xf5, 0x85, 0x7e, 0xff, 0x0, 0xa9}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  06 dd f6 e1 ee 75 8f de  18 42 5d bc e4 6c cd da  |.....u...B]..l..|
+        	            	- 00000010  b6 1a fc 4d 83 b9 0d 27  fe bd f9 28 d8 a1 8b fc  |...M...'...(....|
+        	            	+ 00000000  06 dd f6 e1 d7 65 a1 93  d9 cb e1 46 ce eb 79 ac  |.....e.....F..y.|
+        	            	+ 00000010  1c b4 85 ed 5f 5b 37 91  3a 8c f5 85 7e ff 00 a9  |...._[7.:...~...|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+        	Messages:   	transfer program must match the mint owner
+    token_program_test.go:118: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:118
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0xaf, 0x94, 0x0, 0x23, 0xcd, 0xaf, 0x8b, 0x62, 0xec, 0x10, 0x2c, 0xb4, 0xfa, 0xd5, 0xc, 0x52, 0xb6, 0x67, 0x96, 0x17, 0xd4, 0x47, 0x30, 0xbf, 0x8f, 0x59, 0x32, 0x66, 0xfd, 0xb6, 0x17, 0x9c}
+        	            	actual  : solana.PublicKey{0x5e, 0xd5, 0x57, 0x2d, 0xf0, 0xae, 0x9a, 0x50, 0x57, 0x75, 0xe0, 0x19, 0xcf, 0xcb, 0x59, 0xab, 0xb8, 0x41, 0xdd, 0xed, 0x7a, 0xe2, 0x73, 0x6, 0x66, 0x48, 0x95, 0x5, 0xe3, 0xfc, 0x9, 0x26}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  af 94 00 23 cd af 8b 62  ec 10 2c b4 fa d5 0c 52  |...#...b..,....R|
+        	            	- 00000010  b6 67 96 17 d4 47 30 bf  8f 59 32 66 fd b6 17 9c  |.g...G0..Y2f....|
+        	            	+ 00000000  5e d5 57 2d f0 ae 9a 50  57 75 e0 19 cf cb 59 ab  |^.W-...PWu....Y.|
+        	            	+ 00000010  b8 41 dd ed 7a e2 73 06  66 48 95 05 e3 fc 09 26  |.A..z.s.fH.....&|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+        	Messages:   	source ATA must use the mint's token program
+=== CONT  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token
+=== NAME  TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+    token_program_test.go:119: 
+        	Error Trace:	$SOURCE/go/mechanisms/svm/exact/client/token_program_test.go:119
+        	Error:      	Not equal: 
+        	            	expected: solana.PublicKey{0x9e, 0xe1, 0x59, 0xe9, 0xf0, 0xc, 0xe7, 0x59, 0xb, 0xa6, 0xb9, 0x91, 0x19, 0xec, 0x90, 0xae, 0x5a, 0x88, 0xca, 0x98, 0x34, 0x59, 0x6a, 0x4a, 0x9a, 0x39, 0x8, 0x97, 0xb3, 0x65, 0x1b, 0x16}
+        	            	actual  : solana.PublicKey{0xf3, 0x94, 0x18, 0x97, 0x91, 0xe, 0x7b, 0xd5, 0xde, 0x20, 0xb3, 0x80, 0x25, 0xcc, 0xe0, 0x53, 0x75, 0x8, 0x62, 0x4, 0xda, 0x79, 0x4b, 0xb4, 0x62, 0x4e, 0xca, 0xb8, 0x6f, 0xe3, 0xb6, 0xa9}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (solana.PublicKey) (len=32) {
+        	            	- 00000000  9e e1 59 e9 f0 0c e7 59  0b a6 b9 91 19 ec 90 ae  |..Y....Y........|
+        	            	- 00000010  5a 88 ca 98 34 59 6a 4a  9a 39 08 97 b3 65 1b 16  |Z...4YjJ.9...e..|
+        	            	+ 00000000  f3 94 18 97 91 0e 7b d5  de 20 b3 80 25 cc e0 53  |......{.. ..%..S|
+        	            	+ 00000010  75 08 62 04 da 79 4b b4  62 4e ca b8 6f e3 b6 a9  |u.b..yK.bN..o...|
+        	            	 }
+        	Test:       	TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022
+        	Messages:   	destination ATA must use the mint's token program
+--- FAIL: TestCreatePaymentPayloadUsesMintTokenProgram (0.02s)
+    --- FAIL: TestCreatePaymentPayloadUsesMintTokenProgram/sequential (0.01s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_token (0.00s)
+        --- FAIL: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/token_2022 (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/sequential/legacy_after_token_2022 (0.00s)
+    --- FAIL: TestCreatePaymentPayloadUsesMintTokenProgram/parallel (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_after_token_2022 (0.00s)
+        --- FAIL: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/token_2022 (0.00s)
+        --- PASS: TestCreatePaymentPayloadUsesMintTokenProgram/parallel/legacy_token (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/client	0.544s
+FAIL
