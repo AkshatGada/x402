@@ -1,0 +1,13 @@
+{
+  "upstream": "4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54",
+  "implementation": "236e87b80ac9e68606bb417419a1b500e23d97a6",
+  "implementation_branch": "codex/svm-exact-rpc-injection",
+  "evidence_branch": "codex/evidence-svm-exact-rpc-injection",
+  "test_sha256": "a6ff17681d38d277c27206076b74d3de9014134124a965530266fcb3a89a89b1",
+  "dependency_versions": {
+    "@solana/kit": "6.1.0",
+    "typescript": "5.9.2",
+    "vitest": "3.2.7"
+  },
+  "baseline_final_typecheck_logs_identical": true
+}

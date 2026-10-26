@@ -1,0 +1,9 @@
+{
+  "command": [
+    "node",
+    "node_modules/tsup/dist/cli-default.js"
+  ],
+  "cwd": "<local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 8.77
+}

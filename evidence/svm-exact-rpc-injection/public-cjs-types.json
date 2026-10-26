@@ -1,0 +1,19 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--strict",
+    "--skipLibCheck",
+    "--target",
+    "ES2020",
+    "--module",
+    "NodeNext",
+    "--moduleResolution",
+    "NodeNext",
+    "rpc-public-validation.cts"
+  ],
+  "cwd": "<local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.43
+}

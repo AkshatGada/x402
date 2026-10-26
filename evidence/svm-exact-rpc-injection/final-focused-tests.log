@@ -1,0 +1,9 @@
+
+ RUN  v3.2.7 <local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm
+
+ ✓ test/unit/clientRpcInjection.test.ts (17 tests) 33ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  11:15:06
+   Duration  208ms (transform 44ms, setup 0ms, collect 92ms, tests 33ms, environment 0ms, prepare 24ms)

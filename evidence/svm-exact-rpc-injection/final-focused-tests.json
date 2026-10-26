@@ -1,0 +1,15 @@
+{
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "test/unit/clientRpcInjection.test.ts",
+    "--coverage.enabled=false",
+    "--maxWorkers=2",
+    "--minWorkers=1",
+    "--no-file-parallelism"
+  ],
+  "cwd": "<local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.38
+}

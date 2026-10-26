@@ -1,0 +1,43 @@
+Astra high final implementation audit — #1832 — 2026-10-26
+
+Result: no blocking correctness or maintainability findings in the reviewed diff. The implementation follows the scoped design: v2 exact client only, with the agreed minimal shared-helper type narrowing and alias validation guard. Ready for the parent's remaining build/public-type/baseline checks and required human review. This is not a claim that I independently ran the reported test suite.
+
+Reviewed checkout <local>/x402-svm-rpc-injection-20261026 against base 4241d56cae2fb7ed06cd18e3a9ff2a3457b1ce54. Reviewed all six tracked changed files plus the untracked 17-case clientRpcInjection.test.ts and minor changeset. Read surrounding existing network, blockhash and mint-cache tests and tsup entrypoint config. I ran git diff --check successfully, but no unit suite, package build, installation or heavy checks. Parent reports 17 focused and 1044 SVM tests passing; build/type/baseline verification remains parent-owned.
+
+Source review
+- ExactSvmClientConfig intersects the existing URL config with the minimal Kit Rpc<GetAccountInfoApi & GetLatestBlockhashApi>. It is scoped to the exact v2 constructor and exported from the package root and exact/client entrypoint. This avoids advertising unsupported injection on shared client configs, upto, batch or v1.
+- normalizeNetwork executes before either RPC selection or mint-cache access. Injected rpc takes precedence using ?? and avoids constructing a default client, even when rpcUrl is also given. The fallback remains the original createRpcClient invocation with unchanged network and URL arguments.
+- The normalizer's own-property guard preserves rejection of inherited alias keys. Supported CAIP-2 identifiers and aliases retain their behavior. The extra validation call on the default path is cheap and has no network side effects. The only incidental error-text difference is inherited alias names now rejected with the normalizer's Unsupported SVM network wording rather than the factory's Unsupported network wording; all remain rejected.
+- resolveBlockhash changes only its accepted parameter type. It retains the original body, default commitment behavior, supplied-hint parsing and fallback request. The smaller capability requirement is compatible with full existing clients and actual unbranded Kit transports.
+- Mint cache key/body, fee-payer selection, token validation, instruction construction, memo generation and signing are unchanged. There are no retry, failover, discovery, cluster check or transaction-submission additions.
+
+Tests and acceptance matrix
+- Three injected-network cases each create and cryptographically verify two actual payer-signed wire transactions through real createSolanaRpcFromTransport and Kit decoding. They verify fee payer, instruction count and transfer discriminator/amount/decimals. Both rpc and rpcUrl are supplied, with default construction configured to fail locally if reached.
+- Request order proves injected mint fetch and fallback blockhash fetch, then reuse of cached mint metadata while fetching another blockhash.
+- Three default network URL cases plus a custom URL case prove omitted rpc retains the existing factory path and network-specific URLs.
+- Server-provided blockhash case verifies decoded lifetime and absence of blockhash request. Existing client.test.ts covers absent/malformed hints, height parsing and fallback return values; duplicating that matrix in the new test is unnecessary.
+- Failure cases cover both mint and blockhash transport errors by identity, reject unintended default construction, then permit an explicit subsequent caller attempt. Mint failure eviction and reuse after blockhash failure are asserted.
+- Unsupported network cases cover an unknown Solana CAIP-2, a foreign family and an inherited alias, for both injected/default configuration. All reject before transport or factory work. One supported alias works through injection; existing normalizeNetwork tests cover all supported aliases and ordinary unknown names.
+- No direct simultaneous mint-fetch coalescing test was found in the inspected existing tests. Existing tests cover repeated caching, failure eviction and protection of a newer in-flight cache entry. Given the cache implementation is unchanged, this is not a blocking gap or a reason to add a concurrency test solely for this patch. My earlier design report's suggestion that existing tests already covered coalescing was broader than the actual tests found; do not repeat that claim.
+- The new test imports the exact/client config and assigns an actual unbranded client without weakening its type. Vitest execution alone does not typecheck this assignment. Parent must ensure its dedicated typecheck includes the new test or a fixture, and generated declarations expose the type through both root and subpath. tsup has both entrypoints configured.
+
+Optional minor test improvement (not blocking)
+assertSignedPayment currently checks the decoded lifetime only indirectly for fallback calls; its caller in the supplied-blockhash case explicitly checks it. Adding expect(message.lifetimeToken).toBe(BLOCKHASH) inside assertSignedPayment would explicitly assert that actual fallback payloads carry the returned blockhash too. Existing resolveBlockhash tests already assert fallback values independently, and the unchanged transaction-building code uses that result directly, so the current coverage remains adequate.
+
+Documentation and release accuracy
+README clearly scopes the option to v2 exact, describes caller-provided transport policy, precedence, no scheme-level fallback, preserved URL defaults and explicit per-network registrations. Its example uses the supported Solana devnet constant and direct ExactSvmScheme construction. signer and transport are intentionally stated prerequisites, so the snippet does not pretend to be a complete standalone transport implementation. Cluster responsibility is accurately assigned to the caller; no claim that the scheme verifies endpoint identity is made. The minor @x402/svm changeset accurately describes the additive feature without invented performance or reliability claims.
+
+Attribution and scope
+Review performed by Astra in Codex, following the previously read contribution skill. No Claude work is claimed. No files in the implementation checkout were edited by this audit. Only this review report was written. No live RPC, funds, external messages, commits, push, PR action or attribution change on #3892 occurred.
+
+Final verification addendum — same review turn
+Parent addressed the optional lifetime assertion: I inspected the updated test and confirmed assertSignedPayment now checks message.lifetimeToken against BLOCKHASH for every payload, removes the redundant supplied-case assertion/return, and preserves literal network table types with as const. No concern introduced by these changes.
+
+Parent reports the following checks, which I did not independently execute:
+- Updated focused suite: all 17 pass.
+- Generated ESM and CJS declarations compile using ExactSvmClientConfig imports from both package root and exact/client, accepting real unbranded createSolanaRpcFromTransport and branded devnet clients.
+- Whole package tsc produces the same five baseline diagnostics, byte-identical; targeted new-test compilation has only two transitive pre-existing signatureVerification diagnostics and no diagnostics in the new test.
+- Running the identical 17 tests against baseline produces seven failing feature cases and ten passing compatibility cases. This is useful feature-gap/compatibility evidence; the unsupported baseline rpc option must not be described as an existing supported API regression.
+- Earlier full SVM suite report remains 1044 tests passing; this was parent-run, not independently rerun here.
+
+Final verdict: no blocking findings. The optional assertion is resolved and the parent-reported public declaration/type evidence closes the remaining acceptance concern. Package-wide TypeScript cleanliness is limited by five unchanged baseline diagnostics, so do not claim an entirely clean package tsc. Human verification remains required before a non-Draft PR under the contribution policy. This audit authorizes no external write and performed none.

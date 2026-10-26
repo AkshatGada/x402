@@ -1,0 +1,15 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/constants.ts",
+    "src/exact/client/index.ts",
+    "src/exact/client/scheme.ts",
+    "src/index.ts",
+    "src/utils.ts",
+    "test/unit/clientRpcInjection.test.ts"
+  ],
+  "cwd": "<local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 1.01
+}

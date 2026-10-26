@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "-p",
+    "tsconfig.rpc-validation.json"
+  ],
+  "cwd": "<local>/x402-svm-rpc-injection-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 2,
+  "seconds": 0.88
+}

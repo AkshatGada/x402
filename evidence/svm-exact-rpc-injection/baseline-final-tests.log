@@ -1,0 +1,130 @@
+
+ RUN  v3.2.7 <local>/x402-rpc-baseline-20261026/typescript/packages/mechanisms/svm
+
+ ❯ test/unit/clientRpcInjection.test.ts (17 tests | 7 failed) 25ms
+   × ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp 4ms
+     → Unexpected default RPC construction
+   × ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1 0ms
+     → Unexpected default RPC construction
+   × ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z 0ms
+     → Unexpected default RPC construction
+   ✓ ExactSvmScheme RPC injection > preserves the default RPC for solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp 10ms
+   ✓ ExactSvmScheme RPC injection > preserves the default RPC for solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1 2ms
+   ✓ ExactSvmScheme RPC injection > preserves the default RPC for solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z 1ms
+   ✓ ExactSvmScheme RPC injection > preserves the custom URL when no RPC is injected 1ms
+   × ExactSvmScheme RPC injection > uses a server-supplied blockhash without fetching it from the injected RPC 0ms
+     → Unexpected default RPC construction
+   × ExactSvmScheme RPC injection > propagates getAccountInfo failure without fallback and permits retry 2ms
+     → expected Error: Unexpected default RPC construction to be Error: Custom transport unavailable // Object.is equality
+   × ExactSvmScheme RPC injection > propagates getLatestBlockhash failure without fallback and permits retry 0ms
+     → expected Error: Unexpected default RPC construction to be Error: Custom transport unavailable // Object.is equality
+   ✓ ExactSvmScheme RPC injection > unsupported network solana:unsupported > rejects before RPC work (injected=true) 1ms
+   ✓ ExactSvmScheme RPC injection > unsupported network solana:unsupported > rejects before RPC work (injected=false) 0ms
+   ✓ ExactSvmScheme RPC injection > unsupported network eip155:1 > rejects before RPC work (injected=true) 0ms
+   ✓ ExactSvmScheme RPC injection > unsupported network eip155:1 > rejects before RPC work (injected=false) 1ms
+   ✓ ExactSvmScheme RPC injection > unsupported network constructor > rejects before RPC work (injected=true) 0ms
+   ✓ ExactSvmScheme RPC injection > unsupported network constructor > rejects before RPC work (injected=false) 0ms
+   × ExactSvmScheme RPC injection > preserves supported network aliases with an injected RPC 0ms
+     → Unexpected default RPC construction
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
+Error: Unexpected default RPC construction
+ ❯ test/unit/clientRpcInjection.test.ts:70:13
+     68|     // An unexpected default construction fails locally instead of acc…
+     69|     vi.mocked(createSolanaRpc).mockImplementation(() => {
+     70|       throw new Error("Unexpected default RPC construction");
+       |             ^
+     71|     });
+     72|     payer = await generateKeyPairSigner();
+ ❯ createRpcClient src/utils.ts:149:14
+ ❯ ExactSvmScheme.createPaymentPayload src/exact/client/scheme.ts:66:17
+ ❯ assertSignedPayment test/unit/clientRpcInjection.test.ts:90:33
+ ❯ test/unit/clientRpcInjection.test.ts:120:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1
+Error: Unexpected default RPC construction
+ ❯ test/unit/clientRpcInjection.test.ts:70:13
+     68|     // An unexpected default construction fails locally instead of acc…
+     69|     vi.mocked(createSolanaRpc).mockImplementation(() => {
+     70|       throw new Error("Unexpected default RPC construction");
+       |             ^
+     71|     });
+     72|     payer = await generateKeyPairSigner();
+ ❯ createRpcClient src/utils.ts:141:14
+ ❯ ExactSvmScheme.createPaymentPayload src/exact/client/scheme.ts:66:17
+ ❯ assertSignedPayment test/unit/clientRpcInjection.test.ts:90:33
+ ❯ test/unit/clientRpcInjection.test.ts:120:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > uses an unbranded Kit transport client ahead of rpcUrl on solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z
+Error: Unexpected default RPC construction
+ ❯ test/unit/clientRpcInjection.test.ts:70:13
+     68|     // An unexpected default construction fails locally instead of acc…
+     69|     vi.mocked(createSolanaRpc).mockImplementation(() => {
+     70|       throw new Error("Unexpected default RPC construction");
+       |             ^
+     71|     });
+     72|     payer = await generateKeyPairSigner();
+ ❯ createRpcClient src/utils.ts:145:14
+ ❯ ExactSvmScheme.createPaymentPayload src/exact/client/scheme.ts:66:17
+ ❯ assertSignedPayment test/unit/clientRpcInjection.test.ts:90:33
+ ❯ test/unit/clientRpcInjection.test.ts:120:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > uses a server-supplied blockhash without fetching it from the injected RPC
+Error: Unexpected default RPC construction
+ ❯ test/unit/clientRpcInjection.test.ts:70:13
+     68|     // An unexpected default construction fails locally instead of acc…
+     69|     vi.mocked(createSolanaRpc).mockImplementation(() => {
+     70|       throw new Error("Unexpected default RPC construction");
+       |             ^
+     71|     });
+     72|     payer = await generateKeyPairSigner();
+ ❯ createRpcClient src/utils.ts:141:14
+ ❯ ExactSvmScheme.createPaymentPayload src/exact/client/scheme.ts:66:17
+ ❯ assertSignedPayment test/unit/clientRpcInjection.test.ts:90:33
+ ❯ test/unit/clientRpcInjection.test.ts:154:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > propagates getAccountInfo failure without fallback and permits retry
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > propagates getLatestBlockhash failure without fallback and permits retry
+AssertionError: expected Error: Unexpected default RPC construction to be Error: Custom transport unavailable // Object.is equality
+
+- Expected
++ Received
+
+  Error {
+-   "message": "Custom transport unavailable",
++   "message": "Unexpected default RPC construction",
+  }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  test/unit/clientRpcInjection.test.ts > ExactSvmScheme RPC injection > preserves supported network aliases with an injected RPC
+Error: Unexpected default RPC construction
+ ❯ test/unit/clientRpcInjection.test.ts:70:13
+     68|     // An unexpected default construction fails locally instead of acc…
+     69|     vi.mocked(createSolanaRpc).mockImplementation(() => {
+     70|       throw new Error("Unexpected default RPC construction");
+       |             ^
+     71|     });
+     72|     payer = await generateKeyPairSigner();
+ ❯ createRpcClient src/utils.ts:141:14
+ ❯ ExactSvmScheme.createPaymentPayload src/exact/client/scheme.ts:66:17
+ ❯ assertSignedPayment test/unit/clientRpcInjection.test.ts:90:33
+ ❯ test/unit/clientRpcInjection.test.ts:195:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 10 passed (17)
+   Start at  11:15:06
+   Duration  202ms (transform 45ms, setup 0ms, collect 94ms, tests 25ms, environment 0ms, prepare 24ms)

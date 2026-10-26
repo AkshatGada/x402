@@ -1,0 +1,13 @@
+import { createSolanaRpcFromTransport, createSolanaRpc, devnet, type RpcTransport } from "@solana/kit";
+import { x402Client } from "@x402/core/client";
+import { ExactSvmScheme, SOLANA_DEVNET_CAIP2, type ExactSvmClientConfig, type ClientSvmSigner } from "@x402/svm";
+import { ExactSvmScheme as DirectScheme, type ExactSvmClientConfig as DirectConfig } from "@x402/svm/exact/client";
+declare const transport: RpcTransport;
+declare const signer: ClientSvmSigner;
+const rpc = createSolanaRpcFromTransport(transport);
+const config: ExactSvmClientConfig = { rpc };
+const direct: DirectConfig = config;
+new ExactSvmScheme(signer, config);
+new x402Client().register(SOLANA_DEVNET_CAIP2, new DirectScheme(signer, direct));
+const branded: DirectConfig = { rpc: createSolanaRpc(devnet("https://rpc.example.invalid")) };
+new DirectScheme(signer, branded);

@@ -1,0 +1,10 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "cwd": "<local>/x402-rpc-baseline-20261026/typescript/packages/mechanisms/svm",
+  "exit_code": 2,
+  "seconds": 1.11
+}
