@@ -1,0 +1,15 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-mod=readonly",
+    "-count=1",
+    "-v",
+    "./mechanisms/svm/exact/facilitator",
+    "-run",
+    "TestRecipientATADiagnostics"
+  ],
+  "cwd": "<implementation>/go",
+  "exit_code": 0,
+  "seconds": 1.41
+}

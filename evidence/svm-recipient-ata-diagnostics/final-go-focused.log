@@ -1,0 +1,72 @@
+=== RUN   TestRecipientATADiagnostics
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/correct_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/read_error
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/partial_result_with_read_error
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/inconclusive_result
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/no_optional_getter
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/successful_simulation
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_amount_rejection
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_mint_rejection
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/undecodable_transaction
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/correct_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/read_error
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/partial_result_with_read_error
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/inconclusive_result
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/no_optional_getter
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/successful_simulation
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_amount_rejection
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_mint_rejection
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/undecodable_transaction
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner
+--- PASS: TestRecipientATADiagnostics (0.01s)
+    --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA (0.01s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/correct_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/read_error (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/partial_result_with_read_error (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/inconclusive_result (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/no_optional_getter (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/successful_simulation (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_amount_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_mint_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/undecodable_transaction (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner (0.00s)
+    --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/correct_program_owner (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/read_error (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/partial_result_with_read_error (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/inconclusive_result (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/no_optional_getter (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/successful_simulation (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_amount_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_mint_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/undecodable_transaction (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner (0.00s)
+PASS
+ok      github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator  0.637s

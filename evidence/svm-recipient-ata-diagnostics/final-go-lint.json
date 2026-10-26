@@ -1,0 +1,11 @@
+{
+  "command": [
+    "<tools>/bin/golangci-lint",
+    "run",
+    "--concurrency=2",
+    "./mechanisms/svm/exact/facilitator"
+  ],
+  "cwd": "<implementation>/go",
+  "exit_code": 0,
+  "seconds": 0.92
+}

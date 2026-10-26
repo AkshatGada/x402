@@ -1,0 +1,15 @@
+{
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "test/unit/recipientAtaDiagnostics.test.ts",
+    "--coverage.enabled=false",
+    "--maxWorkers=2",
+    "--minWorkers=1",
+    "--no-file-parallelism"
+  ],
+  "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+  "exit_code": 1,
+  "seconds": 0.38
+}

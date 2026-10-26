@@ -1,0 +1,15 @@
+{
+  "command": [
+    "go",
+    "test",
+    "-mod=readonly",
+    "-p=2",
+    "-count=1",
+    "-race",
+    "-cover",
+    "./mechanisms/svm/exact/facilitator"
+  ],
+  "cwd": "<implementation>/go",
+  "exit_code": 0,
+  "seconds": 2.46
+}

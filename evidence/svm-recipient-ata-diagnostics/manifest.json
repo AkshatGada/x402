@@ -1,0 +1,37 @@
+{
+  "upstream": "b187119bf270a50c09057d7798c713788f823ca9",
+  "branch": "codex/svm-recipient-ata-diagnostics",
+  "test_files": {
+    "typescript/packages/mechanisms/svm/test/unit/recipientAtaDiagnostics.test.ts": "89cdb2950b4eda55fc2b8ff7479bf9ee18bd3e3a8129e9c4d716eb25de1e5c94",
+    "go/mechanisms/svm/exact/facilitator/recipient_ata_test.go": "02d6aeff1dbdc91a1a0491f014b7f51656ddc8d08cb769e78fe3d836d921691c"
+  },
+  "fixture_note": "Fresh ephemeral keys generated per run. Tests and scenarios identical, not byte-identical generated transactions across runs.",
+  "typecheck_comparisons": {
+    "package": "five identical baseline diagnostics",
+    "test_fixture_with_ES2020_DOM": "six identical imported-source/helper diagnostics; no new test/source diagnostic"
+  },
+  "final-baseline-go": {
+    "pass": 10,
+    "fail": 22
+  },
+  "final-go-focused": {
+    "pass": 32,
+    "fail": 0
+  },
+  "changed_files": {
+    "go/mechanisms/svm/README.md": "f9dc01547e7499f92ec884b8e83a2db918c951d7e9d5a49ab2cf9dc7fd59a3fb",
+    "go/mechanisms/svm/exact/facilitator/errors.go": "29146c5a0400165099a0b0ebb36f0c0115b46690f72e69b46c29c2009d4bbbb4",
+    "go/mechanisms/svm/exact/facilitator/scheme.go": "e338bcfcfbf8abcf986c238fc87b9589d8234b687393b049005ee49e78d4e29b",
+    "typescript/packages/mechanisms/svm/README.md": "ba703286d9c36225c2fc15c9018a583835abde88a613f1cad6ec87d24b4415cb",
+    "typescript/packages/mechanisms/svm/src/exact/facilitator/errors.ts": "3770fb80cc5ac62fec9626681fe5854c426e1179d357ade8cb1fa1e8cd288222",
+    "typescript/packages/mechanisms/svm/src/exact/facilitator/scheme.ts": "587bde032cd44657aaa46d5b724ccb393af1a520c51811b8eeacec2db74a9f5a",
+    "typescript/packages/mechanisms/svm/src/signer.ts": "3574c51e75c530820f6befddb55284509d5577f8f387c65fdf092858c7120379",
+    "go/.changes/unreleased/fixed-svm-recipient-ata-diagnostics.yaml": "b7cfe92bdb700f1ddd4c9c08190202684fb33612c98d4af0127a6fe3d679ddf4",
+    "go/mechanisms/svm/exact/facilitator/recipient_ata_test.go": "02d6aeff1dbdc91a1a0491f014b7f51656ddc8d08cb769e78fe3d836d921691c",
+    "typescript/.changeset/svm-recipient-ata-diagnostics.md": "6f599674445ed1858fe9acbe894ae717235f465013ff1de4a4d61eab6f6f3757",
+    "typescript/packages/mechanisms/svm/test/unit/recipientAtaDiagnostics.test.ts": "89cdb2950b4eda55fc2b8ff7479bf9ee18bd3e3a8129e9c4d716eb25de1e5c94"
+  },
+  "source_patch_sha256": "95cb1df259616cc0b608091c03b738b213a59fb6931b04087ae1f5c8508f1ec0",
+  "implementation_commit": "599a9e36c8c07d56e96c3e675648d3a9db7b5981",
+  "baseline_description": "Disposable archive of pinned upstream source with only the two identical new test files added; 282 source files verified against Git blobs."
+}

@@ -1,0 +1,7 @@
+src/exact/facilitator/signatureVerification.ts(56,51): error TS2345: Argument of type 'TransactionMessageBytes' is not assignable to parameter of type 'Uint8Array<ArrayBufferLike>'.
+  Type 'NominalType<"brand", "TransactionMessageBytes"> & ReadonlyUint8Array<ArrayBufferLike>' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': copyWithin, fill, reverse, set, sort
+src/exact/facilitator/signatureVerification.ts(85,45): error TS2345: Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'SignatureBytes'.
+  Property '"__brand:@solana/kit"' is missing in type 'Uint8Array<ArrayBufferLike>' but required in type 'NominalType<"brand", "SignatureBytes">'.
+test/unit/index.test.ts(12,3): error TS2300: Duplicate identifier 'SOLANA_DEVNET_CAIP2'.
+test/unit/index.test.ts(23,10): error TS2300: Duplicate identifier 'SOLANA_DEVNET_CAIP2'.
+test/unit/index.test.ts(212,39): error TS2345: Argument of type 'FacilitatorSvmSigner' is not assignable to parameter of type 'ClientSvmSigner'.

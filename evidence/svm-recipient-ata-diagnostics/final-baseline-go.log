@@ -1,0 +1,757 @@
+=== RUN   TestRecipientATADiagnostics
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+    recipient_ata_test.go:146:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:146
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+    recipient_ata_test.go:147:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:147
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "11111111111111111111111111111111"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+    recipient_ata_test.go:146:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:146
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+    recipient_ata_test.go:147:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:147
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/correct_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/correct_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/read_error
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/read_error
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/partial_result_with_read_error
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/partial_result_with_read_error
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/inconclusive_result
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0xd7, 0x8b, 0x8a, 0x58, 0xfb, 0x13, 0xf5, 0x5, 0x48, 0xe2, 0x96, 0xf, 0xa3, 0xec, 0x1a, 0x58, 0xc8, 0xa5, 0x7f, 0xee, 0x86, 0x5a, 0x2e, 0xa1, 0x4d, 0x63, 0x5a, 0x26, 0xf, 0xcb, 0x54, 0x5a}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  d7 8b 8a 58 fb 13 f5 05  48 e2 96 0f a3 ec 1a 58  |...X....H......X|
+                            -   00000010  c8 a5 7f ee 86 5a 2e a1  4d 63 5a 26 0f cb 54 5a  |.....Z..McZ&..TZ|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/inconclusive_result
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/no_optional_getter
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/successful_simulation
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_amount_rejection
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_mint_rejection
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/undecodable_transaction
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found
+    recipient_ata_test.go:231:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:231
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found
+    recipient_ata_test.go:234:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:234
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found
+=== RUN   TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner
+    recipient_ata_test.go:231:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:231
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner
+    recipient_ata_test.go:234:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:234
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "FWQ4naggzYdLDhRcdaYK96wmN3uB8aiuxq5cLG3ABmGd"
+            Test:           TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+    recipient_ata_test.go:146:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:146
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+    recipient_ata_test.go:147:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:147
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "11111111111111111111111111111111"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+    recipient_ata_test.go:138:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:138
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+    recipient_ata_test.go:144:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:144
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+    recipient_ata_test.go:146:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:146
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+    recipient_ata_test.go:147:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:147
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/correct_program_owner
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/correct_program_owner
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/read_error
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/read_error
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/partial_result_with_read_error
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/partial_result_with_read_error
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/inconclusive_result
+    recipient_ata_test.go:150:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:150
+            Error:          Not equal:
+                            expected: []facilitator.recipientAccountRead{facilitator.recipientAccountRead{account:solana.PublicKey{0x2b, 0x3b, 0x3e, 0xb, 0xbf, 0xb3, 0xd1, 0x96, 0x54, 0xf6, 0xd4, 0xcc, 0x35, 0x53, 0x89, 0xe3, 0x83, 0xd1, 0xec, 0x73, 0xee, 0xc8, 0x6b, 0x9f, 0x18, 0xad, 0x97, 0x9f, 0xb7, 0x10, 0x8b, 0x70}, network:"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", commitment:"confirmed"}}
+                            actual  : []facilitator.recipientAccountRead(nil)
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1,11 +1,2 @@
+                            -([]facilitator.recipientAccountRead) (len=1) {
+                            - (facilitator.recipientAccountRead) {
+                            -  account: (solana.PublicKey) (len=32) {
+                            -   00000000  2b 3b 3e 0b bf b3 d1 96  54 f6 d4 cc 35 53 89 e3  |+;>.....T...5S..|
+                            -   00000010  83 d1 ec 73 ee c8 6b 9f  18 ad 97 9f b7 10 8b 70  |...s..k........p|
+                            -  },
+                            -  network: (string) (len=39) "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+                            -  commitment: (rpc.CommitmentType) (len=9) "confirmed"
+                            - }
+                            -}
+                            +([]facilitator.recipientAccountRead) <nil>
+
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/inconclusive_result
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/no_optional_getter
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/successful_simulation
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_amount_rejection
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_mint_rejection
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/undecodable_transaction
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found
+    recipient_ata_test.go:231:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:231
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_missing"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_missing
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found
+    recipient_ata_test.go:234:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:234
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found
+=== RUN   TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner
+    recipient_ata_test.go:231:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:231
+            Error:          Not equal:
+                            expected: "invalid_exact_solana_recipient_ata_wrong_program_owner"
+                            actual  : "invalid_exact_solana_transaction_simulation_failed"
+
+                            Diff:
+                            --- Expected
+                            +++ Actual
+                            @@ -1 +1 @@
+                            -invalid_exact_solana_recipient_ata_wrong_program_owner
+                            +invalid_exact_solana_transaction_simulation_failed
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner
+    recipient_ata_test.go:234:
+            Error Trace:    <baseline>/go/mechanisms/svm/exact/facilitator/recipient_ata_test.go:234
+            Error:          "Transaction simulation failed: InvalidAccountData" does not contain "3ukvfZ1UVt1Jc9A8Qf5kjECedUXtXkHr1pN49gzVcWHd"
+            Test:           TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner
+--- FAIL: TestRecipientATADiagnostics (0.01s)
+    --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA (0.01s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/wrapped_not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/empty_account_value (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/system_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/other_token_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/correct_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/read_error (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/partial_result_with_read_error (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/inconclusive_result (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/no_optional_getter (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/successful_simulation (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_amount_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/early_mint_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/undecodable_transaction (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA/settle_system_program_owner (0.00s)
+    --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/wrapped_not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/empty_account_value (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/system_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/other_token_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/correct_program_owner (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/read_error (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/partial_result_with_read_error (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/inconclusive_result (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/no_optional_getter (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/successful_simulation (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_amount_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/early_mint_rejection (0.00s)
+        --- PASS: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/undecodable_transaction (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_not_found (0.00s)
+        --- FAIL: TestRecipientATADiagnostics/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb/settle_system_program_owner (0.00s)
+FAIL
+FAIL    github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator  0.489s
+FAIL

@@ -1,0 +1,11 @@
+src/exact/facilitator/signatureVerification.ts(56,51): error TS2345: Argument of type 'TransactionMessageBytes' is not assignable to parameter of type 'Uint8Array<ArrayBufferLike>'.
+  Type 'NominalType<"brand", "TransactionMessageBytes"> & ReadonlyUint8Array<ArrayBufferLike>' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': copyWithin, fill, reverse, set, sort
+src/exact/facilitator/signatureVerification.ts(85,45): error TS2345: Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'SignatureBytes'.
+  Property '"__brand:@solana/kit"' is missing in type 'Uint8Array<ArrayBufferLike>' but required in type 'NominalType<"brand", "SignatureBytes">'.
+test/unit/helpers/signedTransaction.ts(33,53): error TS2344: Type '"address" | "signMessages"' does not satisfy the constraint '"address"'.
+  Type '"signMessages"' is not assignable to type '"address"'.
+test/unit/helpers/signedTransaction.ts(53,28): error TS18046: 'signer.signMessages' is of type 'unknown'.
+test/unit/helpers/signedTransaction.ts(153,7): error TS2322: Type 'MessageSigner' is not assignable to type 'Address<string> | TransactionSigner<string>'.
+  Property 'signAndSendTransactions' is missing in type 'MessageSigner' but required in type 'Readonly<{ address: Address<string>; signAndSendTransactions(transactions: readonly (Readonly<{ messageBytes: TransactionMessageBytes; signatures: SignaturesMap; }> | (Readonly<...> & TransactionWithLifetime))[], config?: BaseTransactionSignerConfig | undefined): Promise<...>; }>'.
+test/unit/helpers/signedTransaction.ts(182,5): error TS2345: Argument of type 'ReadonlyUint8Array<ArrayBuffer>' is not assignable to parameter of type 'Uint8Array<ArrayBufferLike>'.
+  Type 'ReadonlyUint8Array<ArrayBuffer>' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': copyWithin, fill, reverse, set, sort

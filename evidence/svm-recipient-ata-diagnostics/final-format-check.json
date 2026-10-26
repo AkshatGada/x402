@@ -1,0 +1,15 @@
+{
+  "command": [
+    "node",
+    "node_modules/prettier/bin/prettier.cjs",
+    "--check",
+    "src/exact/facilitator/scheme.ts",
+    "src/exact/facilitator/errors.ts",
+    "src/signer.ts",
+    "test/unit/recipientAtaDiagnostics.test.ts",
+    "../../../.changeset/svm-recipient-ata-diagnostics.md"
+  ],
+  "cwd": "<implementation>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.14
+}
