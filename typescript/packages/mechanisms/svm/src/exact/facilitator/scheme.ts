@@ -15,6 +15,7 @@ import {
 import {
   decompileTransactionMessage,
   getCompiledTransactionMessageDecoder,
+  isAddress,
   type Address,
   type Transaction,
 } from "@solana/kit";
@@ -1167,10 +1168,28 @@ export class ExactSvmScheme implements SchemeNetworkFacilitator {
       await this.signer.simulateTransaction(exactSvmPayload.transaction, requirements.network);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      let invalidReason = Errors.ErrTransactionSimulationFailed;
+      let invalidMessage = errorMessage;
+      if (this.signer.getAccountInfo) {
+        try {
+          const account = await this.signer.getAccountInfo(destATA, requirements.network, {
+            commitment: "confirmed",
+          });
+          if (account === null) {
+            invalidReason = Errors.ErrRecipientATAMissing;
+            invalidMessage = `${errorMessage}; recipient ATA ${destATA} was not found during diagnostic lookup`;
+          } else if (isAddress(account.owner) && account.owner !== programAddress) {
+            invalidReason = Errors.ErrRecipientATAWrongProgramOwner;
+            invalidMessage = `${errorMessage}; recipient ATA ${destATA} has program owner ${account.owner}, expected ${programAddress}`;
+          }
+        } catch {
+          // Account diagnosis is optional; keep the original simulation failure.
+        }
+      }
       return {
         isValid: false,
-        invalidReason: Errors.ErrTransactionSimulationFailed,
-        invalidMessage: errorMessage,
+        invalidReason,
+        invalidMessage,
         payer,
       };
     }

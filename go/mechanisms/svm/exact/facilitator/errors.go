@@ -31,6 +31,8 @@ const (
 	ErrInvalidFeePayer                = "invalid_exact_solana_invalid_fee_payer"
 	ErrTransactionSigningFailed       = "invalid_exact_solana_transaction_signing_failed"
 	ErrTransactionSimulationFailed    = "invalid_exact_solana_transaction_simulation_failed"
+	ErrRecipientATAMissing            = "invalid_exact_solana_recipient_ata_missing"
+	ErrRecipientATAWrongProgramOwner  = "invalid_exact_solana_recipient_ata_wrong_program_owner"
 
 	// Memo verification errors
 	ErrMemoMismatch = "invalid_exact_solana_payload_memo_mismatch"

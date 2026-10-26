@@ -11,6 +11,7 @@ import (
 
 	solana "github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/programs/token"
+	"github.com/gagliardetto/solana-go/rpc"
 
 	x402 "github.com/x402-foundation/x402/go/v2"
 	"github.com/x402-foundation/x402/go/v2/mechanisms/svm"
@@ -457,7 +458,36 @@ func (f *ExactSvmScheme) verifyStaticPath(
 	// CRITICAL: Simulation proves transaction will succeed (catches insufficient balance, invalid accounts, etc)
 	// Signatures are verified locally; the fee-payer slot is unsigned until settle.
 	if err := f.signer.SimulateTransaction(ctx, tx, string(requirements.Network), nil); err != nil {
-		return x402.NewVerifyError(ErrTransactionSimulationFailed, payer, err.Error())
+		failure := x402.NewVerifyError(ErrTransactionSimulationFailed, payer, err.Error())
+		reader, ok := f.signer.(interface {
+			GetAccountInfo(context.Context, solana.PublicKey, string, *rpc.GetAccountInfoOpts) (*rpc.GetAccountInfoResult, error)
+		})
+		if !ok {
+			return failure
+		}
+		// These transfer accounts and program have already passed static validation.
+		transfer := tx.Message.Instructions[2]
+		program, parseErr := tx.Message.Program(transfer.ProgramIDIndex)
+		if parseErr != nil {
+			return failure
+		}
+		accounts, parseErr := transfer.ResolveInstructionAccounts(&tx.Message)
+		if parseErr != nil || len(accounts) < 3 {
+			return failure
+		}
+		destination := accounts[2].PublicKey
+		account, readErr := reader.GetAccountInfo(ctx, destination, string(requirements.Network), &rpc.GetAccountInfoOpts{
+			Commitment: rpc.CommitmentConfirmed,
+		})
+		switch {
+		case errors.Is(readErr, rpc.ErrNotFound) || (readErr == nil && account != nil && account.Value == nil):
+			failure.InvalidReason = ErrRecipientATAMissing
+			failure.InvalidMessage = fmt.Sprintf("%s; recipient ATA %s was not found during diagnostic lookup", err.Error(), destination)
+		case readErr == nil && account != nil && account.Value != nil && account.Value.Owner != program:
+			failure.InvalidReason = ErrRecipientATAWrongProgramOwner
+			failure.InvalidMessage = fmt.Sprintf("%s; recipient ATA %s has program owner %s, expected %s", err.Error(), destination, account.Value.Owner, program)
+		}
+		return failure
 	}
 
 	return nil
