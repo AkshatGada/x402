@@ -1,0 +1,78 @@
+Final independent command record — 2026-10-28
+
+Common paths/environment:
+NODE=<node-runtime>/bin/node
+GO=<test-cache>
+SLOT=<test-cache>
+TASK=<validation>
+OUT=<audit>/final
+EVM=$TASK/checkout/typescript/packages/mechanisms/evm
+CORE=$TASK/checkout/typescript/packages/core
+PATH=${NODE%/node}:/usr/bin:/bin
+Go: CGO_ENABLED=0 GOPROXY=off GOTOOLCHAIN=local
+GOMODCACHE=<test-cache>
+GOCACHE=$TASK/gocache GOPATH=$TASK/gopath
+The queue sets GOMAXPROCS=2 and GOFLAGS=-p=2.
+
+From $EVM:
+python3 "$SLOT" "$NODE" node_modules/vitest/vitest.mjs run --coverage --coverage.reportsDirectory="$OUT/evm-coverage" --maxWorkers 2
+  -> evm-coverage.log; exit0,1648tests.
+python3 "$SLOT" "$NODE" node_modules/typescript/bin/tsc --noEmit -p "$TASK/tsconfig.managed-tests.json"
+  -> evm-types.log; exit0.
+python3 "$SLOT" "$NODE" node_modules/typescript/bin/tsc --noEmit
+  -> evm-standalone-types.log; exit2,known2Cryptoerrors.
+python3 "$SLOT" "$NODE" node_modules/eslint/bin/eslint.js src/batch-settlement/server/managed.ts src/batch-settlement/server/scheme.ts src/batch-settlement/server/settle.ts src/batch-settlement/server/verify.ts src/batch-settlement/server/channelManager.ts src/batch-settlement/client/channel.ts src/batch-settlement/types.ts src/batch-settlement/errors.ts src/batch-settlement/utils.ts test/unit/batch-settlement/managed.test.ts
+  -> evm-lint.log; exit0.
+python3 "$SLOT" "$NODE" node_modules/prettier/bin/prettier.cjs --check src/batch-settlement/server/managed.ts src/batch-settlement/server/scheme.ts src/batch-settlement/server/settle.ts src/batch-settlement/server/verify.ts src/batch-settlement/server/channelManager.ts src/batch-settlement/client/channel.ts src/batch-settlement/types.ts src/batch-settlement/errors.ts src/batch-settlement/utils.ts src/batch-settlement/README.md test/unit/batch-settlement/managed.test.ts ../../../.changeset/evm-managed-custody-client-server.md
+  -> evm-format.log; exit0.
+
+From $CORE:
+python3 "$SLOT" "$NODE" node_modules/vitest/vitest.mjs run --maxWorkers 2
+  -> core-tests.log; exit0,794tests.
+python3 "$SLOT" "$NODE" node_modules/vitest/vitest.mjs run --coverage --coverage.reportsDirectory="$OUT/core-coverage" --maxWorkers 2
+  -> core-coverage.log; exit0,794tests,coveragepass.
+python3 "$SLOT" "$NODE" node_modules/typescript/bin/tsc --noEmit
+  -> core-types.log; exit0.
+python3 "$SLOT" "$NODE" node_modules/eslint/bin/eslint.js src/server/x402ResourceServer.ts src/types/mechanisms.ts test/unit/server/x402ResourceServer.test.ts
+  -> core-lint.log; exit0.
+python3 "$SLOT" "$NODE" node_modules/prettier/bin/prettier.cjs --check src/server/x402ResourceServer.ts src/types/mechanisms.ts test/unit/server/x402ResourceServer.test.ts
+  -> core-format.log; exit0.
+
+From $OUT:
+python3 prepare_final_audit.py
+  -> owned probe copies/configs/current-regression-plus-extra test artifact.
+python3 "$SLOT" "$NODE" "$EVM/node_modules/vitest/vitest.mjs" run --config "$OUT/vitest.ordinary.config.mts" --maxWorkers 2
+  -> ordinary-tests.log; exit0,35cases(28copied+7new).
+python3 "$SLOT" "$NODE" bundle-fixed.mjs
+python3 "$SLOT" "$NODE" bundle-lifecycle.mjs
+python3 "$SLOT" "$NODE" bundle-signer-failure.mjs
+  -> corresponding bundle logs; all exit0; corrected-core.tsconfig.json aliases
+     core to frozen corrected source.
+python3 check_provenance.py
+  -> provenance-check.json;960files,no mismatches.
+  Uses read-only git ls-tree with GIT_NO_LAZY_FETCH=1; no hydration/download.
+
+From $TASK/snapshot/go, with Go env and scoped approved loopback permission:
+X402_PROBE_NODE="$NODE" X402_PROBE_SCRIPT="$OUT/probe-fixed.mjs" X402_PROBE_RESULT=implemented-control-passed python3 "$SLOT" "$GO" test -mod=readonly -p 2 -count=1 -v -run '^TestTypeScriptManagedCustodyProbe$' ./mechanisms/evm/batch-settlement/facilitator
+  -> probe-fixed.log; exit0.
+X402_PROBE_NODE="$NODE" X402_PROBE_SCRIPT="$OUT/probe-lifecycle.mjs" X402_PROBE_RESULT=ordinary-lifecycle-passed python3 "$SLOT" "$GO" test -mod=readonly -p 2 -count=1 -v -run '^TestTypeScriptManagedCustodyProbe$' ./mechanisms/evm/batch-settlement/facilitator
+  -> probe-lifecycle.log; exit0,verify1/settle1/heldfalse.
+X402_PROBE_NODE="$NODE" X402_PROBE_SCRIPT="$OUT/probe-signer-failure.mjs" X402_PROBE_RESULT=ordinary-signer-failure-passed python3 "$SLOT" "$GO" test -mod=readonly -p 2 -count=1 -v -run '^TestTypeScriptManagedCustodyProbe$' ./mechanisms/evm/batch-settlement/facilitator
+  -> probe-signer-failure.log; exit0,verify1/settle1/heldfalse.
+
+From $TASK/checkout (final commit after coordinator signed it):
+git rev-parse HEAD
+  -> 5847307b442f1035644aca3fa91f5b24dbfcc771
+git status --short
+  -> clean.
+git diff --binary dbe1080ac7f65e2e05cc8430a834c255a6800828..HEAD | shasum -a 256
+  -> 4ab434b5dbb10752c35482451dddb034ec577ce45005b242c98145c462362b75
+shasum -a 256 -c ../corrected-source-sha256.txt
+  -> source-hash-check.log;all15match.
+git diff --check dbe1080ac7f65e2e05cc8430a834c255a6800828..HEAD
+  -> diff-check.log;pass.
+
+From primary <primary-checkout>:
+git status --porcelain
+git rev-parse HEAD
+  -> clean,b1176d302b3210395683ac6a5025e84c52b64f15.

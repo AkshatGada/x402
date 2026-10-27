@@ -1,0 +1,12 @@
+{
+  "scenario": "ordinary-after-verify-abort",
+  "verified": {
+    "isValid": false,
+    "invalidReason": "application_policy_denied"
+  },
+  "held": false,
+  "calls": {
+    "settle": 1,
+    "verify": 1
+  }
+}

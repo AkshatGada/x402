@@ -1,0 +1,111 @@
+
+ RUN  v3.2.7 <validation>/checkout/typescript/packages/core
+      Coverage enabled with v8
+
+stdout | test/unit/http/httpFacilitatorClient.test.ts > HTTPFacilitatorClient > EXTENSION-RESPONSES header > sets extensionResponses from header on settle without touching extensions
+[x402] extension responses: {"bazaar":{"status":"accepted"}}
+
+stdout | test/unit/http/httpFacilitatorClient.test.ts > HTTPFacilitatorClient > EXTENSION-RESPONSES header > sets extensionResponses from header on verify without touching extensions
+[x402] extension responses: {"bazaar":{"status":"accepted"}}
+
+stdout | test/unit/http/httpFacilitatorClient.test.ts > HTTPFacilitatorClient > EXTENSION-RESPONSES header > keeps body extensions independent from header extensionResponses
+[x402] extension responses: {"bazaar":{"status":"accepted"}}
+
+stderr | test/unit/server/x402ResourceServer.test.ts > x402ResourceServer > initialize > should continue if one facilitator fails
+Failed to fetch supported kinds from facilitator: Error: Network error
+
+stderr | test/unit/server/x402ResourceServer.test.ts > x402ResourceServer > initialize > should throw if all facilitators fail
+Failed to fetch supported kinds from facilitator: Error: Network error
+
+stderr | test/unit/server/x402ResourceServer.test.ts > x402ResourceServer > initialize > should throw if all facilitators fail
+Failed to fetch supported kinds from facilitator: Error: Rate limited
+
+ ✓ test/unit/server/x402ResourceServer.test.ts (173 tests) 16ms
+ ✓ test/unit/http/httpFacilitatorClient.test.ts (47 tests) 169ms
+stderr | test/unit/http/x402HTTPResourceService.test.ts > x402HTTPResourceServer > Payment processing > should delegate verification to resource service
+Failed to decode PAYMENT-SIGNATURE header: Error: Invalid payment signature header
+    at decodePaymentSignatureHeader (<validation>/checkout/typescript/packages/core/src/http/index.ts:29:11)
+    at x402HTTPResourceServer.extractPayment (<validation>/checkout/typescript/packages/core/src/http/x402HTTPResourceServer.ts:1313:16)
+    at x402HTTPResourceServer.processHTTPRequest (<validation>/checkout/typescript/packages/core/src/http/x402HTTPResourceServer.ts:584:33)
+    at <validation>/checkout/typescript/packages/core/test/unit/http/x402HTTPResourceService.test.ts:1168:24
+    at file://<validation>/checkout/typescript/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file://<validation>/checkout/typescript/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file://<validation>/checkout/typescript/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file://<validation>/checkout/typescript/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file://<validation>/checkout/typescript/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+
+ ✓ test/unit/http/x402HTTPResourceService.test.ts (67 tests) 16ms
+ ✓ test/unit/server/paymentFlow.test.ts (33 tests) 8ms
+ ✓ test/unit/client/x402Client.test.ts (72 tests) 7ms
+stderr | test/unit/http/x402HTTPResourceServer.hooks.test.ts > x402HTTPResourceServer Hooks > Extension Hooks > enrichSettlementResponse > should continue processing if extension hook throws error
+[x402] extension "error-extension" enrichSettlementResponse threw: Extension error
+
+ ✓ test/unit/http/x402HTTPResourceServer.hooks.test.ts (24 tests) 7ms
+ ✓ test/unit/schemas/schemas.test.ts (90 tests) 6ms
+ ✓ test/unit/utils/utils.test.ts (67 tests) 5ms
+ ✓ test/integrations/dynamic.test.ts (15 tests) 5ms
+ ✓ test/unit/http/x402HTTPClient.test.ts (19 tests) 5ms
+ ✓ test/unit/http/x402HTTPResourceServer.errors.test.ts (10 tests) 5ms
+ ✓ test/integrations/paymentFlows.test.ts (4 tests) 5ms
+ ✓ test/integrations/upto.test.ts (7 tests) 5ms
+ ✓ test/unit/facilitator/x402Facilitator.test.ts (30 tests) 4ms
+ ✓ test/unit/http/x402HTTPResourceServer.paywall.test.ts (4 tests) 4ms
+ ✓ test/unit/server/x402ResourceServer.settlementPending.test.ts (14 tests) 4ms
+ ✓ test/integrations/core.test.ts (2 tests) 4ms
+ ✓ test/unit/http/x402HTTPResourceServer.initialize.test.ts (10 tests) 3ms
+ ✓ test/unit/server/hookPolicy.test.ts (27 tests) 3ms
+ ✓ test/unit/http/responseBody.test.ts (7 tests) 3ms
+ ✓ test/unit/facilitator/pendingSettlementStore.test.ts (13 tests) 3ms
+ ✓ test/unit/facilitator/x402Facilitator.hooks.test.ts (14 tests) 3ms
+ ✓ test/unit/http/x402HTTPClient.parsePaymentResult.test.ts (9 tests) 2ms
+ ✓ test/integrations/extensions.test.ts (3 tests) 2ms
+ ✓ test/unit/http/backgroundInit.test.ts (4 tests) 2ms
+ ✓ test/unit/http/x402HTTPClient.hooks.test.ts (12 tests) 2ms
+ ✓ test/unit/http/routeMatching.test.ts (17 tests) 2ms
+
+ Test Files  27 passed (27)
+      Tests  794 passed (794)
+   Start at  00:21:37
+   Duration  1.77s (transform 213ms, setup 0ms, collect 663ms, tests 304ms, environment 2ms, prepare 726ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   95.57 |    91.54 |   97.04 |   95.57 |
+ src               |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+ src/client        |   97.53 |    95.08 |     100 |   97.53 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  x402Client.ts    |   97.52 |    95.08 |     100 |   97.52 | ...-926,1023-1024
+ src/facilitator   |   99.02 |    95.55 |      96 |   99.02 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  ...ementStore.ts |     100 |      100 |     100 |     100 |
+  ...acilitator.ts |   98.92 |    95.06 |   94.73 |   98.92 | 137-138,554
+ src/http          |    94.1 |    89.01 |   95.65 |    94.1 |
+  ...groundInit.ts |     100 |      100 |     100 |     100 |
+  ...atorClient.ts |   90.28 |    86.17 |     100 |   90.28 | ...21,548,574-575
+  index.ts         |     100 |      100 |     100 |     100 |
+  responseBody.ts  |     100 |      100 |     100 |     100 |
+  ...HTTPClient.ts |     100 |    95.16 |     100 |     100 | 218,277,299
+  ...urceServer.ts |   94.26 |    87.38 |   90.62 |   94.26 | ...1377,1500-1501
+ src/schemas       |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+ src/server        |   95.31 |    91.28 |   95.83 |   95.31 |
+  hookPolicy.ts    |   92.76 |    94.28 |     100 |   92.76 | ...26-129,137-140
+  index.ts         |     100 |      100 |     100 |     100 |
+  paymentFlow.ts   |   99.13 |    96.77 |     100 |   99.13 | 189
+  ...urceServer.ts |   95.38 |    90.34 |   94.54 |   95.38 | ...2307,2320-2321
+ src/types         |     100 |       85 |     100 |     100 |
+  extensions.ts    |       0 |        0 |       0 |       0 |
+  facilitator.ts   |     100 |    81.25 |     100 |     100 | 69-71,98
+  index.ts         |     100 |      100 |     100 |     100 |
+  mechanisms.ts    |       0 |        0 |       0 |       0 |
+  payments.ts      |       0 |        0 |       0 |       0 |
+  readonly.ts      |       0 |        0 |       0 |       0 |
+ src/types/v1      |       0 |        0 |       0 |       0 |
+  index.ts         |       0 |        0 |       0 |       0 |
+ src/utils         |   91.76 |    91.02 |     100 |   91.76 |
+  index.ts         |   91.76 |    91.02 |     100 |   91.76 | ...62-263,281-282
+-------------------|---------|----------|---------|---------|-------------------

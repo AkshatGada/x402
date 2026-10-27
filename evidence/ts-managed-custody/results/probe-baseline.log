@@ -1,0 +1,5 @@
+=== RUN   TestTypeScriptManagedCustodyProbe
+    managed_typescript_probe_test.go:103: {"revision":"dbe1080ac7f65e2e05cc8430a834c255a6800828","client":{"actualSalt":"0xabababababababababababababababababababababababababababababababab","canonicalSalt":"0xabababababababababababab3c44cdddb6a900fa2b585dd299e03d12fa4293bc","goRejection":"invalid_batch_settlement_evm_refund_authorizer_mismatch"},"clientControl":{"success":true,"facilitatorCharged":"2000"},"server":{"typescriptSuccess":true,"typescriptCharged":"2000","facilitatorCharged":"1000","facilitatorChargeCount":0,"facilitatorCalls":{"settle":0,"verify":0}},"serverControl":{"success":true,"facilitatorCharged":"2000","facilitatorChargeCount":1,"facilitatorCalls":{"settle":1,"verify":1}},"result":"missing-capability-reproduced"}
+--- PASS: TestTypeScriptManagedCustodyProbe (0.18s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.421s

@@ -1,0 +1,165 @@
+Independent TypeScript managed-custody audit — 2026-10-27
+
+VERDICT: REQUEST CHANGES
+The main client salt and managed pass-through paths work against the pinned Go
+facilitator, and the standard EVM checks pass. Two ordinary failure paths leave
+the facilitator admission held. Correct these before treating the feature as
+ready for publication. No source files were edited during this audit.
+
+Scope and attribution
+- Codex independently reviewed the frozen implementation and performed the
+  commands below using local shell, Python, Node/Vitest, and Go tools. No additional
+  agents were spawned. Do not attribute this audit or implementation to Claude or
+  claim an Astra review. Existing PR #3892 attribution was not touched.
+- Source: <validation>/checkout
+  Branch: codex/ts-managed-custody
+  Base/HEAD: dbe1080ac7f65e2e05cc8430a834c255a6800828
+  Patch SHA256: ec4ccd1b73268c363b7c38bb6473761288b5561fe34ed6e93efbaef7e5ea6d03
+  All 12 handoff source hashes matched before and after checks. See
+  source-sha256.txt and source-hash-check.log in this audit directory.
+- Read the user attribution instructions, frozen .agents/skills/contributing/SKILL.md,
+  CONTRIBUTING.md and TypeScript contributing guide, SECURITY.md, merged batch
+  settlement spec, all changed files and surrounding core/client/server lifecycle,
+  actual Go managed verify/settle/refund types and contracts, and proof scripts.
+- Read the Python managed implementation only as a cross-language reference;
+  did not edit it or message that chat.
+
+Findings
+
+1. [P1] Capture and release admission when an application afterVerify hook aborts.
+   Target: typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts:178
+   Core invokes manual afterVerify hooks before the scheme adapter
+   (core/src/server/x402ResourceServer.ts:1999,2011). An application hook that
+   returns {abort:true} after successful facilitator verification triggers core
+   cancellation immediately (core:1764), before managed.afterVerify has saved
+   extra.pendingId. The scheme's settleOnCancel then sees no request context and
+   skips the cancel settle. The caller sees verification rejection, while a
+   normal next request to the channel must wait for the facilitator lease expiry.
+   This is an application-policy hook on an otherwise valid payment, not a
+   malformed or adversarial request.
+   Actual TS SDK + actual pinned Go managed scheme evidence:
+     verify response: {isValid:false,invalidReason:"application_policy_denied"}
+     Go calls: verify=1, settle=0; held=true.
+   Files: probe-lifecycle.mts, probe-lifecycle-async.log, lifecycle-evidence.json.
+   The intended held=false assertion fails. The hook is async, matching the SDK
+   hook signature. A narrow lifecycle/context fix is required; do not paper over
+   it by fabricating or reusing a client-supplied reservation identity.
+   The in-progress Python implementation already carries verify_result into its
+   cancellation context for this ordering case; TS currently has no equivalent.
+
+2. [P2] Release admission on a local settlement-enrichment failure.
+   Target: typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts:120
+   Managed onSettleFailure unconditionally drops the only pendingId context.
+   When refund signing throws in managed.enrichSettlementPayload before the
+   facilitator is called, this deletes the server's cleanup identity without
+   canceling the admitted request. The reservation remains held until expiry.
+   Reproduced with the actual TS client.refund method, TS resource server and Go
+   managed scheme, using a local test signer that throws
+   "simulated_signer_unavailable". Go calls: verify=1, settle=0; held=true.
+   Files: probe-signer-failure.mts, probe-signer-failure.log,
+   signer-failure-evidence.json. The intended held=false assertion fails.
+   Cleanup should cover pre-facilitator failures without changing committed or
+   non-terminal settlement outcomes. Retain context until cleanup/reconciliation
+   is possible rather than forgetting an outstanding reservation.
+
+3. [P2 design/correctness concern] Optional replica failures rewrite committed success.
+   Target: typescript/packages/mechanisms/evm/src/batch-settlement/server/managed.ts:270
+   A failed optional replica update throws AfterSettleAbortError, so core changes
+   the authoritative successful receipt to success:false. The unchanged TS client
+   response hook returns immediately on !success (client/hooks.ts:29) and does not
+   adopt the committed watermark. A local replica outage can therefore make every
+   paid request fail while the facilitator commits charges. This contradicts the
+   managed pass-through contract and makes optional storage an availability
+   dependency. The README acknowledges the behavior and the unit test explicitly
+   asserts it; that is intentional behavior, not evidence that it is desirable.
+   Recommendation: preserve facilitator success for replica I/O failure, report
+   the mirror failure to operators, and test that the client adopts the committed
+   receipt. Distinguish a malformed authoritative receipt from mirror persistence
+   failure. This concern is separate from the two confirmed reservation leaks.
+
+Positive review conclusions
+- Explicit voucherManager configuration prevents accidental local managed
+  admission; managed requirements use the advertised authorizer and delay, and
+  require either a server refund key or delegatedRefund:true.
+- Managed deposits/vouchers/refunds reach facilitator verification and settlement
+  despite stale, empty, or restarted local stores. The worker guard is appropriate
+  for the intentionally unported TS facilitator.
+- pendingId/cancel are rejected on client verify input. Ordinary settlement and
+  core's one settlement_pending retry carry the admitted pendingId unchanged.
+- The client salt helper matches Go's bytes12 entropy + bytes20 refund key rule
+  for raw and index salts; default server mode preserves raw salt behavior.
+- Shared refund amount/claim/signing logic reduces duplication. Managed refunds
+  never sign claim authority; the exact string nonce is used for consent even
+  above 2^53. The unit independently verifies that typed-data signature.
+- Corrective proofs for both cumulative mismatch reasons are copied from the
+  facilitator rather than derived from the replica. Existing client signature
+  validation remains responsible for adopting those proofs.
+- The implementation does not add dependencies, storage/facilitator ports, legacy
+  changes, misleading e2e catalog entries, or unrelated production edits.
+
+Independent verification performed
+1. Frozen hashes and patch: all match; git diff --check passes.
+2. Immutable snapshot: compared 741 tracked files under go/, core/src and baseline
+   EVM batch-settlement source with Git blob IDs at the pinned base. No missing
+   files or mismatches. managed_typescript_probe_test.go is an explicitly added
+   fixture, not an upstream production file. See immutable-snapshot-check.json.
+3. Focused managed/server/client run: 3 files, 222 tests pass (focused-tests.log).
+4. Normal package config with --coverage, rather than only custom validation config:
+   58 files, 1633 tests pass; statements/lines 95.66%, branches 91.05%, functions
+   98.33%. Configured global thresholds pass (standard-unit-coverage.log).
+5. Normal package ESM/CJS/declaration build passes; 31 CJS declaration files mirrored
+   (evm-build.log). Source and new tests typecheck with the handoff ES2020+DOM
+   test config (types-managed-tests.log). Changed source/test ESLint and all changed
+   file Prettier checks pass (lint.log,format-check.log).
+6. Go controls pass: TestScheme_GetExtraAdvertisesVoucherStore and
+   TestSettleManaged_ReleasesLockWhenPendingIdEchoed (go-controls.log).
+7. Baseline Go bridge passes its missing-capability assertions:
+   raw salt rejected; explicit canonical positive control commits; warm baseline
+   TS server reports charged=2000 while Go stays 1000, calls=0/count=0; direct Go
+   positive control commits 2000, count=1. See baseline-evidence.json and
+   probe-baseline-loopback.log.
+8. Fixed bridge passes: canonical salt; warm Go verify=1/settle=1, charged=2000,
+   count=1; fresh servers reach 3000/count=2; repeated cancel calls settle once,
+   release hold and keep charged=1000/count=0; signed refund returns amount=9000,
+   balance=1000, count=0, handlerCalls=0. See fixed-evidence.json and
+   probe-fixed-loopback.log.
+9. Two additional ordinary unit cases pass: admission with pendingId but missing
+   snapshot field cancels with amount=0; partial delegated refund forwards the
+   pending identity/nonce/claim and omits both signatures. ordinary-tests.log is
+   15 passing cases: copied existing 13 plus these 2 audit-only cases.
+10. The two additional ordinary lifecycle bridge assertions fail as described
+    above. These are feature-correctness regression tests and not security probes.
+
+Evidence and runtime limits
+- Commands are recorded in commands.txt. Every build/typecheck/lint/Vitest/Go/
+  esbuild invocation used the shared with-test-slot.py queue; Vitest <=2 workers,
+  Go -p 2/GOMAXPROCS=2. No installation or download occurred.
+- The sandbox first denied httptest socket binding (the initial probe-baseline.log
+  and probe-fixed.log contain this environment failure). Scoped approved loopback
+  reruns succeeded; their results are the *-loopback.log receipts above.
+- Original handoff evidence and scripts were not overwritten. Audit copies change
+  only import/output locations for the selected probes; separate audit-only scripts
+  add the ordinary lifecycle scenarios. Probe bundles use the byte-identical pinned
+  core source. The normal package suite uses its built workspace dependency.
+- Go HTTP admission/storage/refund-consent logic is real. Chain reads, receipt logs,
+  onchain writes and facilitator-authorizer signing use upstream synthetic helpers.
+  Caller identity is fixed to a synthetic service. These prove SDK/protocol wiring,
+  not middleware authentication, live-chain execution, real RPC or actual funds.
+- Initial deposit is covered with a typed facilitator unit double; Go bridge seeds
+  existing channel state. No actual deposit transaction, payout worker, delayed
+  receipt, or worker attestation was exercised.
+- Inspected existing core-build/full-suite/build receipts; did not rebuild core
+  independently. Standalone ES2020-only tsc error logs match baseline and fixed:
+  src/utils.ts:38/39 cannot find Crypto. That unchanged file is not a regression;
+  the normal declaration build and DOM-enabled source/test typecheck both pass.
+- The in-repo regression tests run with normal package config and pass coverage.
+  The cross-language bridge remains an external audit artifact, not repository CI.
+  Add ordinary cancellation regression coverage with any lifecycle correction;
+  a small checked-in synthetic Go interoperability test would help prevent SDK
+  divergence, without needing live chain infrastructure.
+- No vulnerability hunting, adversarial exploit harness, public report, maintainer
+  contact, commit, push, PR, or external account mutation. If a potential security
+  issue emerges, frozen SECURITY.md requires private Slack contact with an x402
+  TSC member or primary maintainer; do not publish details.
+- Primary <primary-checkout> is clean at
+  b1176d302b3210395683ac6a5025e84c52b64f15. Other PRs were not changed.

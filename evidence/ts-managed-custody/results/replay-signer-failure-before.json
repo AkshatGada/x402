@@ -1,0 +1,9 @@
+{
+  "scenario": "ordinary-refund-signer-failure",
+  "signingError": "simulated_signer_unavailable",
+  "held": true,
+  "calls": {
+    "settle": 0,
+    "verify": 1
+  }
+}

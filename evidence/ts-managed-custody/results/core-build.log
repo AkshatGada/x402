@@ -1,0 +1,76 @@
+$ tsup && node ../../scripts/mirror-cjs-dts.mjs
+CLI Building entry: {"index":"src/index.ts","client/index":"src/client/index.ts","facilitator/index":"src/facilitator/index.ts","http/index":"src/http/index.ts","server/index":"src/server/index.ts","types/index":"src/types/index.ts","types/v1/index":"src/types/v1/index.ts","utils/index":"src/utils/index.ts","schemas/index":"src/schemas/index.ts"}
+CLI Using tsconfig: tsconfig.json
+CLI Building entry: {"index":"src/index.ts","client/index":"src/client/index.ts","facilitator/index":"src/facilitator/index.ts","http/index":"src/http/index.ts","server/index":"src/server/index.ts","types/index":"src/types/index.ts","types/v1/index":"src/types/v1/index.ts","utils/index":"src/utils/index.ts","schemas/index":"src/schemas/index.ts"}
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Using tsup config: <validation>/checkout/typescript/packages/core/tsup.config.ts
+CLI tsup v8.5.0
+CLI Using tsup config: <validation>/checkout/typescript/packages/core/tsup.config.ts
+CLI Target: es2020
+CLI Target: es2020
+CJS Build start
+CLI Cleaning output folder
+ESM Build start
+CJS dist/cjs/index.js                 1.08 KB
+CJS dist/cjs/client/index.js          45.78 KB
+CJS dist/cjs/facilitator/index.js     15.91 KB
+CJS dist/cjs/types/index.js           4.27 KB
+CJS dist/cjs/types/v1/index.js        794.00 B
+CJS dist/cjs/server/index.js          128.86 KB
+CJS dist/cjs/http/index.js            70.42 KB
+CJS dist/cjs/utils/index.js           7.56 KB
+CJS dist/cjs/schemas/index.js         8.07 KB
+CJS dist/cjs/index.js.map             184.00 B
+CJS dist/cjs/types/index.js.map       9.23 KB
+CJS dist/cjs/types/v1/index.js.map    1.46 KB
+CJS dist/cjs/client/index.js.map      213.00 KB
+CJS dist/cjs/facilitator/index.js.map 43.10 KB
+CJS dist/cjs/utils/index.js.map       15.78 KB
+CJS dist/cjs/http/index.js.map        252.23 KB
+CJS dist/cjs/server/index.js.map      285.54 KB
+CJS dist/cjs/schemas/index.js.map     16.45 KB
+CJS ⚡️ Build success in 30ms
+ESM dist/esm/schemas/index.mjs         1.52 KB
+ESM dist/esm/client/index.mjs          26.65 KB
+ESM dist/esm/chunk-EW77LSDL.mjs        5.16 KB
+ESM dist/esm/chunk-MA7F3CLI.mjs        2.99 KB
+ESM dist/esm/facilitator/index.mjs     14.47 KB
+ESM dist/esm/server/index.mjs          1.96 KB
+ESM dist/esm/http/index.mjs            1.45 KB
+ESM dist/esm/index.mjs                 114.00 B
+ESM dist/esm/chunk-VE37GDG2.mjs        107.00 B
+ESM dist/esm/types/v1/index.mjs        34.00 B
+ESM dist/esm/utils/index.mjs           843.00 B
+ESM dist/esm/chunk-J5ASBWJ6.mjs        124.63 KB
+ESM dist/esm/chunk-XW2CWVLZ.mjs        5.81 KB
+ESM dist/esm/types/index.mjs           377.00 B
+ESM dist/esm/schemas/index.mjs.map     71.00 B
+ESM dist/esm/client/index.mjs.map      51.86 KB
+ESM dist/esm/index.mjs.map             71.00 B
+ESM dist/esm/http/index.mjs.map        71.00 B
+ESM dist/esm/chunk-EW77LSDL.mjs.map    16.25 KB
+ESM dist/esm/chunk-VE37GDG2.mjs.map    140.00 B
+ESM dist/esm/types/v1/index.mjs.map    71.00 B
+ESM dist/esm/facilitator/index.mjs.map 31.02 KB
+ESM dist/esm/chunk-MA7F3CLI.mjs.map    7.45 KB
+ESM dist/esm/utils/index.mjs.map       71.00 B
+ESM dist/esm/chunk-XW2CWVLZ.mjs.map    15.66 KB
+ESM dist/esm/types/index.mjs.map       71.00 B
+ESM dist/esm/chunk-J5ASBWJ6.mjs.map    259.91 KB
+ESM dist/esm/server/index.mjs.map      71.00 B
+ESM ⚡️ Build success in 28ms
+DTS Build start
+DTS ⚡️ Build success in 2023ms
+DTS dist/esm/index.d.mts                   56.00 B
+DTS dist/esm/utils/index.d.mts             6.12 KB
+DTS dist/esm/schemas/index.d.mts           33.37 KB
+DTS dist/esm/facilitator/index.d.mts       13.25 KB
+DTS dist/esm/http/index.d.mts              4.46 KB
+DTS dist/esm/server/index.d.mts            10.31 KB
+DTS dist/esm/client/index.d.mts            6.79 KB
+DTS dist/esm/types/v1/index.d.mts          223.00 B
+DTS dist/esm/types/index.d.mts             1.43 KB
+DTS dist/esm/backgroundInit-CJlb-S48.d.mts 1014.00 B
+DTS dist/esm/x402Client-CbT046P6.d.mts     94.16 KB
+[mirror-cjs-dts] Mirrored 11 declaration file(s) into dist/cjs

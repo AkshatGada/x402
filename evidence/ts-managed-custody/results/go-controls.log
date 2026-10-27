@@ -1,0 +1,6 @@
+=== RUN   TestScheme_GetExtraAdvertisesVoucherStore
+--- PASS: TestScheme_GetExtraAdvertisesVoucherStore (0.01s)
+=== RUN   TestSettleManaged_ReleasesLockWhenPendingIdEchoed
+--- PASS: TestSettleManaged_ReleasesLockWhenPendingIdEchoed (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.727s

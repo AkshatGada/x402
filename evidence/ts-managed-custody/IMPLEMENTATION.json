@@ -1,0 +1,8 @@
+{
+  "upstream_revision": "dbe1080ac7f65e2e05cc8430a834c255a6800828",
+  "implementation_branch": "codex/ts-managed-custody",
+  "implementation_commit": "5847307b442f1035644aca3fa91f5b24dbfcc771",
+  "audited_patch_sha256": "4ab434b5dbb10752c35482451dddb034ec577ce45005b242c98145c462362b75",
+  "source_file_count": 15,
+  "publication": "local only; no pushes or PR"
+}

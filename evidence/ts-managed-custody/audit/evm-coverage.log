@@ -1,0 +1,226 @@
+
+ RUN  v3.2.7 <validation>/checkout/typescript/packages/mechanisms/evm
+      Coverage enabled with v8
+
+ ✓ test/unit/auth-capture/server.test.ts (99 tests) 1135ms
+   ✓ AuthCaptureEvmScheme > enhancePaymentRequirements > should keep relative deadlines stable across enhance calls within the same bucket  1101ms
+ ✓ test/unit/auth-capture/facilitator.test.ts (166 tests) 161ms
+ ✓ test/unit/batch-settlement/client.test.ts (97 tests) 128ms
+ ✓ test/unit/batch-settlement/channelManager.test.ts (33 tests) 126ms
+ ✓ test/unit/batch-settlement/facilitator.test.ts (119 tests) 2272ms
+   ✓ BatchSettlementEvmScheme (Facilitator) — settle routing > fails an erc20-approval deposit bundle when a single extension-signer hash's balance never confirms  2117ms
+ ✓ test/unit/batch-settlement/server.test.ts (112 tests) 103ms
+ ✓ test/unit/assetCache.test.ts (13 tests) 99ms
+ ✓ test/unit/shared/verifySignature.test.ts (21 tests) 37ms
+ ✓ test/unit/exact/facilitator.test.ts (72 tests) 59ms
+ ✓ test/unit/upto/facilitator.test.ts (56 tests) 41ms
+ ✓ test/unit/batch-settlement/storage.test.ts (87 tests) 28ms
+stderr | test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > does not cancel a skip receipt when response enrichment fails
+[x402] Resource server enrichSettlementResponse hook threw (scheme "batch-settlement" enrichSettlementResponse): enrichment_failed
+
+stderr | test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > keeps the committed receipt and client watermark when the optional replica fails
+[x402] Managed channel replica update failed for 0x5fdaf9a13f7b0586af78f966cbeab2473767053cf7d21d8a5c63a708e5bcccf4: replica unavailable
+
+ ✓ test/unit/batch-settlement/managed.test.ts (28 tests) 64ms
+ ✓ test/unit/exact/eip3009-code-lookup.test.ts (6 tests) 24ms
+ ✓ test/unit/batch-settlement/utils.test.ts (81 tests) 25ms
+ ✓ test/unit/batch-settlement/pendingSettlement.test.ts (8 tests) 17ms
+ ✓ test/unit/auth-capture/pendingSettlement.test.ts (15 tests) 15ms
+ ✓ test/unit/v1/facilitator.test.ts (27 tests) 15ms
+ ✓ test/unit/exact/pendingSettlement.test.ts (13 tests) 11ms
+ ✓ test/unit/auth-capture/nonce.test.ts (25 tests) 11ms
+ ✓ test/unit/server.moneyParser.test.ts (37 tests) 10ms
+ ✓ test/unit/exact/client.test.ts (50 tests) 10ms
+ ✓ test/unit/auth-capture/client.test.ts (27 tests) 10ms
+ ✓ test/unit/auth-capture/settlementHooks.test.ts (20 tests) 9ms
+ ✓ test/unit/upto/pendingSettlement.test.ts (7 tests) 8ms
+ ✓ test/unit/upto/client.test.ts (24 tests) 7ms
+ ✓ test/unit/constants.test.ts (13 tests) 7ms
+ ✓ test/unit/exact/verify-simulation-reason.test.ts (3 tests) 7ms
+ ✓ test/unit/auth-capture/lifecyclePayload.test.ts (12 tests) 6ms
+ ✓ test/unit/auth-capture/delegatedAuth.test.ts (19 tests) 5ms
+ ✓ test/unit/shared/permit2-allowance.test.ts (11 tests) 5ms
+ ✓ test/unit/exact/eip3009-transfer-event.test.ts (13 tests) 5ms
+ ✓ test/unit/v1/client.test.ts (9 tests) 4ms
+ ✓ test/unit/batch-settlement/deposit-erc6492.test.ts (3 tests) 4ms
+ ✓ test/unit/upto/server.test.ts (21 tests) 4ms
+ ✓ test/unit/upto/types.test.ts (31 tests) 3ms
+ ✓ test/unit/utils.test.ts (44 tests) 4ms
+ ✓ test/unit/server.test.ts (22 tests) 4ms
+ ✓ test/unit/auth-capture/extra.test.ts (28 tests) 3ms
+ ✓ test/unit/auth-capture/lifecycleFacilitator.test.ts (8 tests) 4ms
+ ✓ test/unit/auth-capture/types.test.ts (40 tests) 3ms
+ ✓ test/unit/exact/eip3009-signature-v.test.ts (4 tests) 3ms
+ ✓ test/unit/signer.test.ts (8 tests) 3ms
+ ✓ test/unit/auth-capture/collect.test.ts (1 test) 3ms
+ ✓ test/unit/erc6492-signature.test.ts (5 tests) 2ms
+ ✓ test/unit/defaultAssets.test.ts (10 tests) 2ms
+ ✓ test/unit/shared/settleReceipt.test.ts (14 tests) 2ms
+ ✓ test/unit/auth-capture/facilitator-utils.test.ts (5 tests) 2ms
+ ✓ test/unit/exact/client.rpc.test.ts (4 tests) 2ms
+ ✓ test/unit/batch-settlement/types.test.ts (36 tests) 2ms
+ ✓ test/unit/exact/extensions-gas-sponsoring.test.ts (4 tests) 2ms
+ ✓ test/unit/types.test.ts (8 tests) 2ms
+ ✓ test/unit/auth-capture/utils.test.ts (6 tests) 2ms
+ ✓ test/unit/shared/erc7702.test.ts (11 tests) 1ms
+ ✓ test/unit/index.test.ts (4 tests) 1ms
+ ✓ test/unit/index-barrels.test.ts (1 test) 1ms
+ ✓ test/unit/v1/index.test.ts (4 tests) 1ms
+ ✓ test/unit/auth-capture/abi.test.ts (2 tests) 1ms
+ ✓ test/unit/settlement-pending-reason.test.ts (1 test) 1ms
+
+ Test Files  58 passed (58)
+      Tests  1648 passed (1648)
+   Start at  00:15:51
+   Duration  7.38s (transform 576ms, setup 0ms, collect 4.64s, tests 4.53s, environment 4ms, prepare 1.53s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   95.68 |    91.22 |    98.5 |   95.68 |
+ src               |   99.62 |    97.94 |   96.87 |   99.62 |
+  assetCache.ts    |   97.53 |    97.14 |     100 |   97.53 | 55-56
+  constants.ts     |     100 |      100 |     100 |     100 |
+  defaultAssets.ts |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  multicall.ts     |     100 |    91.66 |     100 |     100 | 136
+  signer.ts        |     100 |      100 |    87.5 |     100 |
+  types.ts         |     100 |      100 |     100 |     100 |
+  utils.ts         |   96.66 |    95.65 |     100 |   96.66 | 41-42
+ src/auth-capture  |   99.25 |    96.42 |     100 |   99.25 |
+  abi.ts           |     100 |    88.88 |     100 |     100 | 255
+  ...izerSigner.ts |     100 |      100 |     100 |     100 |
+  constants.ts     |     100 |      100 |     100 |     100 |
+  errors.ts        |     100 |      100 |     100 |     100 |
+  extra.ts         |   97.36 |    95.39 |     100 |   97.36 | ...02-203,482-483
+  index.ts         |     100 |      100 |     100 |     100 |
+  ...clePayload.ts |   99.59 |    94.54 |     100 |   99.59 | 127
+  nonce.ts         |     100 |      100 |     100 |     100 |
+  types.ts         |   98.02 |    96.85 |     100 |   98.02 | 509-512
+  utils.ts         |     100 |      100 |     100 |     100 |
+ ...capture/client |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  scheme.ts        |     100 |      100 |     100 |     100 |
+ ...re/facilitator |   92.09 |    89.85 |     100 |   92.09 |
+  collect.ts       |   93.67 |       88 |     100 |   93.67 | ...1443-1444,1541
+  delegatedAuth.ts |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  lifecycle.ts     |   85.64 |    83.42 |     100 |   85.64 | ...1084,1101-1102
+  scheme.ts        |     100 |      100 |     100 |     100 |
+  utils.ts         |   97.98 |    95.83 |     100 |   97.98 | ...87,328-329,444
+ ...capture/server |   98.22 |    93.05 |   95.55 |   98.22 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  ...cleManager.ts |   96.33 |    91.11 |    90.9 |   96.33 | ...41-243,273-274
+  scheme.ts        |   99.27 |    99.09 |   94.44 |   99.27 | 356-357
+  ...ementHooks.ts |   99.47 |    87.05 |     100 |   99.47 | 55
+  storage.ts       |   95.77 |    89.47 |     100 |   95.77 | 147-149
+ ...tch-settlement |   99.52 |    96.96 |     100 |   99.52 |
+  abi.ts           |     100 |      100 |     100 |     100 |
+  ...izerSigner.ts |     100 |      100 |     100 |     100 |
+  constants.ts     |     100 |      100 |     100 |     100 |
+  encoding.ts      |     100 |      100 |     100 |     100 |
+  errors.ts        |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  storage-utils.ts |   91.66 |    92.85 |     100 |   91.66 | 66-68
+  types.ts         |     100 |      100 |     100 |     100 |
+  utils.ts         |     100 |    94.44 |     100 |     100 | 22
+ ...tlement/client |   96.74 |    89.34 |   94.11 |   96.74 |
+  channel.ts       |   97.59 |    86.36 |     100 |   97.59 | 216,224,272-273
+  config.ts        |     100 |    97.95 |     100 |     100 | 119
+  eip3009.ts       |     100 |      100 |     100 |     100 |
+  fileStorage.ts   |     100 |    88.88 |     100 |     100 | 55
+  hooks.ts         |      94 |    83.33 |     100 |      94 | 44-45,58
+  index.ts         |     100 |      100 |     100 |     100 |
+  permit2.ts       |     100 |      100 |     100 |     100 |
+  recovery.ts      |   96.19 |     87.5 |     100 |   96.19 | 89-90,148-149
+  refund.ts        |   93.44 |    84.74 |      90 |   93.44 | ...90-291,307-308
+  scheme.ts        |   95.11 |     90.9 |   77.77 |   95.11 | ...83,320-321,329
+  storage.ts       |     100 |      100 |     100 |     100 |
+  voucher.ts       |     100 |      100 |     100 |     100 |
+ ...nt/facilitator |   95.71 |    89.52 |     100 |   95.71 |
+  claim.ts         |     100 |     87.5 |     100 |     100 | 95,117
+  ...it-eip3009.ts |   96.61 |    91.66 |     100 |   96.61 | 53-54,122-123
+  ...it-permit2.ts |   84.38 |    87.23 |     100 |   84.38 | ...02-208,367-368
+  deposit.ts       |   95.26 |    83.72 |     100 |   95.26 | ...08-312,855-856
+  index.ts         |     100 |      100 |     100 |     100 |
+  refund.ts        |   98.64 |    89.04 |     100 |   98.64 | 143-147
+  scheme.ts        |     100 |      100 |     100 |     100 |
+  settle.ts        |     100 |       90 |     100 |     100 | 74,92
+  utils.ts         |   98.48 |    97.72 |     100 |   98.48 | 128-129
+  voucher.ts       |     100 |      100 |     100 |     100 |
+ ...tlement/server |   94.35 |    86.85 |   99.19 |   94.35 |
+  ...nelManager.ts |   92.71 |    82.44 |     100 |   92.71 | ...81-782,785-786
+  fileStorage.ts   |   89.65 |       80 |     100 |   89.65 | ...03-104,139-143
+  index.ts         |     100 |      100 |     100 |     100 |
+  managed.ts       |   98.12 |    78.66 |     100 |   98.12 | 51,53-54,157
+  redisStorage.ts  |    87.5 |    76.19 |     100 |    87.5 | ...18-219,222-223
+  scheme.ts        |   96.14 |    95.03 |   97.43 |   96.14 | ...12-613,616-617
+  settle.ts        |   92.35 |    84.26 |     100 |   92.35 | ...26-327,352-353
+  storage.ts       |     100 |    93.33 |     100 |     100 | 100
+  utils.ts         |     100 |      100 |     100 |     100 |
+  verify.ts        |    95.2 |    88.67 |     100 |    95.2 | ...86-487,493-494
+ src/exact         |     100 |    96.36 |     100 |     100 |
+  extensions.ts    |     100 |    96.36 |     100 |     100 | 204-208
+  index.ts         |     100 |      100 |     100 |     100 |
+ src/exact/client  |   98.22 |    97.22 |     100 |   98.22 |
+  eip2612.ts       |     100 |      100 |     100 |     100 |
+  eip3009.ts       |     100 |      100 |     100 |     100 |
+  erc20approval.ts |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  permit2.ts       |     100 |      100 |     100 |     100 |
+  register.ts      |   87.09 |    91.66 |     100 |   87.09 | 97-100
+  rpc.ts           |       0 |      100 |     100 |       0 | 2
+  scheme.ts        |     100 |      100 |     100 |     100 |
+ ...ct/facilitator |   90.34 |    88.15 |   95.45 |   90.34 |
+  eip3009-utils.ts |   99.14 |    94.64 |     100 |   99.14 | 113-114
+  eip3009.ts       |   82.12 |    83.52 |      80 |   82.12 | ...13-520,584-605
+  erc20approval.ts |     100 |      100 |     100 |     100 |
+  errors.ts        |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  permit2.ts       |   89.75 |    85.91 |     100 |   89.75 | ...45-252,508-509
+  register.ts      |     100 |      100 |     100 |     100 |
+  scheme.ts        |     100 |      100 |     100 |     100 |
+ src/exact/server  |     100 |       96 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  register.ts      |     100 |      100 |     100 |     100 |
+  scheme.ts        |     100 |    95.23 |     100 |     100 | 81
+ src/exact/v1      |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+ ...xact/v1/client |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  scheme.ts        |     100 |      100 |     100 |     100 |
+ ...v1/facilitator |   99.38 |    92.64 |     100 |   99.38 |
+  index.ts         |     100 |      100 |     100 |     100 |
+  scheme.ts        |   99.38 |    92.64 |     100 |   99.38 | 421-422
+ src/shared        |   96.88 |     93.8 |     100 |   96.88 |
+  erc20approval.ts |     100 |    96.66 |     100 |     100 | 97
+  erc7702.ts       |     100 |      100 |     100 |     100 |
+  permit2.ts       |   95.08 |    94.18 |     100 |   95.08 | ...36-137,146-154
+  revert.ts        |     100 |      100 |     100 |     100 |
+  rpc.ts           |   96.87 |       95 |     100 |   96.87 | 57-58
+  settleReceipt.ts |     100 |    94.11 |     100 |     100 | 154,188
+  ...ySignature.ts |   97.22 |    88.63 |     100 |   97.22 | 210-211,237-238
+ ...red/extensions |   92.85 |    94.52 |     100 |   92.85 |
+  builderCode.ts   |   81.81 |    95.83 |     100 |   81.81 | 76-83
+  gasSponsoring.ts |   96.72 |    93.87 |     100 |   96.72 | 90-91,110,185
+  index.ts         |     100 |      100 |     100 |     100 |
+ src/upto          |     100 |      100 |     100 |     100 |
+  extensions.ts    |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+ src/upto/client   |   89.71 |    86.66 |     100 |   89.71 |
+  index.ts         |       0 |      100 |     100 |       0 | 5-16
+  permit2.ts       |    92.3 |    83.33 |     100 |    92.3 | 48-52
+  rpc.ts           |       0 |      100 |     100 |       0 | 4
+  scheme.ts        |   94.73 |    85.71 |     100 |   94.73 | 58-59
+ ...to/facilitator |   93.63 |    89.13 |     100 |   93.63 |
+  errors.ts        |     100 |      100 |     100 |     100 |
+  index.ts         |       0 |      100 |     100 |       0 | 3
+  permit2.ts       |   93.26 |     88.6 |     100 |   93.26 | ...25-332,577-578
+  scheme.ts        |   96.92 |    91.66 |     100 |   96.92 | 59-60
+ src/upto/server   |   95.65 |    94.44 |   85.71 |   95.65 |
+  index.ts         |       0 |      100 |     100 |       0 | 3
+  scheme.ts        |   97.05 |    94.11 |   83.33 |   97.05 | 46-47
+ src/v1            |     100 |      100 |     100 |     100 |
+  index.ts         |     100 |      100 |     100 |     100 |
+-------------------|---------|----------|---------|---------|-------------------

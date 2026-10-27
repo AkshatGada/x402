@@ -1,0 +1,1257 @@
+diff --git a/typescript/.changeset/evm-managed-custody-client-server.md b/typescript/.changeset/evm-managed-custody-client-server.md
+new file mode 100644
+index 0000000..eeeff12
+--- /dev/null
++++ b/typescript/.changeset/evm-managed-custody-client-server.md
+@@ -0,0 +1,5 @@
++---
++"@x402/evm": minor
++---
++
++Added client and resource-server support for facilitator-managed EVM batch settlement, including refund channel identity, admission forwarding, cancellation and corrective recovery.
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/README.md b/typescript/packages/mechanisms/evm/src/batch-settlement/README.md
+index a572cc1..b8f4528 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/README.md
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/README.md
+@@ -210,6 +210,26 @@ const scheme = new BatchSettlementEvmScheme(receiverAddress, {
+ 
+ When enabled, deposits below the resolved hint abort verify with `invalid_batch_settlement_evm_deposit_below_min_deposit`. The facilitator never enforces this — it remains server-local policy.
+ 
++### Facilitator-managed vouchers
++
++To use a managed-custody facilitator, configure the resource server explicitly:
++
++```typescript
++const scheme = new BatchSettlementEvmScheme(receiverAddress, {
++  voucherManager: "facilitator",
++  refundAuthorizerSigner, // server-owned EOA used only to consent to refunds
++});
++resourceServer.register("eip155:84532", scheme);
++```
++
++The facilitator must advertise `voucherManager: ["server", "facilitator"]`, a non-zero `receiverAuthorizer`, and `withdrawDelay`. The server copies those terms rather than choosing its own delay. It advertises the server's refund key as `refundAuthorizer`; the client packs that key into the channel salt. Rotating the refund key creates a different channel. When `refundAuthorizerSigner` is omitted, the facilitator must advertise `delegatedRefund: true` and authenticate the resource server on settlement calls.
++
++Every deposit, voucher and refund is verified and settled through the facilitator. The facilitator holds the authoritative cumulative amount and voucher, and its redemption worker runs claims and payouts. A local server channel store is a replica only: its contents never drive managed admission or corrective responses, so servers do not need a shared authoritative voucher store. Failed handlers release the facilitator reservation with a zero-charge cancel settle, including verify-only requests.
++
++A successful receipt updates the local replica. If that write fails, the response fails closed while retaining the facilitator's committed receipt; operators must reconcile that outcome rather than assume no charge occurred. Standard corrective recovery still requires the client's signed voucher proof.
++
++This TypeScript client/resource-server mode interoperates with the Go managed facilitator. The TypeScript facilitator does not implement managed custody, and the server-side `BatchSettlementChannelManager` is unavailable in managed mode. Use the Go facilitator's worker for redemption. Omitting `voucherManager` retains server-managed behavior.
++
+ ## Facilitator Usage
+ 
+ ```typescript
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/client/channel.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/client/channel.ts
+index c5f31f3..350f38e 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/client/channel.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/client/channel.ts
+@@ -9,7 +9,7 @@ import type {
+   BatchSettlementPaymentRequirementsExtra,
+   ChannelConfig,
+ } from "../types";
+-import { computeChannelId } from "../utils";
++import { computeChannelId, packRefundAuthorizerSalt } from "../utils";
+ import type { BatchSettlementClientContext, ClientChannelStorage } from "./storage";
+ 
+ /**
+@@ -57,7 +57,12 @@ export function buildChannelConfig(
+     token: paymentRequirements.asset as `0x${string}`,
+     withdrawDelay:
+       typeof extra?.withdrawDelay === "number" ? extra.withdrawDelay : MIN_WITHDRAW_DELAY,
+-    salt: deps.salt,
++    salt:
++      extra?.voucherManager === "facilitator" &&
++      extra.refundAuthorizer &&
++      getAddress(extra.refundAuthorizer) !== "0x0000000000000000000000000000000000000000"
++        ? packRefundAuthorizerSalt(deps.salt, extra.refundAuthorizer)
++        : deps.salt,
+   };
+ }
+ 
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/errors.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/errors.ts
+index 1001e3b..5c27dd3 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/errors.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/errors.ts
+@@ -81,3 +81,6 @@ export const ErrMissingChannel = "invalid_batch_settlement_evm_missing_channel";
+ export const ErrRefundNoBalance = "invalid_batch_settlement_evm_refund_no_balance";
+ export const ErrRefundedEventMismatch = "invalid_batch_settlement_evm_refunded_event_mismatch";
+ export const ErrRefundAmountInvalid = "invalid_batch_settlement_evm_refund_amount_invalid";
++
++export const ErrUnexpectedPendingId = "invalid_batch_settlement_evm_unexpected_pending_id";
++export const ErrUnexpectedCancel = "invalid_batch_settlement_evm_unexpected_cancel";
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/server/channelManager.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/server/channelManager.ts
+index c8ca1a3..0bc7370 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/server/channelManager.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/server/channelManager.ts
+@@ -124,6 +124,9 @@ export class BatchSettlementChannelManager {
+    * @param config - Manager configuration: scheme, facilitator, receiver, token, network.
+    */
+   constructor(config: ChannelManagerConfig) {
++    if (config.scheme.voucherManager === "facilitator") {
++      throw new Error("Facilitator-managed channels must use the facilitator's redemption worker");
++    }
+     this.scheme = config.scheme;
+     this.facilitator = config.facilitator;
+     this.receiver = config.receiver;
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/server/managed.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/server/managed.ts
+new file mode 100644
+index 0000000..13c6a2d
+--- /dev/null
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/server/managed.ts
+@@ -0,0 +1,278 @@
++import { AfterSettleAbortError } from "@x402/core/server";
++import type {
++  SettleContext,
++  SettleResultContext,
++  VerifiedPaymentCanceledContext,
++  VerifyContext,
++  VerifyResultContext,
++} from "@x402/core/server";
++import type { PaymentRequirements, SchemePaymentRequiredContext } from "@x402/core/types";
++import {
++  isBatchSettlementDepositPayload,
++  isBatchSettlementRefundPayload,
++  isBatchSettlementVoucherPayload,
++} from "../types";
++import type { BatchSettlementVoucherStateExtra } from "../types";
++import { channelIdBindingError } from "../utils";
++import * as Errors from "../errors";
++import type { BatchSettlementEvmScheme } from "./scheme";
++import type { Channel } from "./storage";
++import { buildRefundSettlementFields } from "./settle";
++import {
++  readChannelStateExtra,
++  readExtraNumber,
++  readExtraString,
++  readExtraUintString,
++} from "./utils";
++
++/**
++ * Managed admission belongs to the facilitator, including when a replica exists.
++ *
++ * @param scheme - Resource server scheme.
++ * @param ctx - Verify request.
++ * @returns An abort for invalid client fields, channel binding or deposit size.
++ */
++export async function beforeVerify(scheme: BatchSettlementEvmScheme, ctx: VerifyContext) {
++  const raw = ctx.paymentPayload.payload;
++  if (ctx.requirements.extra?.voucherManager !== "facilitator")
++    return { abort: true as const, reason: Errors.ErrInvalidPayloadType };
++  if (
++    !isBatchSettlementDepositPayload(raw) &&
++    !isBatchSettlementVoucherPayload(raw) &&
++    !isBatchSettlementRefundPayload(raw)
++  )
++    return;
++  if ("pendingId" in raw) return { abort: true as const, reason: Errors.ErrUnexpectedPendingId };
++  if ("cancel" in raw) return { abort: true as const, reason: Errors.ErrUnexpectedCancel };
++  const reason = channelIdBindingError(
++    raw.channelConfig,
++    raw.voucher.channelId,
++    ctx.requirements.network,
++  );
++  if (reason) return { abort: true as const, reason };
++  if (
++    isBatchSettlementDepositPayload(raw) &&
++    scheme.getEnforceMinDeposit() &&
++    BigInt(raw.deposit.amount) < BigInt(await scheme.resolveMinDepositHint(ctx.requirements))
++  ) {
++    return { abort: true as const, reason: Errors.ErrDepositBelowMinDeposit };
++  }
++}
++
++/**
++ * Keeps the facilitator's admission identity and view for settlement and refund consent.
++ *
++ * @param scheme - Resource server scheme.
++ * @param ctx - Facilitator verification result.
++ * @returns A refund handler shortcut or an abort for an incomplete admission response.
++ */
++export async function afterVerify(scheme: BatchSettlementEvmScheme, ctx: VerifyResultContext) {
++  const raw = ctx.paymentPayload.payload;
++  if (
++    !isBatchSettlementDepositPayload(raw) &&
++    !isBatchSettlementVoucherPayload(raw) &&
++    !isBatchSettlementRefundPayload(raw)
++  )
++    return;
++  const extra = ctx.result.extra;
++  if (!ctx.result.isValid) {
++    if (
++      ctx.result.invalidReason === Errors.ErrCumulativeAmountMismatch ||
++      ctx.result.invalidReason === Errors.ErrCumulativeAmountBelowClaimed
++    ) {
++      scheme.mergeRequestContext(ctx.paymentPayload, {
++        correctiveChannelState: readChannelStateExtra(extra),
++        correctiveVoucherState: extra?.voucherState as BatchSettlementVoucherStateExtra | undefined,
++      });
++    }
++    return;
++  }
++  const pendingId = typeof extra?.pendingId === "string" ? extra.pendingId : undefined;
++  const charged = readExtraUintString(extra, "chargedCumulativeAmount");
++  const balance = readExtraUintString(extra, "balance");
++  const totalClaimed = readExtraUintString(extra, "totalClaimed");
++  const nonce = readExtraUintString(extra, "refundNonce");
++  // Preserve admission before checking the rest of the response so core can cancel it.
++  scheme.mergeRequestContext(ctx.paymentPayload, { pendingId, channelId: raw.voucher.channelId });
++  if (
++    !pendingId ||
++    charged === undefined ||
++    balance === undefined ||
++    totalClaimed === undefined ||
++    nonce === undefined
++  ) {
++    return { abort: true as const, reason: Errors.ErrVerificationStateUnavailable };
++  }
++  scheme.mergeRequestContext(ctx.paymentPayload, {
++    managedRefundNonce: nonce,
++    channelSnapshot: {
++      channelId: raw.voucher.channelId,
++      channelConfig: raw.channelConfig,
++      chargedCumulativeAmount: charged,
++      signedMaxClaimable: raw.voucher.maxClaimableAmount,
++      signature: raw.voucher.signature,
++      balance,
++      totalClaimed,
++      withdrawRequestedAt: readExtraNumber(extra, "withdrawRequestedAt", 0),
++      refundNonce: Number(nonce),
++      lastRequestTimestamp: Date.now(),
++    },
++  });
++  if (isBatchSettlementRefundPayload(raw)) {
++    return {
++      skipHandler: true as const,
++      response: {
++        contentType: "application/json",
++        body: { message: "Refund acknowledged", channelId: raw.voucher.channelId },
++      },
++    };
++  }
++}
++
++/**
++ * Copies facilitator corrective state onto the matching payment option.
++ *
++ * @param scheme - Resource server scheme.
++ * @param ctx - Payment-required response context.
++ * @returns Corrected requirements when the facilitator supplied a recovery proof.
++ */
++export async function enrichPaymentRequiredResponse(
++  scheme: BatchSettlementEvmScheme,
++  ctx: SchemePaymentRequiredContext,
++) {
++  if (
++    !ctx.paymentPayload ||
++    (ctx.error !== Errors.ErrCumulativeAmountMismatch &&
++      ctx.error !== Errors.ErrCumulativeAmountBelowClaimed)
++  )
++    return;
++  const request = scheme.takeRequestContext(ctx.paymentPayload);
++  if (!request?.correctiveChannelState || !request.correctiveVoucherState) return;
++  return ctx.requirements.map(requirements =>
++    requirements.scheme === scheme.scheme &&
++    requirements.network === ctx.paymentPayload!.accepted.network
++      ? {
++          ...requirements,
++          extra: {
++            ...requirements.extra,
++            channelState: request.correctiveChannelState,
++            voucherState: request.correctiveVoucherState,
++          },
++        }
++      : requirements,
++  );
++}
++
++/**
++ * Releases verified admission after a canceled handler without charging it.
++ *
++ * @param ctx - Verified cancellation context, including verify-only flows.
++ * @returns Zero-charge requirements for core's cancel settle.
++ */
++export function settleOnCancel(ctx: VerifiedPaymentCanceledContext): PaymentRequirements | void {
++  if (!["handler_failed", "handler_threw", "after_verify_aborted"].includes(ctx.reason)) return;
++  const raw = ctx.paymentPayload.payload;
++  if (
++    !isBatchSettlementDepositPayload(raw) &&
++    !isBatchSettlementVoucherPayload(raw) &&
++    !isBatchSettlementRefundPayload(raw)
++  )
++    return;
++  return { ...ctx.requirements, amount: "0" };
++}
++
++/**
++ * Forwards admission on ordinary settles and signs only server-owned refund consent.
++ *
++ * @param scheme - Resource server scheme.
++ * @param ctx - Settlement context.
++ * @returns Server-authored fields merged into the facilitator request.
++ */
++export async function enrichSettlementPayload(
++  scheme: BatchSettlementEvmScheme,
++  ctx: SettleContext,
++) {
++  const raw = ctx.paymentPayload.payload;
++  if (
++    !isBatchSettlementDepositPayload(raw) &&
++    !isBatchSettlementVoucherPayload(raw) &&
++    !isBatchSettlementRefundPayload(raw)
++  )
++    return;
++  const request = scheme.readRequestContext(ctx.paymentPayload);
++  const pendingId = request?.pendingId;
++  if (!pendingId) throw new Error(Errors.ErrVerificationStateUnavailable);
++  if (ctx.phase === "cancel") return { pendingId, cancel: true };
++  if (!isBatchSettlementRefundPayload(raw)) return { pendingId };
++  if (!request?.channelSnapshot) throw new Error(Errors.ErrMissingChannel);
++  const fields = await buildRefundSettlementFields({
++    channel: request.channelSnapshot,
++    payload: raw,
++    network: ctx.requirements.network,
++    signer: scheme.getRefundAuthorizerSigner(),
++    includeClaimAuthorizerSignature: false,
++    nonce: request.managedRefundNonce,
++  });
++  return { ...fields, pendingId };
++}
++
++/**
++ * Updates an optional local replica from the authoritative facilitator receipt.
++ * It never supplies admission, cumulative checks or corrective responses.
++ *
++ * @param scheme - Resource server scheme.
++ * @param ctx - Confirmed settlement result.
++ */
++export async function afterSettle(
++  scheme: BatchSettlementEvmScheme,
++  ctx: SettleResultContext,
++): Promise<void> {
++  try {
++    if (!ctx.result.success || ctx.phase === "cancel") return;
++    const raw = ctx.paymentPayload.payload;
++    if (
++      !isBatchSettlementDepositPayload(raw) &&
++      !isBatchSettlementVoucherPayload(raw) &&
++      !isBatchSettlementRefundPayload(raw)
++    )
++      return;
++    const snapshot = readChannelStateExtra(ctx.result.extra);
++    const charged = readExtraUintString(snapshot, "chargedCumulativeAmount");
++    if (charged === undefined)
++      throw new Error("Managed settlement is missing its charged watermark");
++    const request = scheme.readRequestContext(ctx.paymentPayload);
++    await scheme.getStorage().updateChannel(raw.voucher.channelId, current => {
++      if (
++        isBatchSettlementRefundPayload(raw) &&
++        BigInt(readExtraString(snapshot, "balance", "0")) <= BigInt(charged)
++      )
++        return undefined;
++      if (current && BigInt(current.chargedCumulativeAmount) > BigInt(charged)) return current;
++      const base = current ?? request?.channelSnapshot;
++      const next: Channel = {
++        channelId: raw.voucher.channelId,
++        channelConfig: raw.channelConfig,
++        chargedCumulativeAmount: charged,
++        signedMaxClaimable: raw.voucher.maxClaimableAmount,
++        signature: raw.voucher.signature,
++        balance: readExtraString(snapshot, "balance", base?.balance ?? "0"),
++        totalClaimed: readExtraString(snapshot, "totalClaimed", base?.totalClaimed ?? "0"),
++        withdrawRequestedAt: readExtraNumber(
++          snapshot,
++          "withdrawRequestedAt",
++          base?.withdrawRequestedAt ?? 0,
++        ),
++        refundNonce: readExtraNumber(snapshot, "refundNonce", base?.refundNonce ?? 0),
++        lastRequestTimestamp: Date.now(),
++      };
++      return next;
++    });
++  } catch (error) {
++    throw new AfterSettleAbortError(
++      Errors.ErrVoucherStoreUnavailable,
++      error instanceof Error ? error.message : String(error),
++    );
++  } finally {
++    scheme.takeRequestContext(ctx.paymentPayload);
++  }
++}
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts
+index 254c9c0..6a93eef 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts
+@@ -11,7 +11,11 @@ import {
+   SupportedKind,
+ } from "@x402/core/types";
+ import type { DeepReadonly } from "@x402/core/types";
+-import type { SettleContext, SettleResultContext } from "@x402/core/server";
++import type {
++  SettleContext,
++  SettleResultContext,
++  VerifiedPaymentCanceledContext,
++} from "@x402/core/server";
+ import { convertToTokenAmount, parseMoney } from "@x402/core/utils";
+ import type { FacilitatorClient } from "@x402/core/server";
+ import { getAddress } from "viem";
+@@ -24,6 +28,8 @@ import {
+   MIN_WITHDRAW_DELAY,
+ } from "../constants";
+ import { InMemoryChannelStorage, ChannelStorage, type Channel } from "./storage";
++import type { BatchSettlementChannelStateExtra, BatchSettlementVoucherStateExtra } from "../types";
++import * as managed from "./managed";
+ import {
+   handleAfterVerify,
+   handleBeforeVerify,
+@@ -45,6 +51,10 @@ export interface BatchSettlementEvmSchemeServerConfig {
+   withdrawDelay?: number;
+   onchainStateTtlMs?: number;
+   enforceMinDeposit?: boolean;
++  /** Authoritative voucher custody. Defaults to server-held state. */
++  voucherManager?: "server" | "facilitator";
++  /** Server refund-consent key for facilitator-managed channels. */
++  refundAuthorizerSigner?: AuthorizerSigner;
+ }
+ 
+ export interface BatchSettlementRequestContext {
+@@ -53,6 +63,9 @@ export interface BatchSettlementRequestContext {
+   channelSnapshot?: Channel;
+   localVerify?: boolean;
+   reservationCommitted?: boolean;
++  managedRefundNonce?: string;
++  correctiveChannelState?: Partial<BatchSettlementChannelStateExtra>;
++  correctiveVoucherState?: BatchSettlementVoucherStateExtra;
+ }
+ 
+ /**
+@@ -60,6 +73,8 @@ export interface BatchSettlementRequestContext {
+  */
+ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+   readonly scheme = BATCH_SETTLEMENT_SCHEME;
++  /** Configured voucher custodian; server custody is the default. */
++  readonly voucherManager: "server" | "facilitator";
+   readonly defaultAssetTransferMethod: BatchSettlementAssetTransferMethod = "eip3009";
+   readonly paymentFlows = {
+     eip3009: { supported: ["authorization"], default: "authorization" },
+@@ -78,6 +93,7 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+   private readonly withdrawDelay: number;
+   private readonly onchainStateTtlMs: number;
+   private readonly enforceMinDeposit: boolean;
++  private readonly refundAuthorizerSigner: AuthorizerSigner | undefined;
+ 
+   /**
+    * Constructs a batched server scheme.
+@@ -93,15 +109,27 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+     this.onchainStateTtlMs =
+       config?.onchainStateTtlMs ?? defaultOnchainStateTtlMs(this.withdrawDelay);
+     this.enforceMinDeposit = config?.enforceMinDeposit ?? false;
+-    this.schemeHooks = {
+-      onBeforeVerify: ctx => handleBeforeVerify(this, ctx),
+-      onAfterVerify: ctx => handleAfterVerify(this, ctx),
+-      onBeforeSettle: ctx => handleBeforeSettle(this, ctx),
+-      onAfterSettle: ctx => handleAfterSettle(this, ctx),
+-      onVerifyFailure: ctx => handleVerifyFailure(this, ctx),
+-      onSettleFailure: ctx => handleSettleFailure(this, ctx),
+-      onVerifiedPaymentCanceled: ctx => handleVerifiedPaymentCanceled(this, ctx),
+-    };
++    this.voucherManager = config?.voucherManager ?? "server";
++    this.refundAuthorizerSigner = config?.refundAuthorizerSigner;
++    this.schemeHooks =
++      this.voucherManager === "facilitator"
++        ? {
++            onBeforeVerify: ctx => managed.beforeVerify(this, ctx),
++            onAfterVerify: ctx => managed.afterVerify(this, ctx),
++            onAfterSettle: ctx => managed.afterSettle(this, ctx),
++            onSettleFailure: async ctx => {
++              this.takeRequestContext(ctx.paymentPayload);
++            },
++          }
++        : {
++            onBeforeVerify: ctx => handleBeforeVerify(this, ctx),
++            onAfterVerify: ctx => handleAfterVerify(this, ctx),
++            onBeforeSettle: ctx => handleBeforeSettle(this, ctx),
++            onAfterSettle: ctx => handleAfterSettle(this, ctx),
++            onVerifyFailure: ctx => handleVerifyFailure(this, ctx),
++            onSettleFailure: ctx => handleSettleFailure(this, ctx),
++            onVerifiedPaymentCanceled: ctx => handleVerifiedPaymentCanceled(this, ctx),
++          };
+   }
+ 
+   /**
+@@ -111,7 +139,9 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+    * @returns Additive payload fields, or nothing when no enrichment is needed.
+    */
+   enrichSettlementPayload = (ctx: SettleContext): Promise<Record<string, unknown> | void> =>
+-    handleEnrichSettlementPayload(this, ctx);
++    this.voucherManager === "facilitator"
++      ? managed.enrichSettlementPayload(this, ctx)
++      : handleEnrichSettlementPayload(this, ctx);
+ 
+   /**
+    * Adds corrective channel state to payment-required responses when available.
+@@ -121,7 +151,10 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+    */
+   enrichPaymentRequiredResponse = (
+     ctx: Parameters<typeof handleEnrichPaymentRequiredResponse>[1],
+-  ): Promise<PaymentRequirements[] | void> => handleEnrichPaymentRequiredResponse(this, ctx);
++  ): Promise<PaymentRequirements[] | void> =>
++    this.voucherManager === "facilitator"
++      ? managed.enrichPaymentRequiredResponse(this, ctx)
++      : handleEnrichPaymentRequiredResponse(this, ctx);
+ 
+   /**
+    * Adds server-owned extra fields after facilitator settlement.
+@@ -130,7 +163,24 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+    * @returns Additive response extra fields, or nothing when no enrichment is needed.
+    */
+   enrichSettlementResponse = (ctx: SettleResultContext): Promise<Record<string, unknown> | void> =>
+-    handleEnrichSettlementResponse(this, ctx);
++    this.voucherManager === "facilitator"
++      ? Promise.resolve()
++      : handleEnrichSettlementResponse(this, ctx);
++
++  /**
++   * Releases facilitator admission after a verified handler is canceled.
++   *
++   * @param ctx - Verified cancellation context.
++   * @returns Zero-charge cancel requirements for managed custody.
++   */
++  settleOnCancel(ctx: VerifiedPaymentCanceledContext): PaymentRequirements | void {
++    if (this.voucherManager !== "facilitator") return;
++    if (!this.readRequestContext(ctx.paymentPayload)?.pendingId) {
++      this.takeRequestContext(ctx.paymentPayload);
++      return;
++    }
++    return managed.settleOnCancel(ctx);
++  }
+ 
+   /**
+    * Merges batch-settlement state into the current request context.
+@@ -305,6 +355,34 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+   ): Promise<PaymentRequirements> {
+     void _extensionKeys;
+ 
++    if (this.voucherManager === "facilitator") {
++      const problem = this.validateFacilitatorSupport(
++        paymentRequirements.network,
++        supportedKind,
++        [],
++      );
++      if (problem) throw new Error(problem);
++      const extra = { ...paymentRequirements.extra };
++      delete extra.refundAuthorizer;
++      return {
++        ...paymentRequirements,
++        extra: {
++          ...extra,
++          voucherManager: "facilitator",
++          receiverAuthorizer: getAddress(supportedKind.extra!.receiverAuthorizer as string),
++          withdrawDelay: supportedKind.extra!.withdrawDelay,
++          ...(this.refundAuthorizerSigner
++            ? { refundAuthorizer: getAddress(this.refundAuthorizerSigner.address) }
++            : {}),
++          minDeposit: await this.resolveMinDepositHint(paymentRequirements),
++        },
++      };
++    }
++
++    if (paymentRequirements.extra?.voucherManager === "facilitator") {
++      throw new Error('Configure voucherManager: "facilitator" on the resource server scheme');
++    }
++
+     const receiverAuthorizer =
+       this.receiverAuthorizerSigner?.address ??
+       (typeof supportedKind.extra?.receiverAuthorizer === "string"
+@@ -343,6 +421,29 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+     supportedKind: SupportedKind,
+     _: string[],
+   ): string | void {
++    if (this.voucherManager === "facilitator") {
++      const extra = supportedKind.extra;
++      if (!Array.isArray(extra?.voucherManager) || !extra.voucherManager.includes("facilitator")) {
++        return 'Facilitator-managed custody requires advertised voucherManager to include "facilitator"';
++      }
++      if (
++        typeof extra.receiverAuthorizer !== "string" ||
++        getAddress(extra.receiverAuthorizer) === "0x0000000000000000000000000000000000000000"
++      ) {
++        return "Facilitator-managed custody requires a non-zero receiverAuthorizer";
++      }
++      if (
++        typeof extra.withdrawDelay !== "number" ||
++        !Number.isSafeInteger(extra.withdrawDelay) ||
++        extra.withdrawDelay <= 0
++      ) {
++        return "Facilitator-managed custody requires an advertised withdrawDelay";
++      }
++      if (!this.refundAuthorizerSigner && extra.delegatedRefund !== true) {
++        return "Facilitator-managed custody requires a refundAuthorizerSigner or delegatedRefund: true";
++      }
++      return;
++    }
+     if (this.receiverAuthorizerSigner) return;
+ 
+     const advertised = supportedKind.extra?.receiverAuthorizer;
+@@ -413,6 +514,17 @@ export class BatchSettlementEvmScheme implements SchemeNetworkServer {
+     return this.receiverAuthorizerSigner;
+   }
+ 
++  /**
++   * Returns the key authorized to consent to refunds in this custody mode.
++   *
++   * @returns Server-owned refund signer, or undefined for delegated consent.
++   */
++  getRefundAuthorizerSigner(): AuthorizerSigner | undefined {
++    return this.voucherManager === "facilitator"
++      ? this.refundAuthorizerSigner
++      : this.receiverAuthorizerSigner;
++  }
++
+   /**
+    * Creates a {@link BatchSettlementChannelManager} pre-configured with this scheme's
+    * receiver, a token for the given network, and the provided facilitator.
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/server/settle.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/server/settle.ts
+index 7aa4474..7bc852c 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/server/settle.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/server/settle.ts
+@@ -1,4 +1,4 @@
+-import type { SettleResponse } from "@x402/core/types";
++import type { Network, SettleResponse } from "@x402/core/types";
+ import { AfterSettleAbortError } from "@x402/core/server";
+ import type { SettleContext, SettleFailureContext, SettleResultContext } from "@x402/core/server";
+ import { signClaimBatch, signRefund } from "../authorizerSigner";
+@@ -7,7 +7,12 @@ import {
+   isBatchSettlementRefundPayload,
+   isBatchSettlementVoucherPayload,
+ } from "../types";
+-import type { BatchSettlementPaymentResponseExtra, BatchSettlementVoucherClaim } from "../types";
++import type {
++  AuthorizerSigner,
++  BatchSettlementRefundPayload,
++  BatchSettlementPaymentResponseExtra,
++  BatchSettlementVoucherClaim,
++} from "../types";
+ import { computeChannelId } from "../utils";
+ import * as Errors from "../errors";
+ import type { BatchSettlementEvmScheme } from "./scheme";
+@@ -198,7 +203,45 @@ export async function handleEnrichSettlementPayload(
+     throw new Error(Errors.ErrInvalidVoucherSignature);
+   }
+ 
++  scheme.rememberChannelSnapshot(paymentPayload, channel);
++  return buildRefundSettlementFields({
++    channel,
++    payload: raw,
++    network: requirements.network,
++    signer: scheme.getReceiverAuthorizerSigner(),
++    includeClaimAuthorizerSignature: true,
++  });
++}
++
++/**
++ * Builds the same refund amount and consent fields for either voucher custodian.
++ *
++ * @param args - Verified channel, refund request and server signing policy.
++ * @param args.channel - Latest authoritative channel snapshot.
++ * @param args.payload - Payer's zero-charge refund voucher.
++ * @param args.network - Channel network.
++ * @param args.signer - Server refund-consent signer, when configured.
++ * @param args.includeClaimAuthorizerSignature - Whether the server owns claim authority.
++ * @param args.nonce - Exact facilitator nonce, avoiding a numeric replica conversion.
++ * @returns Server-authored refund settlement fields.
++ */
++export async function buildRefundSettlementFields({
++  channel,
++  payload: raw,
++  network,
++  signer,
++  includeClaimAuthorizerSignature,
++  nonce: suppliedNonce,
++}: {
++  channel: Channel;
++  payload: BatchSettlementRefundPayload;
++  network: Network;
++  signer?: AuthorizerSigner;
++  includeClaimAuthorizerSignature: boolean;
++  nonce?: string;
++}): Promise<Record<string, unknown>> {
+   const config = raw.channelConfig;
++  const channelId = raw.voucher.channelId;
+ 
+   const claimEntry: BatchSettlementVoucherClaim = {
+     voucher: {
+@@ -227,25 +270,16 @@ export async function handleEnrichSettlementPayload(
+   }
+ 
+   const refundAmount = refundAmountBig.toString();
+-  const nonce = String(channel.refundNonce ?? 0);
+-
+-  const receiverAuthorizerSigner = scheme.getReceiverAuthorizerSigner();
+-
+-  const refundAuthorizerSignature = receiverAuthorizerSigner
+-    ? await signRefund(
+-        receiverAuthorizerSigner,
+-        channelId as `0x${string}`,
+-        refundAmount,
+-        nonce,
+-        requirements.network,
+-      )
+-    : undefined;
++  const nonce = suppliedNonce ?? String(channel.refundNonce ?? 0);
+ 
+-  const claimAuthorizerSignature = receiverAuthorizerSigner
+-    ? await signClaimBatch(receiverAuthorizerSigner, [claimEntry], requirements.network)
++  const refundAuthorizerSignature = signer
++    ? await signRefund(signer, channelId as `0x${string}`, refundAmount, nonce, network)
+     : undefined;
+ 
+-  scheme.rememberChannelSnapshot(paymentPayload, channel);
++  const claimAuthorizerSignature =
++    signer && includeClaimAuthorizerSignature
++      ? await signClaimBatch(signer, [claimEntry], network)
++      : undefined;
+ 
+   return {
+     ...(raw.amount === undefined ? { amount: refundAmount } : {}),
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/server/verify.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/server/verify.ts
+index 0ce090c..6221eb7 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/server/verify.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/server/verify.ts
+@@ -99,6 +99,10 @@ export async function handleBeforeVerify(
+ > {
+   const { paymentPayload, requirements } = ctx;
+ 
++  if (requirements.extra?.voucherManager === "facilitator") {
++    return { abort: true, reason: Errors.ErrInvalidPayloadType };
++  }
++
+   const raw = paymentPayload.payload;
+   const isPaidPayload =
+     isBatchSettlementVoucherPayload(raw) || isBatchSettlementDepositPayload(raw);
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/types.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/types.ts
+index 157a097..e47f4f3 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/types.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/types.ts
+@@ -121,6 +121,8 @@ export type BatchSettlementPaymentRequirementsExtra = {
+   assetTransferMethod?: BatchSettlementAssetTransferMethod;
+   channelState?: BatchSettlementChannelStateExtra;
+   voucherState?: BatchSettlementVoucherStateExtra;
++  voucherManager?: "server" | "facilitator";
++  refundAuthorizer?: `0x${string}`;
+ };
+ 
+ export type FileChannelStorageOptions = {
+@@ -132,6 +134,7 @@ export type BatchSettlementPaymentResponseExtra = {
+   chargedAmount?: string;
+   channelState?: BatchSettlementChannelStateExtra;
+   voucherState?: BatchSettlementVoucherStateExtra;
++  chargeCount?: number;
+ };
+ 
+ export type BatchSettlementClaimPayload = {
+diff --git a/typescript/packages/mechanisms/evm/src/batch-settlement/utils.ts b/typescript/packages/mechanisms/evm/src/batch-settlement/utils.ts
+index 73bfbde..d2a1c09 100644
+--- a/typescript/packages/mechanisms/evm/src/batch-settlement/utils.ts
++++ b/typescript/packages/mechanisms/evm/src/batch-settlement/utils.ts
+@@ -7,6 +7,24 @@ import { getEvmChainId } from "../utils";
+ /** Canonical `bytes32` channel id: `0x` followed by exactly 64 hex digits. */
+ const CHANNEL_ID_RE = /^0x[0-9a-fA-F]{64}$/;
+ 
++/**
++ * Packs a managed channel's refund key after its 12-byte entropy prefix.
++ * Small index-style salts use their low 96 bits, matching the Go client.
++ *
++ * @param salt - Base channel salt.
++ * @param refundAuthorizer - Server-owned refund authorizer.
++ * @returns The channel's packed bytes32 salt.
++ */
++export function packRefundAuthorizerSalt(
++  salt: `0x${string}`,
++  refundAuthorizer: `0x${string}`,
++): `0x${string}` {
++  if (!CHANNEL_ID_RE.test(salt)) throw new Error("Channel salt must be bytes32");
++  const high = salt.slice(2, 26);
++  const entropy = BigInt(`0x${high}`) === 0n ? salt.slice(-24) : high;
++  return `0x${entropy}${getAddress(refundAuthorizer).slice(2)}`.toLowerCase() as `0x${string}`;
++}
++
+ /**
+  * Narrows an untrusted value to a canonical `bytes32` channel id string.
+  *
+diff --git a/typescript/packages/mechanisms/evm/test/unit/batch-settlement/managed.test.ts b/typescript/packages/mechanisms/evm/test/unit/batch-settlement/managed.test.ts
+new file mode 100644
+index 0000000..cc94d31
+--- /dev/null
++++ b/typescript/packages/mechanisms/evm/test/unit/batch-settlement/managed.test.ts
+@@ -0,0 +1,472 @@
++import { describe, expect, it, vi } from "vitest";
++import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
++import { verifyTypedData } from "viem";
++import { x402ResourceServer, type FacilitatorClient } from "@x402/core/server";
++import type {
++  PaymentPayload,
++  PaymentRequirements,
++  SettleResponse,
++  VerifyResponse,
++} from "@x402/core/types";
++import { buildChannelConfig } from "../../../src/batch-settlement/client/channel";
++import { BatchSettlementEvmScheme as Client } from "../../../src/batch-settlement/client/scheme";
++import { InMemoryClientChannelStorage } from "../../../src/batch-settlement/client/storage";
++import { BatchSettlementEvmScheme as Server } from "../../../src/batch-settlement/server/scheme";
++import { InMemoryChannelStorage } from "../../../src/batch-settlement/server/storage";
++import type {
++  BatchSettlementRefundPayload,
++  BatchSettlementVoucherPayload,
++} from "../../../src/batch-settlement/types";
++import {
++  computeChannelId,
++  getBatchSettlementEip712Domain,
++  packRefundAuthorizerSalt,
++} from "../../../src/batch-settlement/utils";
++import { refundTypes } from "../../../src/batch-settlement/constants";
++import * as Errors from "../../../src/batch-settlement/errors";
++
++const payer = privateKeyToAccount(generatePrivateKey());
++const refundKey = privateKeyToAccount(generatePrivateKey());
++const receiver = "0x9876543210987654321098765432109876543210";
++const authorizer = "0x1111111111111111111111111111111111111111";
++const salt = `0x${"ab".repeat(32)}` as const;
++const requirements: PaymentRequirements = {
++  scheme: "batch-settlement",
++  network: "eip155:84532",
++  amount: "1000",
++  asset: "0x036cbd53842c5426634e7929541ec2318f3dcf7e",
++  payTo: receiver,
++  maxTimeoutSeconds: 60,
++  extra: { voucherManager: "facilitator", receiverAuthorizer: authorizer, withdrawDelay: 900 },
++};
++const supported = {
++  x402Version: 2,
++  scheme: requirements.scheme,
++  network: requirements.network,
++  extra: {
++    voucherManager: ["server", "facilitator"],
++    receiverAuthorizer: authorizer,
++    withdrawDelay: 900,
++    delegatedRefund: true,
++  },
++};
++
++async function payment(
++  charged = "1000",
++  terms = requirements,
++): Promise<PaymentPayload & { payload: BatchSettlementVoucherPayload }> {
++  const storage = new InMemoryClientChannelStorage();
++  const config = buildChannelConfig({ signer: payer, storage, salt }, terms);
++  const channelId = computeChannelId(config, terms.network);
++  await storage.set(channelId, {
++    chargedCumulativeAmount: charged,
++    balance: "10000",
++    totalClaimed: "0",
++  });
++  const client = new Client(payer, { storage, salt });
++  const result = await client.createPaymentPayload(2, terms);
++  return {
++    x402Version: 2,
++    accepted: terms,
++    payload: result.payload as BatchSettlementVoucherPayload,
++  };
++}
++function verification(
++  payload: PaymentPayload & {
++    payload: BatchSettlementVoucherPayload | BatchSettlementRefundPayload;
++  },
++  overrides: Record<string, string | number> = {},
++): VerifyResponse {
++  return {
++    isValid: true,
++    payer: payer.address,
++    extra: {
++      pendingId: "managed-admission",
++      balance: "10000",
++      totalClaimed: "0",
++      chargedCumulativeAmount: "1000",
++      withdrawRequestedAt: 0,
++      refundNonce: "0",
++      ...overrides,
++    },
++  };
++}
++function receipt(
++  payload: PaymentPayload & {
++    payload: BatchSettlementVoucherPayload | BatchSettlementRefundPayload;
++  },
++  overrides: Record<string, string | number> = {},
++): SettleResponse {
++  return {
++    success: true,
++    network: requirements.network,
++    payer: payer.address,
++    transaction: "",
++    amount: "",
++    extra: {
++      chargedAmount: "1000",
++      chargeCount: 1,
++      channelState: {
++        channelId: payload.payload.voucher.channelId,
++        balance: "10000",
++        totalClaimed: "0",
++        chargedCumulativeAmount: "2000",
++        withdrawRequestedAt: 0,
++        refundNonce: "0",
++        ...overrides,
++      },
++    },
++  };
++}
++async function runtime(
++  payload: PaymentPayload & {
++    payload: BatchSettlementVoucherPayload | BatchSettlementRefundPayload;
++  },
++  options: { storage?: InMemoryChannelStorage; refundSigner?: typeof refundKey } = {},
++) {
++  const verify = vi.fn(async () => verification(payload));
++  const settle = vi.fn(async (_payload: PaymentPayload, _requirements: PaymentRequirements) =>
++    receipt(payload),
++  );
++  const facilitator: FacilitatorClient = {
++    verify,
++    settle,
++    getSupported: async () => ({ kinds: [supported], extensions: [], signers: {} }),
++  };
++  const storage = options.storage ?? new InMemoryChannelStorage();
++  const scheme = new Server(receiver, {
++    voucherManager: "facilitator",
++    storage,
++    refundAuthorizerSigner: options.refundSigner,
++  });
++  const server = new x402ResourceServer(facilitator).register(requirements.network, scheme);
++  await server.initialize();
++  return { server, scheme, storage, verify, settle };
++}
++
++describe("facilitator-managed EVM client and resource server", () => {
++  it("does not settle a malformed admission response without its reservation identity", async () => {
++    const payload = await payment();
++    const { server, scheme, verify, settle } = await runtime(payload);
++    verify.mockResolvedValueOnce({
++      isValid: true,
++      payer: payer.address,
++      extra: {
++        balance: "10000",
++        chargedCumulativeAmount: "1000",
++        totalClaimed: "0",
++        refundNonce: "0",
++      },
++    });
++    expect(await server.verifyPayment(payload, requirements)).toMatchObject({
++      isValid: false,
++      invalidReason: Errors.ErrVerificationStateUnavailable,
++    });
++    expect(settle).not.toHaveBeenCalled();
++    expect(scheme.readRequestContext(payload)).toBeUndefined();
++  });
++
++  it("does not offer a server redemption worker for facilitator custody", async () => {
++    const payload = await payment();
++    const { scheme } = await runtime(payload);
++    expect(() =>
++      scheme.createChannelManager(
++        {} as FacilitatorClient,
++        requirements.network,
++        requirements.asset as `0x${string}`,
++      ),
++    ).toThrow(/facilitator's redemption worker/);
++  });
++
++  it("forwards an initial deposit and copies its committed facilitator receipt", async () => {
++    const terms = { ...requirements, extra: { ...requirements.extra, name: "USDC", version: "2" } };
++    const client = new Client(payer, { salt });
++    const created = await client.createPaymentPayload(2, terms);
++    const payload: PaymentPayload = { x402Version: 2, accepted: terms, payload: created.payload };
++    const verify = vi.fn(async () => ({
++      isValid: true,
++      payer: payer.address,
++      extra: {
++        pendingId: "deposit-admission",
++        chargedCumulativeAmount: "0",
++        balance: "0",
++        totalClaimed: "0",
++        refundNonce: "0",
++      },
++    }));
++    const settle = vi.fn(async () => ({
++      success: true,
++      network: terms.network,
++      payer: payer.address,
++      transaction: `0x${"ab".repeat(32)}`,
++      amount: "5000",
++      extra: {
++        chargedAmount: "1000",
++        chargeCount: 1,
++        channelState: {
++          channelId: (created.payload as BatchSettlementVoucherPayload).voucher.channelId,
++          balance: "5000",
++          totalClaimed: "0",
++          chargedCumulativeAmount: "1000",
++          withdrawRequestedAt: 0,
++          refundNonce: "0",
++        },
++      },
++    }));
++    const scheme = new Server(receiver, { voucherManager: "facilitator" });
++    const server = new x402ResourceServer({
++      verify,
++      settle,
++      getSupported: async () => ({ kinds: [supported], extensions: [], signers: {} }),
++    }).register(terms.network, scheme);
++    await server.initialize();
++    expect((await server.verifyPayment(payload, terms)).isValid).toBe(true);
++    const result = await server.settlePayment(payload, terms);
++    expect(result).toMatchObject({ success: true, amount: "5000", extra: { chargeCount: 1 } });
++    expect(settle).toHaveBeenCalledWith(
++      expect.objectContaining({
++        payload: expect.objectContaining({ type: "deposit", pendingId: "deposit-admission" }),
++      }),
++      expect.anything(),
++    );
++    expect((await scheme.getStorage().list())[0]).toMatchObject({
++      balance: "5000",
++      chargedCumulativeAmount: "1000",
++    });
++  });
++
++  it("packs the refund key using Go-compatible raw and index entropy while preserving server mode", () => {
++    const index = `0x${"0".repeat(63)}1` as const;
++    expect(packRefundAuthorizerSalt(index, refundKey.address)).toBe(
++      `0x${"0".repeat(23)}1${refundKey.address.slice(2)}`.toLowerCase(),
++    );
++    expect(packRefundAuthorizerSalt(salt, refundKey.address)).toBe(
++      `0x${"ab".repeat(12)}${refundKey.address.slice(2)}`.toLowerCase(),
++    );
++    const storage = new InMemoryClientChannelStorage();
++    const terms = {
++      ...requirements,
++      extra: { ...requirements.extra, refundAuthorizer: refundKey.address },
++    };
++    expect(buildChannelConfig({ signer: payer, storage, salt }, terms).salt).toBe(
++      packRefundAuthorizerSalt(salt, refundKey.address),
++    );
++    expect(
++      buildChannelConfig(
++        { signer: payer, storage, salt },
++        { ...terms, extra: { ...terms.extra, voucherManager: "server" } },
++      ).salt,
++    ).toBe(salt);
++  });
++
++  it("negotiates managed capability and a refund-consent path, copying the facilitator delay", async () => {
++    const scheme = new Server(receiver, {
++      voucherManager: "facilitator",
++      withdrawDelay: 900,
++      refundAuthorizerSigner: refundKey,
++    });
++    const kind = {
++      ...supported,
++      extra: { ...supported.extra, withdrawDelay: 1200, delegatedRefund: false },
++    };
++    const terms = await scheme.enhancePaymentRequirements(requirements, kind, []);
++    expect(terms.extra).toMatchObject({
++      voucherManager: "facilitator",
++      receiverAuthorizer: authorizer,
++      withdrawDelay: 1200,
++      refundAuthorizer: refundKey.address,
++    });
++    await expect(
++      scheme.enhancePaymentRequirements(
++        requirements,
++        { ...kind, extra: { ...kind.extra, voucherManager: ["server"] } },
++        [],
++      ),
++    ).rejects.toThrow(/voucherManager/);
++    const delegated = new Server(receiver, { voucherManager: "facilitator" });
++    expect(delegated.validateFacilitatorSupport(requirements.network, kind, [])).toMatch(
++      /refundAuthorizerSigner/,
++    );
++    const delegatedTerms = await delegated.enhancePaymentRequirements(
++      { ...requirements, extra: { ...requirements.extra, refundAuthorizer: refundKey.address } },
++      supported,
++      [],
++    );
++    expect(delegatedTerms.extra).not.toHaveProperty("refundAuthorizer");
++  });
++
++  it("forwards every voucher despite a stale replica, and recreates a server without authoritative local storage", async () => {
++    const payload = await payment();
++    const first = await runtime(payload);
++    await first.storage.updateChannel(payload.payload.voucher.channelId, () => ({
++      channelId: payload.payload.voucher.channelId,
++      channelConfig: payload.payload.channelConfig,
++      chargedCumulativeAmount: "9000",
++      signedMaxClaimable: "9000",
++      signature: "0x",
++      balance: "10000",
++      totalClaimed: "0",
++      withdrawRequestedAt: 0,
++      refundNonce: 0,
++      lastRequestTimestamp: 0,
++    }));
++    expect((await first.server.verifyPayment(payload, requirements)).isValid).toBe(true);
++    expect((await first.server.settlePayment(payload, requirements)).success).toBe(true);
++    expect(first.verify).toHaveBeenCalledTimes(1);
++    expect(first.settle).toHaveBeenCalledTimes(1);
++    expect(first.settle.mock.calls[0][0].payload).toMatchObject({ pendingId: "managed-admission" });
++    // The stale replica is never used to refuse admission or roll back newer state.
++    expect(
++      (await first.storage.get(payload.payload.voucher.channelId))?.chargedCumulativeAmount,
++    ).toBe("9000");
++    const restarted = await runtime(payload);
++    expect((await restarted.server.verifyPayment(payload, requirements)).isValid).toBe(true);
++    const result = await restarted.server.settlePayment(payload, requirements);
++    expect(result.extra?.chargeCount).toBe(1);
++    expect(
++      (await restarted.storage.get(payload.payload.voucher.channelId))?.chargedCumulativeAmount,
++    ).toBe("2000");
++  });
++
++  it.each(["pendingId", "cancel"])("rejects client-supplied %s before admission", async field => {
++    const payload = await payment();
++    Object.assign(payload.payload, { [field]: field === "cancel" ? true : "client-value" });
++    const { server, verify } = await runtime(payload);
++    expect((await server.verifyPayment(payload, requirements)).isValid).toBe(false);
++    expect(verify).not.toHaveBeenCalled();
++  });
++
++  it("cancels verify-only admission once, without a paid charge or a replica write", async () => {
++    const payload = await payment();
++    const { server, storage, settle } = await runtime(payload);
++    expect((await server.verifyPayment(payload, requirements)).isValid).toBe(true);
++    const cancel = server.createPaymentCancellationDispatcher(payload, requirements);
++    await Promise.all([
++      cancel.cancel({ reason: "handler_threw" }),
++      cancel.cancel({ reason: "handler_threw" }),
++    ]);
++    expect(settle).toHaveBeenCalledTimes(1);
++    expect(settle.mock.calls[0][0].payload).toMatchObject({
++      pendingId: "managed-admission",
++      cancel: true,
++    });
++    expect(settle.mock.calls[0][1].amount).toBe("0");
++    expect(await storage.list()).toEqual([]);
++  });
++
++  it("preserves the same admission and receipt through settlement_pending retry", async () => {
++    const payload = await payment();
++    const { server, settle } = await runtime(payload);
++    settle.mockResolvedValueOnce({
++      success: false,
++      errorReason: "settlement_pending",
++      transaction: "0xconfirmed-later",
++      network: requirements.network,
++    });
++    settle.mockResolvedValueOnce({ ...receipt(payload), transaction: "0xconfirmed-later" });
++    await server.verifyPayment(payload, requirements);
++    expect((await server.settlePayment(payload, requirements)).transaction).toBe(
++      "0xconfirmed-later",
++    );
++    expect(settle).toHaveBeenCalledTimes(2);
++    expect(
++      settle.mock.calls.map(call => (call[0].payload as { pendingId: string }).pendingId),
++    ).toEqual(["managed-admission", "managed-admission"]);
++  });
++
++  it("fails a replica persistence error closed while retaining the facilitator's committed receipt", async () => {
++    const payload = await payment();
++    const storage = new InMemoryChannelStorage();
++    const { server } = await runtime(payload, { storage });
++    await server.verifyPayment(payload, requirements);
++    vi.spyOn(storage, "updateChannel").mockRejectedValueOnce(new Error("replica unavailable"));
++    const result = await server.settlePayment(payload, requirements);
++    expect(result).toMatchObject({
++      success: false,
++      errorReason: Errors.ErrVoucherStoreUnavailable,
++      extra: { chargeCount: 1, channelState: { chargedCumulativeAmount: "2000" } },
++    });
++  });
++
++  it("uses the verify snapshot for a signed refund, preserving the exact nonce and omitting claim authority", async () => {
++    const paid = await payment();
++    const payload: PaymentPayload & { payload: BatchSettlementRefundPayload } = {
++      ...paid,
++      payload: {
++        ...paid.payload,
++        type: "refund",
++        voucher: { ...paid.payload.voucher, maxClaimableAmount: "1000" },
++      },
++    };
++    const { server, verify, settle } = await runtime(payload, { refundSigner: refundKey });
++    verify.mockResolvedValueOnce(verification(payload, { refundNonce: "9007199254740993" }));
++    settle.mockResolvedValueOnce(
++      receipt(payload, {
++        balance: "1000",
++        chargedCumulativeAmount: "1000",
++        refundNonce: "9007199254740994",
++      }),
++    );
++    await server.verifyPayment(payload, { ...requirements, amount: "0" });
++    await server.settlePayment(payload, { ...requirements, amount: "0" });
++    const raw = settle.mock.calls[0][0].payload as Record<string, string | undefined>;
++    expect(raw.refundNonce).toBe("9007199254740993");
++    expect(raw.amount).toBe("9000");
++    expect(raw.claimAuthorizerSignature).toBeUndefined();
++    expect(
++      await verifyTypedData({
++        address: refundKey.address,
++        domain: getBatchSettlementEip712Domain(84532),
++        types: refundTypes,
++        primaryType: "Refund",
++        message: {
++          channelId: paid.payload.voucher.channelId,
++          nonce: 9007199254740993n,
++          amount: 9000n,
++        },
++        signature: raw.refundAuthorizerSignature as `0x${string}`,
++      }),
++    ).toBe(true);
++  });
++
++  it("forwards facilitator corrective proofs for either mismatch reason without consulting a replica", async () => {
++    const payload = await payment();
++    const { server, scheme, verify } = await runtime(payload);
++    for (const reason of [
++      Errors.ErrCumulativeAmountMismatch,
++      Errors.ErrCumulativeAmountBelowClaimed,
++    ]) {
++      const channelState = {
++        channelId: payload.payload.voucher.channelId,
++        balance: "10000",
++        chargedCumulativeAmount: "2000",
++        totalClaimed: "1000",
++        refundNonce: "0",
++        withdrawRequestedAt: 0,
++      };
++      const voucherState = {
++        signedMaxClaimable: "2000",
++        signature: payload.payload.voucher.signature,
++      };
++      verify.mockResolvedValueOnce({
++        isValid: false,
++        invalidReason: reason,
++        extra: { channelState, voucherState },
++      });
++      expect((await server.verifyPayment(payload, requirements)).isValid).toBe(false);
++      const accepts = [requirements];
++      const result = await scheme.enrichPaymentRequiredResponse({
++        requirements: accepts,
++        paymentPayload: payload,
++        error: reason,
++        resourceInfo: { url: "https://example.test/resource" },
++        paymentRequiredResponse: {
++          x402Version: 2,
++          resource: { url: "https://example.test/resource" },
++          accepts,
++        },
++      });
++      expect(result?.[0].extra).toMatchObject({ channelState, voucherState });
++    }
++  });
++});

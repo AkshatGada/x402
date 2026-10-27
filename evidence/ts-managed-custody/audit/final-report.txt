@@ -1,0 +1,129 @@
+Final independent managed-custody audit — 2026-10-28
+
+VERDICT: NO REMAINING BLOCKING FINDINGS IN THE REVIEWED SCOPE.
+The two reproduced reservation failures and the optional-replica receipt issue
+from the initial audit are corrected. This report supersedes the initial request-
+changes verdict for the exact source identified below. Ready for local review/PR
+preparation and human review; no publication or live-chain readiness is implied.
+
+Source identity
+- Checkout: <validation>/checkout
+- Base: dbe1080ac7f65e2e05cc8430a834c255a6800828
+- Audited final commit: 5847307b442f1035644aca3fa91f5b24dbfcc771
+- git diff --binary BASE..HEAD SHA256:
+  4ab434b5dbb10752c35482451dddb034ec577ce45005b242c98145c462362b75
+  This matches corrected.patch byte-for-byte. The earlier ede098... artifact
+  differed only by an erroneous JSDoc parameter line removed before final checks.
+- 15 changed files, 1235 insertions/37 deletions. All 15 final source hashes match
+  source-sha256.txt and source-hash-check.log. Final worktree is clean.
+- No source edits or commits were performed by this independent audit agent.
+
+Review conclusions
+1. Early application afterVerify abort now passes the trusted verify response
+   through an optional in-process cancellation-context field. The managed scheme
+   recovers a missing pendingId only from a valid trusted response. Manual-first
+   hook order remains intact; client-authored reservation/cancel fields remain
+   rejected. No reservation identity is invented when a response lacks it.
+2. Local refund enrichment/signing failure now sends a zero-charge cancel after
+   unrecovered failure hooks and retains the original error. Explicit beforeSettle
+   directive abort also cancels, while existing thrown-hook and skip-result
+   behavior is preserved. Cancel-phase failures do not recursively cancel.
+3. The dispatch flag is set before either selected-client or fallback facilitator
+   invocation. Actual pending/unknown outcomes retain identity and are not
+   automatically canceled. Receipt-bearing/pending local SettleError outcomes are
+   excluded too. A recovered failure short-circuits cleanup. Failed cancellation
+   retains its identity for an explicit later attempt or reconciliation.
+4. All authoritative uint snapshot fields are parsed before the optional replica
+   update. Malformed authoritative data still fails the committed receipt closed
+   without canceling it. Replica persistence/callback failure instead warns once
+   and preserves the exact successful facilitator receipt. The real client's
+   response hook then advances its local watermark. Confirmed receipt paths clear
+   request context; failed/uncertain calls retain it.
+5. Original feature paths remain focused: Go-compatible refund-key salt packing,
+   explicit managed capability/refund-consent negotiation, every managed payload
+   forwarded despite warm/stale/fresh replicas, exact refund nonce for signatures,
+   facilitator corrective proofs for both mismatch reasons, and managed redemption
+   worker guard. Shared refund logic preserves default server custody behavior.
+6. Core's optional context field/new cancellation reason are a small enabling
+   lifecycle change. No new dependencies, TS managed facilitator/storage port,
+   legacy source, misleading e2e catalog claim, or unrelated API redesign was added.
+   The changeset correctly includes both core and EVM.
+
+Checks independently rerun on final source
+- EVM normal package config with coverage: 58 files / 1648 tests PASS.
+  Statements/lines 95.68%, branches 91.22%, functions 98.50%; thresholds PASS.
+- Core normal package config with coverage: 27 files / 794 tests PASS.
+  Statements/lines 95.57%, branches 91.54%, functions 97.04%; thresholds PASS.
+- Core tsc --noEmit PASS. EVM source plus the final managed test file with the
+  documented ES2020+DOM test config PASS. Changed core/EVM source and tests ESLint
+  and Prettier PASS. Only existing module-type warnings appeared.
+- EVM standalone ES2020-only tsc reproduces the two pre-existing missing Crypto
+  errors in unchanged src/utils.ts:38/39; see evm-standalone-types.log. The matching
+  baseline log was inspected. This is not described as a passing standalone check.
+- Audit-only ordinary matrix: 35 tests PASS (copied final 28 plus 7 extra cases):
+  fallback dispatch exception, thrown pending with one retry, failed cancellation
+  preserving signer error/identity, two receipt-bearing enrichment errors,
+  incomplete admitted snapshot, and exact receipt/one warning/real client advance.
+- Actual TS SDK + pinned Go managed scheme, three loopback probes PASS with the
+  corrected core aliases: complete fixed client/server/refund/cancel flow, early
+  afterVerify abort, refund-signer outage. Both formerly failing cases now show
+  verify=1, settle=1, held=false; original signing/application errors are preserved.
+- git diff BASE..HEAD --check PASS. Primary checkout remains clean at
+  b1176d302b3210395683ac6a5025e84c52b64f15.
+
+Coordinator receipts inspected, not independently rerun in this final pass
+- Current normal core/EVM ESM/CJS/declaration builds PASS, including mirrored CJS
+  declarations. Initial audit independently ran the original EVM package build;
+  final-build claims here refer to inspected coordinator receipts.
+- Identical final 28-case correction test source: uncorrected feature has
+  11 failures/17 passes; corrected source has 28 passes. The initial test-startup
+  failure from a missing tsconfig.base.json is excluded from this comparison.
+- Portable replay's six loopback scenarios and same-test regression comparison
+  passed expected assertions. The two expected-failure scenarios assert their
+  specific held-reservation JSON and verify/settle counts, not merely exit 1.
+- Initial pinned Go controls pass; original immutable baseline defect/control
+  proof passed during the first independent audit. Go production code is unchanged.
+
+Evidence provenance/framing review
+- Read public-evidence/replay.py and the baseline/fixed/early-abort/signer-failure
+  harnesses, Go fixture, README and PROVENANCE. No evidence-framing blocker found.
+- Independently verified all 960 public baseline manifest entries against pinned
+  Git tree blob IDs, snapshot Git blob hashes and SHA256. No mismatches.
+  Also verified the public 28-test file equals final source, the fixture equals the
+  exercised fixture, public final source manifest equals final handoff manifest,
+  and uncorrected patch hash remains ec4ccd1... . See provenance-check.json.
+- Replay uses existing dependencies, disables lazy Git fetching/Go downloads,
+  supports an already available snapshot in partial clones, stages only temporary
+  sources, and validates implementation hashes before testing. The corrected Go
+  bundles used here alias core to corrected source, not the pinned baseline core.
+- The README correctly distinguishes pinned upstream missing-capability proof from
+  intermediate-feature audit corrections. Amounts are synthetic fixture units;
+  this is not framed as a live-funds incident or vulnerability reproduction.
+- Codex implemented/corrected and prepared evidence. This independent review was
+  separately selected as gpt-6.1-sol/xhigh by the coordinator. No Claude/Astra credit
+  or copied co-author trailer belongs on this work. PR #3892 attribution is unchanged.
+
+Limits and remaining review boundaries
+- Actual Go admission/storage/refund-consent code and TS SDK methods were used;
+  chain readers, receipt logs, facilitator authorizer and onchain writes are
+  upstream synthetic helpers. Caller identity is fixed to a synthetic service.
+  No live RPC, chain, real funds, middleware auth gateway or payout worker was used.
+- Initial deposit forwarding is a typed facilitator unit fixture; Go bridge seeds
+  an existing channel. Non-terminal retry identity is covered with unit doubles,
+  not a delayed live onchain transaction. Exact nonce >2^53 consent is verified
+  cryptographically in TS; the observational replica still has a numeric nonce.
+- Automatic local cleanup intentionally covers explicit beforeSettle directive
+  abort and settlement enrichment failure. Invalid settlement-override arguments
+  remain outside that path; README states this. This audit does not claim a general
+  cleanup rewrite for every possible API/preflight exception.
+- Complete monorepo, other SDK builds, browser runtime matrix and live-chain
+  integration were not run. The cross-language bridge is an evidence artifact,
+  not checked-in CI. Some generic core guard edge cases are audit-only tests;
+  moving those to core regression coverage later would aid maintenance.
+- No adversarial security testing, public report, maintainer contact, push or PR
+  creation occurred during this audit. Security-sensitive discoveries, if any
+  arise later, belong with the private TSC/maintainer process in SECURITY.md.
+
+Artifacts: final/commands.txt, source-sha256.txt, source-hash-check.log,
+provenance-check.json, package coverage/type/lint/format logs, ordinary-tests.log,
+three probe logs/JSON, and the independently authored audit harnesses.

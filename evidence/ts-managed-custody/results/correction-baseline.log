@@ -1,0 +1,187 @@
+
+ RUN  v3.2.7 <validation>/correction-baseline/typescript/packages/mechanisms/evm
+
+stderr | test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > does not cancel a skip receipt when response enrichment fails
+[x402] Resource server enrichSettlementResponse hook threw (scheme "batch-settlement" enrichSettlementResponse): enrichment_failed
+
+ ❯ test/unit/batch-settlement/managed.test.ts (28 tests | 11 failed) 30ms
+   × facilitator-managed EVM client and resource server > cancels trusted admission when a manual afterVerify hook aborts before scheme hooks 6ms
+     → expected "spy" to be called 1 times, but got 0 times
+   × facilitator-managed EVM client and resource server > releases admission after a local refund signer fails and preserves the original error 2ms
+     → expected "spy" to be called 1 times, but got 0 times
+   × facilitator-managed EVM client and resource server > cancels admission when a beforeSettle hook explicitly aborts 1ms
+     → expected "spy" to be called 1 times, but got 0 times
+   × facilitator-managed EVM client and resource server > retains admission without canceling a unknown settlement outcome 1ms
+     → expected undefined to be 'managed-admission' // Object.is equality
+   × facilitator-managed EVM client and resource server > retains admission without canceling a pending settlement outcome 1ms
+     → expected undefined to be 'managed-admission' // Object.is equality
+   × facilitator-managed EVM client and resource server > retains cleanup identity when cancel fails, allowing a later cancellation attempt 1ms
+     → expected undefined to be 'managed-admission' // Object.is equality
+   ✓ facilitator-managed EVM client and resource server > does not cancel a beforeSettle error reporting settlement_pending 1ms
+   ✓ facilitator-managed EVM client and resource server > does not cancel a beforeSettle error reporting receipt_present 1ms
+   ✓ facilitator-managed EVM client and resource server > does not cancel after a recovery hook handles a pre-dispatch failure 1ms
+   ✓ facilitator-managed EVM client and resource server > does not cancel a skip receipt when response enrichment fails 1ms
+   ✓ facilitator-managed EVM client and resource server > fails closed for malformed authoritative chargedCumulativeAmount without canceling a commit 1ms
+   × facilitator-managed EVM client and resource server > fails closed for malformed authoritative balance without canceling a commit 2ms
+     → expected { success: true, …(5) } to match object { success: false, …(1) }
+(8 matching properties omitted from actual)
+   × facilitator-managed EVM client and resource server > fails closed for malformed authoritative totalClaimed without canceling a commit 1ms
+     → expected { success: true, …(5) } to match object { success: false, …(1) }
+(8 matching properties omitted from actual)
+   × facilitator-managed EVM client and resource server > fails closed for malformed authoritative refundNonce without canceling a commit 1ms
+     → expected { success: true, …(5) } to match object { success: false, …(1) }
+(8 matching properties omitted from actual)
+   × facilitator-managed EVM client and resource server > fails closed for malformed authoritative withdrawRequestedAt without canceling a commit 1ms
+     → expected { success: true, …(5) } to match object { success: false, …(1) }
+(8 matching properties omitted from actual)
+   ✓ facilitator-managed EVM client and resource server > does not settle a malformed admission response without its reservation identity 1ms
+   ✓ facilitator-managed EVM client and resource server > does not offer a server redemption worker for facilitator custody 1ms
+   ✓ facilitator-managed EVM client and resource server > forwards an initial deposit and copies its committed facilitator receipt 1ms
+   ✓ facilitator-managed EVM client and resource server > packs the refund key using Go-compatible raw and index entropy while preserving server mode 0ms
+   ✓ facilitator-managed EVM client and resource server > negotiates managed capability and a refund-consent path, copying the facilitator delay 0ms
+   ✓ facilitator-managed EVM client and resource server > forwards every voucher despite a stale replica, and recreates a server without authoritative local storage 1ms
+   ✓ facilitator-managed EVM client and resource server > rejects client-supplied pendingId before admission 0ms
+   ✓ facilitator-managed EVM client and resource server > rejects client-supplied cancel before admission 0ms
+   ✓ facilitator-managed EVM client and resource server > cancels verify-only admission once, without a paid charge or a replica write 1ms
+   ✓ facilitator-managed EVM client and resource server > preserves the same admission and receipt through settlement_pending retry 1ms
+   × facilitator-managed EVM client and resource server > keeps the committed receipt and client watermark when the optional replica fails 1ms
+     → expected { success: false, …(7), …(1) } to match object { success: true, extra: { …(2) } }
+(6 matching properties omitted from actual)
+   ✓ facilitator-managed EVM client and resource server > uses the verify snapshot for a signed refund, preserving the exact nonce and omitting claim authority 3ms
+   ✓ facilitator-managed EVM client and resource server > forwards facilitator corrective proofs for either mismatch reason without consulting a replica 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > cancels trusted admission when a manual afterVerify hook aborts before scheme hooks
+AssertionError: expected "spy" to be called 1 times, but got 0 times
+ ❯ test/unit/batch-settlement/managed.test.ts:157:20
+    155|       invalidReason: "application_aborted",
+    156|     });
+    157|     expect(settle).toHaveBeenCalledTimes(1);
+       |                    ^
+    158|     expect(settle.mock.calls[0][0].payload).toMatchObject({
+    159|       pendingId: "managed-admission",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > releases admission after a local refund signer fails and preserves the original error
+AssertionError: expected "spy" to be called 1 times, but got 0 times
+ ❯ test/unit/batch-settlement/managed.test.ts:181:20
+    179|     await server.verifyPayment(payload, requirements);
+    180|     await expect(server.settlePayment(payload, requirements)).rejects.…
+    181|     expect(settle).toHaveBeenCalledTimes(1);
+       |                    ^
+    182|     expect(settle.mock.calls[0][0].payload).toMatchObject({
+    183|       pendingId: "managed-admission",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > cancels admission when a beforeSettle hook explicitly aborts
+AssertionError: expected "spy" to be called 1 times, but got 0 times
+ ❯ test/unit/batch-settlement/managed.test.ts:200:20
+    198|       errorReason: "application_aborted",
+    199|     });
+    200|     expect(settle).toHaveBeenCalledTimes(1);
+       |                    ^
+    201|     expect(settle.mock.calls[0][0].payload).toMatchObject({
+    202|       pendingId: "managed-admission",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > retains admission without canceling a unknown settlement outcome
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > retains admission without canceling a pending settlement outcome
+AssertionError: expected undefined to be 'managed-admission' // Object.is equality
+
+- Expected:
+"managed-admission"
+
++ Received:
+undefined
+
+ ❯ test/unit/batch-settlement/managed.test.ts:230:61
+    228|         settle.mock.calls.every(call => !(call[0].payload as { cancel?…
+    229|       ).toBe(true);
+    230|       expect(scheme.readRequestContext(payload)?.pendingId).toBe("mana…
+       |                                                             ^
+    231|       settle.mockResolvedValue(receipt(payload));
+    232|       expect((await server.settlePayment(payload, requirements)).succe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > retains cleanup identity when cancel fails, allowing a later cancellation attempt
+AssertionError: expected undefined to be 'managed-admission' // Object.is equality
+
+- Expected:
+"managed-admission"
+
++ Received:
+undefined
+
+ ❯ test/unit/batch-settlement/managed.test.ts:250:59
+    248|       .createPaymentCancellationDispatcher(payload, requirements)
+    249|       .cancel({ reason: "handler_failed" });
+    250|     expect(scheme.readRequestContext(payload)?.pendingId).toBe("manage…
+       |                                                           ^
+    251|     await server
+    252|       .createPaymentCancellationDispatcher(payload, requirements)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > fails closed for malformed authoritative balance without canceling a commit
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > fails closed for malformed authoritative totalClaimed without canceling a commit
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > fails closed for malformed authoritative refundNonce without canceling a commit
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > fails closed for malformed authoritative withdrawRequestedAt without canceling a commit
+AssertionError: expected { success: true, …(5) } to match object { success: false, …(1) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "errorReason": "invalid_batch_settlement_evm_voucher_store_unavailable",
+-   "success": false,
++   "success": true,
+  }
+
+ ❯ test/unit/batch-settlement/managed.test.ts:319:63
+    317|     await server.verifyPayment(payload, requirements);
+    318|     settle.mockResolvedValueOnce(receipt(payload, { [field]: "invalid"…
+    319|     expect(await server.settlePayment(payload, requirements)).toMatchO…
+       |                                                               ^
+    320|       success: false,
+    321|       errorReason: Errors.ErrVoucherStoreUnavailable,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  test/unit/batch-settlement/managed.test.ts > facilitator-managed EVM client and resource server > keeps the committed receipt and client watermark when the optional replica fails
+AssertionError: expected { success: false, …(7), …(1) } to match object { success: true, extra: { …(2) } }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -3,7 +3,7 @@
+      "channelState": {
+        "chargedCumulativeAmount": "2000",
+      },
+      "chargeCount": 1,
+    },
+-   "success": true,
++   "success": false,
+  }
+
+ ❯ test/unit/batch-settlement/managed.test.ts:562:20
+    560|     vi.spyOn(storage, "updateChannel").mockRejectedValueOnce(new Error…
+    561|     const result = await server.settlePayment(payload, requirements);
+    562|     expect(result).toMatchObject({
+       |                    ^
+    563|       success: true,
+    564|       extra: { chargeCount: 1, channelState: { chargedCumulativeAmount…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 17 passed (28)
+   Start at  00:14:51
+   Duration  412ms (transform 123ms, setup 0ms, collect 293ms, tests 30ms, environment 0ms, prepare 28ms)

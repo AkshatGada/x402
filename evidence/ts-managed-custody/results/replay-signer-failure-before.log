@@ -1,0 +1,26 @@
+=== RUN   TestTypeScriptManagedCustodyProbe
+    managed_typescript_probe_test.go:103: {"scenario":"ordinary-refund-signer-failure","signingError":"simulated_signer_unavailable","held":true,"calls":{"settle":0,"verify":1}}
+        node:internal/modules/run_main:107
+            triggerUncaughtException(
+            ^
+
+        AssertionError [ERR_ASSERTION]: a pre-settle refund signing failure must release verified admission
+
+        true !== false
+
+            at file:///private/var/folders/l0/16h5m7k56759zbvx8pbktt900000gn/T/x402-managed-replay-oqbdfxjr/signer-failure-before.mjs:7537:8
+            at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+          generatedMessage: false,
+          code: 'ERR_ASSERTION',
+          actual: true,
+          expected: false,
+          operator: 'strictEqual',
+          diff: 'simple'
+        }
+
+        Node.js v24.19.0
+    managed_typescript_probe_test.go:104: TypeScript probe failed: exit status 1
+--- FAIL: TestTypeScriptManagedCustodyProbe (0.16s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.397s
+FAIL

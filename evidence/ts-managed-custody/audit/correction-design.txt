@@ -1,0 +1,156 @@
+Managed-custody correction design audit — 2026-10-28
+Reviewer: Codex. No source edits, new dependencies, or extra agents.
+
+Verdict
+The proposed narrow corrections are appropriate. Preserve manual-first hook order,
+the existing beforeSettle skip behavior, and existing settlement_pending retry
+semantics. The new cleanup is safe only before core dispatches settlement and
+before a hook supplies a settlement outcome. Retaining request context and deciding
+whether to cancel are separate requirements.
+
+P1: trusted admission in early afterVerify cancellation
+- Add optional verifyResult?: DeepReadonly<VerifyResponse> to
+  VerifiedPaymentCanceledContext. Keep it in-process; do not add it to the client
+  payload, facilitator wire, cancellation caller options, or transport headers.
+- Add a private optional verifyResult parameter to
+  dispatchVerifiedPaymentCanceled and pass the current result from the
+  runAfterVerifyHooks abort path. This keeps manual/scheme/extension ordering and
+  does not force scheme afterVerify hooks to run after an application abort.
+- In the managed scheme's settleOnCancel wrapper, only recover a missing pendingId
+  from ctx.verifyResult when isValid is true and extra.pendingId is a nonempty
+  string. Store only the admission/channel identity needed for cancellation;
+  invoking the entire afterVerify/refund snapshot handler again is unnecessary.
+  Never recover this field from paymentPayload.payload or an accepted echo.
+- Existing context takes precedence. A malformed valid verify result that includes
+  pendingId but lacks snapshot fields must still be cancellable. An invalid verify
+  result or a result without pendingId cannot produce a fabricated cancel identity.
+
+P2: known unstarted settlement failures
+- Add the explicit reason "settlement_failed" and document its narrow meaning:
+  core failed before dispatching settlement. Managed settleOnCancel accepts it and
+  returns amount="0" exactly as for the existing cancellation reasons.
+- Remove the managed failure hook that unconditionally takes request context.
+  Successful settle/cancel receipts clear it in afterSettle; unsuccessful or
+  uncertain calls keep it available for reconciliation or WeakMap collection.
+- In settlePayment's existing main try/catch, maintain a private flag set immediately
+  before the first actual call to settleWithPendingRetry, in both selected-client
+  and fallback branches. Never reset it after a throw, returned failure, or retry.
+  A call that throws may already have committed; it must not be followed by an
+  automatic cancellation. The bounded settlement_pending retry continues unchanged.
+- Run the existing onSettleFailure recovery hooks first. If one recovers, return its
+  result with no automatic cancel. Otherwise, only when the flag is still false
+  and phase != "cancel", dispatch verified cancellation with settlement_failed.
+  Preserve the original settlement error even if cancellation fails. Existing
+  cancellation warning/response handling already provides this best-effort behavior.
+- Retaining context alone does NOT prevent automatic cancellation. The stage flag
+  is what protects actual pending/unknown outcomes. Retention preserves the exact
+  identity needed for a later reconciliation or explicit cleanup.
+- A SettleError supplied by local enrichment that already carries
+  settlement_pending or a nonempty transaction hash is an uncertainty signal even
+  if core has not called its facilitator yet. Exclude such receipt-bearing errors
+  from the pre-dispatch cleanup guard rather than inferring no settlement from the
+  private flag alone. Preserve their context and original error.
+- The coordinator's choice to cancel an explicit beforeSettle {abort:true} directly
+  in that branch, outside the main try, is suitably narrow. It covers an ordinary
+  already-admitted request without changing skip processing or the existing policy
+  that a generic thrown beforeSettle error is warned and ignored. Skip results can
+  represent an existing committed receipt (auth-capture deferred mode), so they
+  must not become automatic-cancel candidates just because no facilitator call
+  happened in this invocation. A user-thrown SettleError should retain its existing
+  behavior unless it is known to be the explicit local abort constructed here.
+- The amount-override parse currently also occurs before the guarded try. That is
+  another possible pre-dispatch exception after admission. Either include it in a
+  small guarded preflight, or scope documentation precisely to the explicit abort
+  and enrichment paths handled here. Do not claim universal pre-dispatch cleanup
+  while invalid overrides still bypass it. Do not expand this into an unrelated
+  lifecycle rewrite merely to handle invalid API arguments.
+- Do not invent previous settledPhases for this cleanup. Authorization-style EVM
+  managed custody has no prior before-handler settlement. Existing escrow schemes
+  decide their own cleanup from confirmed prior phases; empty phase history must
+  not imply an authorization/void is safe.
+
+Go cancellation contract checked from pinned source
+- SettleManaged dispatches cancel:true to settleManagedCancel before paid deposit,
+  voucher or refund work. The TS cancellation still sends amount="0".
+- The cancel parses the original channel/voucher, derives the admission owner from
+  pendingId plus that voucher, and performs releaseAdmission. It does not charge,
+  deposit, refund, or increment chargeCount.
+- ChannelLockStorage.Release is compare-and-delete. Repeating a cancel for the same
+  admitted owner is harmless, and an old owner cannot release a newer owner.
+  Missing pendingId is a no-op release, so it cannot fix the early-abort problem.
+- This review only read the existing cancellation contract. No adversarial testing
+  or investigation of upstream fallback behavior was performed.
+
+P3: preserve committed receipts when optional replication fails
+- Keep authoritative receipt parsing outside the catch for optional storage I/O.
+  Validate every authoritative field subsequently used by the update before calling
+  storage.updateChannel. Otherwise a BigInt parse failure inside the callback can
+  be mislabeled as optional I/O failure and silently accepted.
+- At minimum chargedCumulativeAmount must be present/canonical, as before. For the
+  stated malformed-receipt guarantee, balance, totalClaimed, refundNonce and the
+  timestamp used for the replica should also be parsed consistently with the spec.
+  Avoid stale replica fallbacks replacing a malformed authoritative field.
+- A malformed authoritative success receipt remains AfterSettleAbortError, retaining
+  the committed transaction/amount/extra for reconciliation. A confirmed malformed
+  receipt must not trigger the pre-dispatch cancellation path.
+- Catch optional update/read/callback persistence failures separately, emit one
+  useful console.warn/operator message with channel context, and preserve the
+  facilitator receipt unchanged. No new logger/configuration API is needed.
+- Clear request context in finally after a successful receipt, including successful
+  cancel and replica I/O failure. On failed/unknown settle or failed cancel, preserve
+  context. Managed refund consent continues to use the exact verify nonce string;
+  a numeric observational replica must not become the source for later signatures.
+- Change the README and the existing test that currently promise failure on mirror
+  error. Test the actual client's response hook advancing its watermark from the
+  retained successful receipt, not merely the server's returned success flag.
+
+Minimum regression matrix
+1. Core: manual afterVerify abort gets the exact trusted verify result in the
+   cancellation context; later afterVerify hooks remain skipped and original abort
+   reason is preserved when cancel cleanup fails.
+2. Managed early abort: verified reservation is canceled once with its own pendingId,
+   amount=0/cancel=true; no handler/charge/refund/deposit. Invalid/no-pending verify
+   results do not borrow a client field. Include pendingId plus incomplete snapshot.
+3. Managed signer/enrichment failure: original signing error survives; one zero-charge
+   cancel reaches Go, held=false and charged/count unchanged. Cancellation must not
+   invoke the refund signer again.
+4. Explicit beforeSettle abort after managed verification performs the same cleanup;
+   original abort remains. A phase="cancel" failure never recursively dispatches.
+5. Existing recovery hook returns a recovered result: no automatic cancellation.
+6. Selected facilitator and fallback dispatch throws after invocation: no cancel,
+   pendingId retained. The existing retry is bounded and keeps the same identity.
+7. Returned and thrown settlement_pending after the one retry: original hash/result
+   retained, context retained, no cancel. Also cover a pre-dispatch SettleError
+   already carrying a transaction/pending signal if the new catch handles it.
+8. beforeSettle skip/existing receipt and AfterSettleAbortError: no new cancellation
+   or changes to existing receipt handling. Generic beforeSettle throws retain the
+   existing warn-and-continue policy.
+9. Optional replica throws: one warning, exact successful receipt preserved, actual
+   client.schemeHooks.onPaymentResponse advances client storage from 1000 to 2000,
+   server request context cleared. The existing client helper pattern is in
+   evm/test/unit/batch-settlement/client.test.ts:970.
+10. Malformed authoritative snapshot: failed-closed receipt retains committed fields,
+    no optional-write warning, no post-commit cancel, context cleared.
+11. Failed cancel: no recursion and no replacement of the original application
+    failure; context retained for reconciliation. Repeated successful cancellation
+    remains harmless/deduplicated.
+12. Run core lifecycle/payment-flow/settlementPending suites plus EVM normal unit
+    suites, builds, lint/format and types. Use the shared queue and <=2 workers.
+    No SVM implementation edits or PR #3892 attribution changes are needed.
+
+Preserved uncorrected baseline for proof
+<audit>/uncorrected contains immutable pinned
+core source/tests and reconstructed uncorrected EVM source/tests. It was built from
+the pinned snapshot plus the original implementation.patch, not by copying a live
+worktree while the coordinator edited it. All 12 original implementation hashes
+match (uncorrected-source-check.json). Original patch SHA256 remains
+ec4ccd1b73268c363b7c38bb6473761288b5561fe34ed6e93efbaef7e5ea6d03.
+
+Limits
+- This is a design review; no corrected-source checks have run yet. The coordinator
+  owns all edits. Independent exact-diff review and reruns will follow its handoff.
+- The sparse checkout does not contain pinned SVM source. A read-only git grep
+  attempted an automatic promisor fetch and failed DNS; no objects downloaded and
+  no retry was made. Do not hydrate/download it for this task. Use the existing
+  PR #3892 evidence/coordinator context for its separate semantics. Existing core
+  and EVM auth-capture cancellation contracts were read locally.

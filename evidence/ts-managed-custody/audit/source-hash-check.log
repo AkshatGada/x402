@@ -1,0 +1,15 @@
+typescript/.changeset/evm-managed-custody-client-server.md: OK
+typescript/packages/core/src/server/x402ResourceServer.ts: OK
+typescript/packages/core/src/types/mechanisms.ts: OK
+typescript/packages/core/test/unit/server/x402ResourceServer.test.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/README.md: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/client/channel.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/errors.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/server/channelManager.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/server/managed.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/server/scheme.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/server/settle.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/server/verify.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/types.ts: OK
+typescript/packages/mechanisms/evm/src/batch-settlement/utils.ts: OK
+typescript/packages/mechanisms/evm/test/unit/batch-settlement/managed.test.ts: OK

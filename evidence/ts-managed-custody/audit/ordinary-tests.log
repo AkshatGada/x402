@@ -1,0 +1,15 @@
+
+ RUN  v3.2.7 <audit>/final
+
+stderr | ordinary.test.ts > facilitator-managed EVM client and resource server > does not cancel a skip receipt when response enrichment fails
+[x402] Resource server enrichSettlementResponse hook threw (scheme "batch-settlement" enrichSettlementResponse): enrichment_failed
+
+stderr | ordinary.test.ts > facilitator-managed EVM client and resource server > keeps the committed receipt and client watermark when the optional replica fails
+[x402] Managed channel replica update failed for 0x257d8e2d347066b0705b9c623103516760cba65145a1abf958832ec169fbcae6: replica unavailable
+
+ ✓ ordinary.test.ts (35 tests) 33ms
+
+ Test Files  1 passed (1)
+      Tests  35 passed (35)
+   Start at  00:18:07
+   Duration  358ms (transform 120ms, setup 0ms, collect 245ms, tests 33ms, environment 0ms, prepare 23ms)

@@ -1,0 +1,2 @@
+src/utils.ts(38,23): error TS2304: Cannot find name 'Crypto'.
+src/utils.ts(39,42): error TS2304: Cannot find name 'Crypto'.

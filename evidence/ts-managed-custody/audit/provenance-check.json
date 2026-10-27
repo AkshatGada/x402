@@ -1,0 +1,9 @@
+{
+  "revision": "dbe1080ac7f65e2e05cc8430a834c255a6800828",
+  "files_checked": 960,
+  "mismatches": [],
+  "same_regression_test": true,
+  "uncorrected_patch_sha256": "ec4ccd1b73268c363b7c38bb6473761288b5561fe34ed6e93efbaef7e5ea6d03",
+  "final_source_manifest_same": true,
+  "fixture_same": true
+}

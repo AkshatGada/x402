@@ -1,0 +1,2 @@
+# Preserve exact patch context markers and its independently checked hash.
+harness/uncorrected-implementation.patch -whitespace
