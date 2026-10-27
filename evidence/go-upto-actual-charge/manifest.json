@@ -1,0 +1,98 @@
+{
+  "baseline": "dbe1080ac7f65e2e05cc8430a834c255a6800828",
+  "implementation_commit": "d202e72dda378788adc3aef17dbfeda08c28e286",
+  "private_material_included": false,
+  "secret_personal_path_private_fixture_scan": "passed",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3451,
+      "sha256": "26235a40b97b5b5d06b59c91f4fdaf432bca1ebc4101e5c19741a4026322c2fc"
+    },
+    {
+      "path": "harness/reproduce.py",
+      "bytes": 2319,
+      "sha256": "3cd5cc4cb29f4448cd9d3489fa2e0e1d95c241fd0c2020aae9e9209a8011ea7c"
+    },
+    {
+      "path": "harness/settle_simulation_test.go",
+      "bytes": 15366,
+      "sha256": "edab2732d18e8d381f43dbd31cfc707e1175b940566d05bcef1168ac8dd25867"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 822,
+      "sha256": "d554f8203e39c1b2913b4828178e4b38340865291ff2eb297e9f47f83dc3351a"
+    },
+    {
+      "path": "results/baseline-positive.json",
+      "bytes": 605,
+      "sha256": "ce431e975ac592e4cc4ef71c788d1550677f7027b4f3de15dc5194b15f92a257"
+    },
+    {
+      "path": "results/baseline-positive.log",
+      "bytes": 10219,
+      "sha256": "0eb0392828ffb9ad71d0480fd14fc939a211c8d9442dc0de6f92f25d6a5de7c6"
+    },
+    {
+      "path": "results/checks.json",
+      "bytes": 3878,
+      "sha256": "c332b34972593e769f031715c616511673f0b7ae16d551690c58d7fa4425c280"
+    },
+    {
+      "path": "results/focused-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/focused-lint.log",
+      "bytes": 10,
+      "sha256": "e92606b0bf483111dff0a120c315ea165821348f31365020e2468a0059095c47"
+    },
+    {
+      "path": "results/focused-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/goimports.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/package-tests.log",
+      "bytes": 22723,
+      "sha256": "d6fcd2777f8e62cdf9b8dc7eee32ae9cdd68fb7419a7720c05a89b445c61ef34"
+    },
+    {
+      "path": "results/portable-baseline.log",
+      "bytes": 10378,
+      "sha256": "ae0a42d080c7cfe1f5d48979a87d6ca6fe1cb67cee03c9cd7f2e5aa5efd202fe"
+    },
+    {
+      "path": "results/portable-checks.json",
+      "bytes": 731,
+      "sha256": "3bc955da3f96d51c5697a49ffc83f800dba18e7cda05890da0ef7d52ad788f22"
+    },
+    {
+      "path": "results/portable-fixed.log",
+      "bytes": 7285,
+      "sha256": "53436eec3379eceb65344f12a822fcb70f09b8225b3ded075c6a6d07ced957e2"
+    },
+    {
+      "path": "results/review-summary.txt",
+      "bytes": 398,
+      "sha256": "bee398260572372657e5cc36fa2c9d244fb6e0c183e90172c6551e5e49e72320"
+    },
+    {
+      "path": "results/source-hashes.json",
+      "bytes": 390,
+      "sha256": "3a8d29ee9fff1bed4814d73e1cb805ac8e6f1a03c6a739e62a6397434121e0a3"
+    },
+    {
+      "path": "results/test-counts.json",
+      "bytes": 100,
+      "sha256": "8691a65581f65083c0c33f53b2c9e3bb818ccf7207d94b30d34bfc4137b18082"
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+=== RUN   TestBuildUptoPermit2SettleArgs_UnwrapsERC6492Signature
+--- PASS: TestBuildUptoPermit2SettleArgs_UnwrapsERC6492Signature (0.00s)
+=== RUN   TestVerifyUptoPermit2_AssetIsEOA
+--- PASS: TestVerifyUptoPermit2_AssetIsEOA (0.00s)
+=== RUN   TestVerifyUptoPermit2_AssetGetCodeRPCError
+--- PASS: TestVerifyUptoPermit2_AssetGetCodeRPCError (0.00s)
+=== RUN   TestVerifyUptoPermit2_SchemeMismatch_Payload
+--- PASS: TestVerifyUptoPermit2_SchemeMismatch_Payload (0.00s)
+=== RUN   TestVerifyUptoPermit2_SchemeMismatch_Requirements
+--- PASS: TestVerifyUptoPermit2_SchemeMismatch_Requirements (0.00s)
+=== RUN   TestVerifyUptoPermit2_NetworkMismatch
+--- PASS: TestVerifyUptoPermit2_NetworkMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_InvalidSpender
+--- PASS: TestVerifyUptoPermit2_InvalidSpender (0.00s)
+=== RUN   TestVerifyUptoPermit2_RecipientMismatch
+--- PASS: TestVerifyUptoPermit2_RecipientMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_FacilitatorMismatch
+--- PASS: TestVerifyUptoPermit2_FacilitatorMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_FacilitatorMatch_CaseInsensitive
+--- PASS: TestVerifyUptoPermit2_FacilitatorMatch_CaseInsensitive (0.00s)
+=== RUN   TestVerifyUptoPermit2_DeadlineExpired
+--- PASS: TestVerifyUptoPermit2_DeadlineExpired (0.00s)
+=== RUN   TestVerifyUptoPermit2_NotYetValid
+--- PASS: TestVerifyUptoPermit2_NotYetValid (0.00s)
+=== RUN   TestVerifyUptoPermit2_AmountMismatch
+--- PASS: TestVerifyUptoPermit2_AmountMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_TokenMismatch
+--- PASS: TestVerifyUptoPermit2_TokenMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_InvalidSignatureHex
+--- PASS: TestVerifyUptoPermit2_InvalidSignatureHex (0.00s)
+=== RUN   TestVerifyUptoPermit2_InvalidSig_PayerIsEOA
+--- PASS: TestVerifyUptoPermit2_InvalidSig_PayerIsEOA (0.00s)
+=== RUN   TestVerifyUptoPermit2_SimulationDisabled_ReturnsValid
+--- PASS: TestVerifyUptoPermit2_SimulationDisabled_ReturnsValid (0.00s)
+=== RUN   TestVerifyUptoPermit2_SimulationSucceeds
+--- PASS: TestVerifyUptoPermit2_SimulationSucceeds (0.00s)
+=== RUN   TestVerifyUptoPermit2_ViabilityCheck_FailOpenOnMulticallError
+--- PASS: TestVerifyUptoPermit2_ViabilityCheck_FailOpenOnMulticallError (0.00s)
+=== RUN   TestVerifyUptoPermit2_WithEIP2612Extension_FromMismatch
+--- PASS: TestVerifyUptoPermit2_WithEIP2612Extension_FromMismatch (0.00s)
+=== RUN   TestVerifyUptoPermit2_WithEIP2612Extension_Valid_SimSucceeds
+--- PASS: TestVerifyUptoPermit2_WithEIP2612Extension_Valid_SimSucceeds (0.00s)
+=== RUN   TestSettleUptoPermit2_ZeroSettlement
+--- PASS: TestSettleUptoPermit2_ZeroSettlement (0.00s)
+=== RUN   TestSettleUptoPermit2_ExceedsPermittedAmount
+--- PASS: TestSettleUptoPermit2_ExceedsPermittedAmount (0.00s)
+=== RUN   TestSettleUptoPermit2_FullAmount
+--- PASS: TestSettleUptoPermit2_FullAmount (0.00s)
+=== RUN   TestSettleUptoPermit2_PartialAmount
+--- PASS: TestSettleUptoPermit2_PartialAmount (0.00s)
+=== RUN   TestSettleUptoPermit2_InvalidSettlementAmount
+--- PASS: TestSettleUptoPermit2_InvalidSettlementAmount (0.00s)
+=== RUN   TestSettleUptoPermit2_WriteContractFails
+--- PASS: TestSettleUptoPermit2_WriteContractFails (0.00s)
+=== RUN   TestSettleUptoPermit2_ReceiptStatusFailed
+--- PASS: TestSettleUptoPermit2_ReceiptStatusFailed (0.00s)
+=== RUN   TestSettleUptoPermit2_ReceiptError
+--- PASS: TestSettleUptoPermit2_ReceiptError (0.00s)
+=== RUN   TestSettleUptoPermit2_PendingSettlementStore_CacheMissSuccessLeavesNoEntry
+--- PASS: TestSettleUptoPermit2_PendingSettlementStore_CacheMissSuccessLeavesNoEntry (0.00s)
+=== RUN   TestSettleUptoPermit2_PendingSettlementStore_CacheMissReceiptFailurePopulatesStore
+--- PASS: TestSettleUptoPermit2_PendingSettlementStore_CacheMissReceiptFailurePopulatesStore (0.00s)
+=== RUN   TestSettleUptoPermit2_PendingSettlementStore_CacheHitReconcilesWithoutRebroadcast
+--- PASS: TestSettleUptoPermit2_PendingSettlementStore_CacheHitReconcilesWithoutRebroadcast (0.00s)
+=== RUN   TestSettleUptoPermit2_PendingSettlementStore_CacheHitStillPendingReturnsAgainWithoutRebroadcast
+--- PASS: TestSettleUptoPermit2_PendingSettlementStore_CacheHitStillPendingReturnsAgainWithoutRebroadcast (0.00s)
+=== RUN   TestSettleUptoPermit2_PendingSettlementStore_NilStoreDisablesFastPath
+--- PASS: TestSettleUptoPermit2_PendingSettlementStore_NilStoreDisablesFastPath (0.00s)
+=== RUN   TestSettleUptoPermit2_ERC20ApprovalIncompleteHashesFailTerminally
+--- PASS: TestSettleUptoPermit2_ERC20ApprovalIncompleteHashesFailTerminally (0.00s)
+=== RUN   TestSettleUptoPermit2_InvalidBroadcastHashIsTerminal
+--- PASS: TestSettleUptoPermit2_InvalidBroadcastHashIsTerminal (0.00s)
+=== RUN   TestSettleUptoPermit2_ERC20ApprovalAtomicBundleSingleHashSucceeds
+--- PASS: TestSettleUptoPermit2_ERC20ApprovalAtomicBundleSingleHashSucceeds (0.00s)
+=== RUN   TestSettleUptoPermit2_ERC20ApprovalExtensionReceiptWaitFailureReturnsSettlementPending
+--- PASS: TestSettleUptoPermit2_ERC20ApprovalExtensionReceiptWaitFailureReturnsSettlementPending (0.00s)
+=== RUN   TestSettleUptoPermit2_VerifyFails_EOAPayer
+--- PASS: TestSettleUptoPermit2_VerifyFails_EOAPayer (0.00s)
+=== RUN   TestSettleUptoPermit2_WithEIP2612_ZeroSettlement
+--- PASS: TestSettleUptoPermit2_WithEIP2612_ZeroSettlement (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_Success
+--- PASS: TestBuildUptoPermit2SettleArgs_Success (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_InvalidPermittedAmount
+--- PASS: TestBuildUptoPermit2SettleArgs_InvalidPermittedAmount (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_InvalidNonce
+--- PASS: TestBuildUptoPermit2SettleArgs_InvalidNonce (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_InvalidDeadline
+--- PASS: TestBuildUptoPermit2SettleArgs_InvalidDeadline (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_InvalidValidAfter
+--- PASS: TestBuildUptoPermit2SettleArgs_InvalidValidAfter (0.00s)
+=== RUN   TestBuildUptoPermit2SettleArgs_InvalidSignature
+--- PASS: TestBuildUptoPermit2SettleArgs_InvalidSignature (0.00s)
+=== RUN   TestValidateEip2612PermitForPayment_Valid
+--- PASS: TestValidateEip2612PermitForPayment_Valid (0.00s)
+=== RUN   TestValidateEip2612PermitForPayment_FromMismatch
+--- PASS: TestValidateEip2612PermitForPayment_FromMismatch (0.00s)
+=== RUN   TestValidateEip2612PermitForPayment_AssetMismatch
+--- PASS: TestValidateEip2612PermitForPayment_AssetMismatch (0.00s)
+=== RUN   TestValidateEip2612PermitForPayment_WrongSpender
+--- PASS: TestValidateEip2612PermitForPayment_WrongSpender (0.00s)
+=== RUN   TestValidateEip2612PermitForPayment_ExpiredDeadline
+--- PASS: TestValidateEip2612PermitForPayment_ExpiredDeadline (0.00s)
+=== RUN   TestSplitEip2612Signature_Valid
+--- PASS: TestSplitEip2612Signature_Valid (0.00s)
+=== RUN   TestSplitEip2612Signature_TooShort
+--- PASS: TestSplitEip2612Signature_TooShort (0.00s)
+=== RUN   TestSplitEip2612Signature_InvalidHex
+--- PASS: TestSplitEip2612Signature_InvalidHex (0.00s)
+=== RUN   TestParseUptoPermit2Error
+=== RUN   TestParseUptoPermit2Error/Permit2612AmountMismatch_blah
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_InvalidAmount
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_InvalidDestination
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_InvalidOwner
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_PaymentTooEarly
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_InvalidSignature
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_SignatureExpired
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_InvalidNonce
+=== RUN   TestParseUptoPermit2Error/erc20_approval_tx_failed:_something
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_AmountExceedsPermitted
+=== RUN   TestParseUptoPermit2Error/execution_reverted:_UnauthorizedFacilitator
+=== RUN   TestParseUptoPermit2Error/unknown_revert_reason
+--- PASS: TestParseUptoPermit2Error (0.00s)
+    --- PASS: TestParseUptoPermit2Error/Permit2612AmountMismatch_blah (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_InvalidAmount (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_InvalidDestination (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_InvalidOwner (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_PaymentTooEarly (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_InvalidSignature (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_SignatureExpired (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_InvalidNonce (0.00s)
+    --- PASS: TestParseUptoPermit2Error/erc20_approval_tx_failed:_something (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_AmountExceedsPermitted (0.00s)
+    --- PASS: TestParseUptoPermit2Error/execution_reverted:_UnauthorizedFacilitator (0.00s)
+    --- PASS: TestParseUptoPermit2Error/unknown_revert_reason (0.00s)
+=== RUN   TestUptoEvmScheme_Scheme
+--- PASS: TestUptoEvmScheme_Scheme (0.00s)
+=== RUN   TestUptoEvmScheme_CaipFamily
+--- PASS: TestUptoEvmScheme_CaipFamily (0.00s)
+=== RUN   TestUptoEvmScheme_GetExtra_ReturnsFacilitatorAddress
+--- PASS: TestUptoEvmScheme_GetExtra_ReturnsFacilitatorAddress (0.00s)
+=== RUN   TestUptoEvmScheme_GetExtra_NoAddresses
+--- PASS: TestUptoEvmScheme_GetExtra_NoAddresses (0.00s)
+=== RUN   TestUptoEvmScheme_GetExtra_MultipleAddresses_UsesOneFromPool
+--- PASS: TestUptoEvmScheme_GetExtra_MultipleAddresses_UsesOneFromPool (0.00s)
+=== RUN   TestUptoEvmScheme_GetSigners
+--- PASS: TestUptoEvmScheme_GetSigners (0.00s)
+=== RUN   TestUptoEvmScheme_Config_DefaultSimulateInSettle
+--- PASS: TestUptoEvmScheme_Config_DefaultSimulateInSettle (0.00s)
+=== RUN   TestUptoEvmScheme_Config_CustomSimulateInSettle
+--- PASS: TestUptoEvmScheme_Config_CustomSimulateInSettle (0.00s)
+=== RUN   TestUptoEvmScheme_Verify_UnsupportedPayload
+--- PASS: TestUptoEvmScheme_Verify_UnsupportedPayload (0.00s)
+=== RUN   TestUptoEvmScheme_Settle_UnsupportedPayload
+--- PASS: TestUptoEvmScheme_Settle_UnsupportedPayload (0.00s)
+=== RUN   TestUptoEvmScheme_Verify_Valid
+--- PASS: TestUptoEvmScheme_Verify_Valid (0.00s)
+=== RUN   TestUptoEvmScheme_Settle_Valid
+--- PASS: TestUptoEvmScheme_Settle_Valid (0.00s)
+=== RUN   TestUptoSettleSimulationUsesActualCharge
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/partial_charge_covered
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/exact_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/insufficient_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/zero_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/over_ceiling_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/negative
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/partial_charge_covered
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/exact_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/insufficient_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/zero_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/over_ceiling_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/negative
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/partial_charge_covered
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/exact_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/insufficient_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/zero_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/over_ceiling_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/negative
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/partial_charge_covered
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/exact_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/insufficient_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/zero_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/over_ceiling_without_funds
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/negative
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/default_config
+--- PASS: TestUptoSettleSimulationUsesActualCharge (0.00s)
+    --- PASS: TestUptoSettleSimulationUsesActualCharge/plain (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/partial_charge_covered (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/full_ceiling (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/insufficient_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/zero_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/over_ceiling_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/default_config (0.00s)
+    --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612 (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/partial_charge_covered (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/full_ceiling (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/insufficient_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/zero_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/over_ceiling_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/default_config (0.00s)
+    --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/partial_charge_covered (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/full_ceiling (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/insufficient_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/zero_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/over_ceiling_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/default_config (0.00s)
+    --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/partial_charge_covered (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/full_ceiling (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/insufficient_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/zero_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/over_ceiling_without_funds (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/default_config (0.00s)
+=== RUN   TestUptoSettleSimulationDiagnostics
+=== RUN   TestUptoSettleSimulationDiagnostics/plain/unrelated_revert
+=== RUN   TestUptoSettleSimulationDiagnostics/plain/allowance_below_charge
+=== RUN   TestUptoSettleSimulationDiagnostics/eip2612/unrelated_revert
+=== RUN   TestUptoSettleSimulationDiagnostics/eip2612/allowance_below_charge
+=== RUN   TestUptoSettleSimulationDiagnostics/erc20_batch/unrelated_revert
+=== RUN   TestUptoSettleSimulationDiagnostics/erc20_batch/allowance_below_charge
+--- PASS: TestUptoSettleSimulationDiagnostics (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/plain/unrelated_revert (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/plain/allowance_below_charge (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/eip2612/unrelated_revert (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/eip2612/allowance_below_charge (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/erc20_batch/unrelated_revert (0.00s)
+    --- PASS: TestUptoSettleSimulationDiagnostics/erc20_batch/allowance_below_charge (0.00s)
+=== RUN   TestUptoVerifySimulationStillUsesCeiling
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/plain/partial_balance
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/plain/ceiling_covered
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/plain/amount_mismatch
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/eip2612/partial_balance
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/eip2612/ceiling_covered
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/eip2612/amount_mismatch
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_batch/partial_balance
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_batch/ceiling_covered
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_batch/amount_mismatch
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/partial_balance
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/ceiling_covered
+=== RUN   TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/amount_mismatch
+--- PASS: TestUptoVerifySimulationStillUsesCeiling (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/plain/partial_balance (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/plain/ceiling_covered (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/plain/amount_mismatch (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/eip2612/partial_balance (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/eip2612/ceiling_covered (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/eip2612/amount_mismatch (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_batch/partial_balance (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_batch/ceiling_covered (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_batch/amount_mismatch (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/partial_balance (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/ceiling_covered (0.00s)
+    --- PASS: TestUptoVerifySimulationStillUsesCeiling/erc20_prerequisites/amount_mismatch (0.00s)
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/plain/eoa
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/plain/contract_rejection
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/plain/contract_error
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/eoa
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/contract_rejection
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/contract_error
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/eoa
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/contract_rejection
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/contract_error
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/eoa
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/contract_rejection
+=== RUN   TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/contract_error
+--- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/plain/eoa (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/plain/contract_rejection (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/plain/contract_error (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/eoa (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/contract_rejection (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/eip2612/contract_error (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/eoa (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/contract_rejection (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_batch/contract_error (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/eoa (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/contract_rejection (0.00s)
+    --- PASS: TestUptoZeroSettlementStillRejectsInvalidSignature/erc20_prerequisites/contract_error (0.00s)
+=== RUN   TestUptoSettlePrerequisitesStillCheckGas
+--- PASS: TestUptoSettlePrerequisitesStillCheckGas (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/upto/facilitator	0.575s

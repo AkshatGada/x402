@@ -1,0 +1,22 @@
+{
+  "command": [
+    "python3",
+    "<queue>/with-test-slot.py",
+    "<toolchain>/bin/go",
+    "test",
+    "-overlay",
+    "<validation>/corrected-validation/baseline-positive-overlay.json",
+    "-mod=readonly",
+    "-p=2",
+    "-count=1",
+    "-v",
+    "-run",
+    "^(TestUptoSettleSimulationUsesActualCharge|TestSettleUptoPermit2_PartialAmount)$",
+    "./mechanisms/evm/upto/facilitator"
+  ],
+  "cwd": "<source>/go",
+  "exit_code": 1,
+  "passing_leaf_cases": 14,
+  "failing_leaf_cases": 23,
+  "scope": "ordinary settlement amount matrix and existing partial-amount control; no private audit fixtures"
+}

@@ -1,0 +1,145 @@
+[
+  {
+    "name": "package-tests",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<toolchain>/bin/go",
+      "test",
+      "-mod=readonly",
+      "-p=2",
+      "-count=1",
+      "-v",
+      "./mechanisms/evm/upto/facilitator"
+    ],
+    "cwd": "<source>/go",
+    "exit_code": 0,
+    "elapsed_seconds": 1.4962849617004395,
+    "environment": {
+      "GOROOT": "<toolchain>",
+      "GOTOOLCHAIN": "local",
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOSUMDB": "off",
+      "GOMAXPROCS": "2",
+      "GOPATH": "<validation>/gopath",
+      "GOMODCACHE": "<validation>/gomod",
+      "GOCACHE": "<validation>/gocache",
+      "GOLANGCI_LINT_CACHE": "<validation>/corrected-validation/golangci-cache",
+      "GOFLAGS": "-p=2 -mod=readonly"
+    }
+  },
+  {
+    "name": "focused-vet",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<toolchain>/bin/go",
+      "vet",
+      "-mod=readonly",
+      "-p=2",
+      "./mechanisms/evm/upto/facilitator"
+    ],
+    "cwd": "<source>/go",
+    "exit_code": 0,
+    "elapsed_seconds": 0.17376279830932617,
+    "environment": {
+      "GOROOT": "<toolchain>",
+      "GOTOOLCHAIN": "local",
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOSUMDB": "off",
+      "GOMAXPROCS": "2",
+      "GOPATH": "<validation>/gopath",
+      "GOMODCACHE": "<validation>/gomod",
+      "GOCACHE": "<validation>/gocache",
+      "GOLANGCI_LINT_CACHE": "<validation>/corrected-validation/golangci-cache",
+      "GOFLAGS": "-p=2 -mod=readonly"
+    }
+  },
+  {
+    "name": "focused-build",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<toolchain>/bin/go",
+      "build",
+      "-mod=readonly",
+      "-p=2",
+      "./mechanisms/evm/upto/facilitator"
+    ],
+    "cwd": "<source>/go",
+    "exit_code": 0,
+    "elapsed_seconds": 0.13091492652893066,
+    "environment": {
+      "GOROOT": "<toolchain>",
+      "GOTOOLCHAIN": "local",
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOSUMDB": "off",
+      "GOMAXPROCS": "2",
+      "GOPATH": "<validation>/gopath",
+      "GOMODCACHE": "<validation>/gomod",
+      "GOCACHE": "<validation>/gocache",
+      "GOLANGCI_LINT_CACHE": "<validation>/corrected-validation/golangci-cache",
+      "GOFLAGS": "-p=2 -mod=readonly"
+    }
+  },
+  {
+    "name": "focused-lint",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<tools>/golangci-lint",
+      "run",
+      "--concurrency",
+      "2",
+      "--modules-download-mode",
+      "readonly",
+      "./mechanisms/evm/upto/facilitator"
+    ],
+    "cwd": "<source>/go",
+    "exit_code": 0,
+    "elapsed_seconds": 3.52164888381958,
+    "environment": {
+      "GOROOT": "<toolchain>",
+      "GOTOOLCHAIN": "local",
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOSUMDB": "off",
+      "GOMAXPROCS": "2",
+      "GOPATH": "<validation>/gopath",
+      "GOMODCACHE": "<validation>/gomod",
+      "GOCACHE": "<validation>/gocache",
+      "GOLANGCI_LINT_CACHE": "<validation>/corrected-validation/golangci-cache",
+      "GOFLAGS": "-p=2 -mod=readonly"
+    }
+  },
+  {
+    "name": "goimports",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<tools>/goimports",
+      "-l",
+      "mechanisms/evm/upto/facilitator/permit2.go",
+      "mechanisms/evm/upto/facilitator/settle_simulation_test.go"
+    ],
+    "cwd": "<source>/go",
+    "exit_code": 0,
+    "elapsed_seconds": 0.04259896278381348,
+    "environment": {
+      "GOROOT": "<toolchain>",
+      "GOTOOLCHAIN": "local",
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOSUMDB": "off",
+      "GOMAXPROCS": "2",
+      "GOPATH": "<validation>/gopath",
+      "GOMODCACHE": "<validation>/gomod",
+      "GOCACHE": "<validation>/gocache",
+      "GOLANGCI_LINT_CACHE": "<validation>/corrected-validation/golangci-cache",
+      "GOFLAGS": "-p=2 -mod=readonly"
+    }
+  }
+]

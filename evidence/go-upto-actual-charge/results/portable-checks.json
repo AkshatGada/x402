@@ -1,0 +1,33 @@
+[
+  {
+    "name": "portable-baseline",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<python>",
+      "<evidence-checkout>/evidence/go-upto-actual-charge/harness/reproduce.py",
+      "<source>",
+      "--go",
+      "<toolchain>/bin/go",
+      "--baseline"
+    ],
+    "exit_code": 1,
+    "passing_leaf_cases": 14,
+    "failing_leaf_cases": 23
+  },
+  {
+    "name": "portable-fixed",
+    "command": [
+      "<python>",
+      "<queue>/with-test-slot.py",
+      "<python>",
+      "<evidence-checkout>/evidence/go-upto-actual-charge/harness/reproduce.py",
+      "<source>",
+      "--go",
+      "<toolchain>/bin/go"
+    ],
+    "exit_code": 0,
+    "passing_leaf_cases": 37,
+    "failing_leaf_cases": 0
+  }
+]

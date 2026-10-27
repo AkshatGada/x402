@@ -1,0 +1,110 @@
+=== RUN   TestSettleUptoPermit2_PartialAmount
+--- PASS: TestSettleUptoPermit2_PartialAmount (0.00s)
+=== RUN   TestUptoSettleSimulationUsesActualCharge
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/partial_charge_covered
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/exact_balance
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/insufficient_balance
+    settle_simulation_test.go:269: simulated = [1000000], want [300000]
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/zero_without_funds
+    settle_simulation_test.go:244: want successful charge 0, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/over_ceiling_without_funds
+    settle_simulation_test.go:237: want invalid_upto_evm_payload_settlement_exceeds_amount, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/negative
+    settle_simulation_test.go:237: want invalid_upto_evm_payload, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/plain/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/partial_charge_covered
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/exact_balance
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/insufficient_balance
+    settle_simulation_test.go:269: simulated = [1000000], want [300000]
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/zero_without_funds
+    settle_simulation_test.go:244: want successful charge 0, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/over_ceiling_without_funds
+    settle_simulation_test.go:237: want invalid_upto_evm_payload_settlement_exceeds_amount, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/negative
+    settle_simulation_test.go:237: want invalid_upto_evm_payload, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/eip2612/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/partial_charge_covered
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/exact_balance
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/insufficient_balance
+    settle_simulation_test.go:269: simulated = [1000000], want [300000]
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/zero_without_funds
+    settle_simulation_test.go:244: want successful charge 0, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/over_ceiling_without_funds
+    settle_simulation_test.go:237: want invalid_upto_evm_payload_settlement_exceeds_amount, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/negative
+    settle_simulation_test.go:237: want invalid_upto_evm_payload, got response=<nil> err=permit2_insufficient_balance: simulation failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_batch/default_config
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/partial_charge_covered
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: prerequisites check failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/exact_balance
+    settle_simulation_test.go:244: want successful charge 300000, got response=<nil> err=permit2_insufficient_balance: prerequisites check failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/full_ceiling
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/insufficient_balance
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/zero_without_funds
+    settle_simulation_test.go:244: want successful charge 0, got response=<nil> err=permit2_insufficient_balance: prerequisites check failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/over_ceiling_without_funds
+    settle_simulation_test.go:237: want invalid_upto_evm_payload_settlement_exceeds_amount, got response=<nil> err=permit2_insufficient_balance: prerequisites check failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/negative
+    settle_simulation_test.go:237: want invalid_upto_evm_payload, got response=<nil> err=permit2_insufficient_balance: prerequisites check failed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/malformed
+=== RUN   TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/default_config
+--- FAIL: TestUptoSettleSimulationUsesActualCharge (0.02s)
+    --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/partial_charge_covered (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/full_ceiling (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/insufficient_balance (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/zero_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/over_ceiling_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/plain/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/plain/default_config (0.00s)
+    --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612 (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/partial_charge_covered (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/full_ceiling (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/insufficient_balance (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/zero_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/over_ceiling_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/eip2612/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/eip2612/default_config (0.00s)
+    --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch (0.01s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/partial_charge_covered (0.01s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/full_ceiling (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/insufficient_balance (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/zero_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/over_ceiling_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_batch/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_batch/default_config (0.00s)
+    --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/partial_charge_covered (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/exact_balance (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/full_ceiling (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/insufficient_balance (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/zero_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/over_ceiling_without_funds (0.00s)
+        --- FAIL: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/negative (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/malformed (0.00s)
+        --- PASS: TestUptoSettleSimulationUsesActualCharge/erc20_prerequisites/default_config (0.00s)
+FAIL
+FAIL	github.com/x402-foundation/x402/go/v2/mechanisms/evm/upto/facilitator	0.487s
+FAIL
