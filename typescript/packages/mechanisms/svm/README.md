@@ -220,12 +220,6 @@ Supports SPL Token and Token-2022 program tokens:
 
 **Upto** uses the payment-channels program (`open` → escrow deposit, then `settle_and_seal` + `distribute` with a server voucher for the actual amount). Details in [Upto SVM Scheme](./src/upto/README.md).
 
-## Recipient Account Diagnostics
-
-After a standard-wallet exact payment fails simulation, the facilitator can use the signer's optional `getAccountInfo` to inspect the validated recipient ATA. `invalid_exact_svm_recipient_ata_missing` reports an absent account; `invalid_exact_svm_recipient_ata_wrong_program_owner` reports a different token-program owner. The original simulation detail is retained. These diagnostics also propagate through settlement's pre-broadcast verification.
-
-Successful simulation performs no diagnostic read. An unavailable lookup or correctly owned account retains the original simulation failure. The lookup observes current account state rather than proving the earlier failure's cause. Recipient account provisioning remains the operator's responsibility; no account is created or funded.
-
 ## Duplicate Settlement Protection
 
 This package includes a built-in `SettlementCache` that prevents a known race condition on Solana where the same payment transaction could be settled multiple times before on-chain confirmation. When the facilitator scheme is registered via `registerExactSvmScheme`, a single `SettlementCache` instance is automatically shared across both V1 and V2 scheme versions.
