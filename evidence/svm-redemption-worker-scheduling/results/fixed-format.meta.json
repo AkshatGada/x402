@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "node_modules/prettier/bin/prettier.cjs",
+    "--config",
+    ".prettierrc",
+    "--ignore-path",
+    "/dev/null",
+    "--check",
+    "src/batch-settlement/server/channelManager.ts",
+    "test/unit/batch.channelManager.scheduling.test.ts",
+    "<implementation>/typescript/.changeset/svm-redemption-worker-scheduling.md"
+  ],
+  "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.14
+}

@@ -1,0 +1,51 @@
+SVM redemption worker scheduler — proposed design for pre-implementation audit
+
+User authorization: implement locally after Sol6.1 extra-high design audit, with baseline-versus-fix tests. No commit/push/PR/contact. Isolated locked SVM/core tooling installation approved in chat. Two build/test workers maximum, no live RPC/funds.
+
+Baseline: newly checked upstream cb0e0487e252f42114225c5a25abdd6968a0d0db; previous discovery b5b0c13104746c2ae3a205bf96ed6894e231e59b. Fresh implementation branch/worktree <implementation>, codex/svm-redemption-worker-scheduling. Read-only discovery baseline <discovery>. Check latest source before audit; worktree fast-forward in progress. Discovery evidence <local>/x402-discovery-20261027/lifecycle and FINAL-AUDIT.txt.
+
+Behavior chosen
+- Preserve setInterval cadence, first pass on first tick (no immediate new work on start).
+- Skip automatic ticks while one automatic job is queued or running. Do not catch up missed historical ticks.
+- Every explicit redeem() remains a distinct serialized pass with its own result/rejection, including manually queued passes.
+- An automatic job already queued behind manual work is obsolete after stop(), and must not start a new runPass(). A pass already inside runPass() must finish normally; no transaction cancellation.
+- stop(false) captures and waits the queue tail existing at invocation. stop(true) synchronously enqueues exactly one explicit final redeem and waits that promise. A later start/new manual request must not extend the earlier stop's captured boundary.
+- start during a pending stop is permitted (existing API has no prohibition). New timer lifecycle cannot revive obsolete queued jobs from the old lifecycle, and completion of an old job cannot unlock a newer active automatic job. start twice while running remains a no-op. Every explicit flush request retains one pass; do not invent flush coalescing semantics.
+
+Minimal implementation proposal, not yet written
+Keep existing timer, running and passInFlight. Add private tickInFlight=false (covers queued + running automatic job across all lifecycles; never reset in start/stop) and private generation=0. Each successful start increments generation and captures its number in the timer callback. Every stop increments generation, sets running false, clears its timer synchronously before any await.
+
+Factor existing redeem's queue operation into a private generic enqueue<T>(pass:()=>Promise<T>):Promise<T>, shared by public redeem and automatic tick. It chains onto passInFlight and catches only the stored tail, returning the pass's own promise unchanged. Existing manual error semantics remain. Keep current Promise<unknown> tail unless a strictly necessary type improvement arises; do not widen public interfaces.
+
+Public redeem becomes return enqueue(()=>runPass()). Timer callback calls void tick(capturedGeneration). Private async tick:
+  if (!running || generation !== capturedGeneration || tickInFlight) return;
+  tickInFlight=true;
+  try {
+    await enqueue(async () => {
+      if (!running || generation !== capturedGeneration) return;
+      await runPass();
+    });
+  } catch (error) {
+    config.onError?.(error);
+  } finally {
+    tickInFlight=false;
+  }
+Because the boolean is never reset on stop/start, no newer automatic job can enter while an old one still owns it. A queued old job releases the flag after its identity check skips it; a future current timer tick can then schedule. Guard release must survive rejected runPass. Throwing onError callback behavior need not be redesigned; flag still releases via finally.
+
+stop captures either this.passInFlight (no flush) or this.redeem().catch(existing onError) (flush), then awaits only that captured promise. Do not reread mutable queue tail after awaiting a flush, as that could wait future-generation work. Update lifecycle JSDoc concisely; add one TS patch changeset. No README internals, new options, dependencies, backoff, timeouts or Go changes.
+
+Tests planned before source change
+Focused new Vitest file using fake timers, deferred real store.list()/settler dependencies and the actual imported class; no private methods mocked and no real signatures/RPC. Use empty MemoryChannelStore for core scheduling cases; existing batch worker fixtures for pending result only if worth avoiding duplicated scaffolding.
+1. Five ticks during blocked empty-store pass: only one pass after release, no overlap, no historical automatic queue. Stop false resolves after current pass, no extra timer work; subsequent timer advancement inert.
+2. Stop(true) with slow automatic pass: exactly one final explicit pass beyond it.
+3. Three manual redeems remain three serialized passes with distinct outcomes/error behavior; rejected predecessor does not poison next queued caller.
+4. Auto tick queued behind blocked manual pass is skipped after stop(false), while all explicit manual calls still run.
+5. Same queued auto with stop/start: old-generation work stays skipped; current generation resumes and stays bounded during a new blocked pass. No stale completion unlocks a newer tick.
+6. Pending/rejected automatic operation releases gate, invokes onError and allows a later tick to retry normally. Include real successful claim path through existing full worker tests, not duplicated synthetic signing setup.
+7. Stop(true) boundary under restart: final flush must finish old stop even if a newer automatic pass has started and is blocked. Use deferred store stages to avoid wall-clock timeout assertions.
+8. Idempotent start and normal stop/restart.
+
+Baseline and fixed use byte-identical focused regression tests, same fake-timer schedule/fixtures, pinned source; record exact JSON output and source/test hashes. Expected baseline failures only for backlog/lifecycle changes, controls pass. Existing worker/cleanup tests and full offline SVM tests at <=2 workers; changed-file format/lint; scoped SVM build and typechecking with baseline comparison for unrelated existing diagnostics. No whole repository build or coverage threshold claim unless genuinely run.
+
+Questions for auditor
+Is retaining tickInFlight across generations + generation check at actual queued execution sufficient, including microtask ordering? Is captured stop boundary correct and compatible with explicit callers? Any simpler design using existing utilities with fewer states? Any missing scenario that could stall redemption or cancel a submitted pass? Correct the plan before implementation; do not edit production source yourself.

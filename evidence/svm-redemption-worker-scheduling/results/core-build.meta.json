@@ -1,0 +1,10 @@
+{
+  "command": [
+    "node",
+    "<evidence-workspace>/build.mjs",
+    "../../scripts/mirror-cjs-dts.mjs"
+  ],
+  "cwd": "<fixed>/typescript/packages/core",
+  "exit_code": 0,
+  "seconds": 2.6
+}

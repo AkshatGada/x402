@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--config",
+    "<local>/x402-svm-redemption-evidence-20261027/evidence/svm-redemption-worker-scheduling/probes/vitest.config.mjs",
+    "--coverage.enabled=false",
+    "--maxWorkers=1",
+    "--minWorkers=1",
+    "--no-file-parallelism",
+    "--reporter=json",
+    "--outputFile=<evidence-workspace>/portable-evidence-probes.results.json"
+  ],
+  "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.52
+}

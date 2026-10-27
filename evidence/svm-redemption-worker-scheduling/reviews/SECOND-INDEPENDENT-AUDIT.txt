@@ -1,0 +1,50 @@
+Second independent SVM redemption scheduler audit — 27 October 2026
+
+Verdict: NO ACTIONABLE FINDINGS. The three-file local patch is suitable for human review. No correctness fix or additional regression test is required by this audit. This is an independent review of the implementation and evidence, not reliance on the prior design/final auditor's approval.
+
+Scope and instructions
+Implementation checkout: <implementation>
+Branch: codex/svm-redemption-worker-scheduling
+Base: cb0e0487e252f42114225c5a25abdd6968a0d0db
+Read the actual .agents/skills/contributing/SKILL.md, CONTRIBUTING.md and typescript/CONTRIBUTING.md; inspected git diff plus both untracked test/changeset files. Also inspected the existing worker tests, package test/build/compiler configurations, reports, runner, raw JSON/logs and build helper. Changes are confined to channelManager.ts, batch.channelManager.scheduling.test.ts and the @x402/svm patch changeset. No public types/options, dependencies, Go or payment algorithm changes.
+
+Correctness review
+- channelManager.ts:147-153,195-207: tickInFlight is acquired synchronously before enqueue and retained until the accepted owner's finally. Neither lifecycle method clears it. Thus a newer automatic owner cannot coexist with the old owner, and an obsolete completion cannot clear a newer automatic job's gate. A queued automatic job counts as busy, so manual work cannot cause automatic timer backlog.
+- channelManager.ts:150,165-166,196,200-201: the captured generation is checked both on admission and immediately before runPass. A stop/start cannot revive an already queued old job, including one accepted by the timer but not yet entered in its first promise microtask. No await separates the execution check and runPass invocation. Once runPass has entered, shutdown does not interrupt its remaining list/claim/distribute behavior.
+- channelManager.ts:135-136,183-186: explicit calls retain their own queued result/rejection; only the stored serial tail absorbs failures. Later explicit calls still execute after a rejected predecessor. The private generic helper is justified by automatic/manual operations sharing one queue with different return types; it does not introduce broader scheduler infrastructure.
+- channelManager.ts:164-174: stop invalidates the lifecycle before awaiting and captures exactly one boundary. A flush adds one explicit redemption per request. Later manual calls, restarted automatic work and reentrant work from an error callback cannot extend an earlier stop. No lifecycle mutation occurs after await that could clobber a restart.
+- Error reporting still uses the existing callback policy. The automatic gate releases even if onError throws. A user callback that itself throws can still reject the ignored timer promise; the patch neither creates nor claims to fix that existing policy. An indefinitely blocked entered pass still blocks serialization; timeout/cancellation policy is outside this patch.
+- Updated lifecycle documentation accurately describes skipped ticks, discarded obsolete automatic jobs, entered-pass completion and captured stop boundaries. The changeset matches the scope.
+
+Regression-test assessment
+The 11 tests import the actual class and observe real empty-store list calls, promise completion, returned result shapes and rejection identity. They do not replace private methods. The blocked-pass tests establish actual serial behavior; after stop, the entered pass still performs its second list read. The restart/flush test genuinely queues current-generation automatic work behind a blocked explicit flush before proving the earlier stop can resolve. Repeated flush requests each produce one additional pass. Fake-clock cleanup releases all gates before stopping managers, and expected baseline failures did not contaminate subsequent controls.
+
+The successful manual scheduler controls return empty outcomes, so they alone do not demonstrate distinct nonempty settlement results. That is not an actionable gap: enqueue directly returns each queued promise, the suite checks individual rejection identity and per-call execution, and existing worker tests exercise nonempty successful/pending results. No claim of real chain execution is supported by these tests.
+
+Independent execution (sequential, one worker, coverage disabled)
+1. second-audit-baseline-focused: actual baseline/typescript cwd, exit 1, 6 passed / 5 failed. Failures were the intended behaviors: accumulated automatic work caused 10 rather than 2 reads; flush caused 12 rather than 4 reads; stopped queued automatic work caused 4 rather than 2 reads; restarted old work caused 3 rather than 2 reads; old stop remained unresolved while later-generation work was blocked.
+2. second-audit-fixed-focused: actual validation/typescript cwd, exit 0, 11/11 passed.
+3. second-audit-probes: scratch-only test suite importing the fixed source, exit 0, 3/3 passed:
+   - synchronous timer admission followed by stop/start before the first promise microtask performs no old-generation list call, then resumes normally;
+   - onError synchronously reenters stop/start after an automatic rejection and the next generation resumes normally;
+   - a rejected final flush invokes onError, whose manual redemption remains blocked, while the flush's captured stop still resolves.
+Scratch source/config: second-audit-probes/second-audit.test.ts and vitest.config.mjs. Exact execution metadata, raw logs and JSON results: second-audit-baseline-focused.*, second-audit-fixed-focused.* and second-audit-probes.*.
+
+Runner bookkeeping: the first invocation accidentally retained run.py's default fixed root while using a baseline-looking output name. It ran the fixed suite successfully, was immediately recognized by its cwd, and its artifacts were moved to second-audit-initial-fixed-root.*. It is not used as baseline evidence. Both authoritative reruns above explicitly set X402_VALIDATION_ROOT and have correct cwd/name/output paths. No prior auditor's artifacts were overwritten.
+
+Evidence and provenance
+- Independently checked the parent's full SVM result JSON/meta: 1,115 passed, zero failed, 58 result files, exit 0, coverage disabled. Did not repeat that suite.
+- Read scoped Core/SVM ESM/CJS/declaration/mirror build logs and sequential build helper; their exit-0 results support the stated scoped build claim. Did not repeat builds.
+- Read changed-file lint/format logs and successful exit metadata. Independently ran git diff --check successfully.
+- Normal package tsc logs have five diagnostics and are byte-identical baseline/fix. Supplemental source plus scheduler-test tsc logs have two signatureVerification.ts diagnostics and are byte-identical baseline/fix. Neither compiler command is green; neither reports a new scheduler/test diagnostic.
+- Compared 206 tracked Core/SVM source, test and relevant configuration files against isolated snapshots: validation is byte-identical to the worktree; baseline differs only in channelManager.ts. All comparison files exist. The new focused test is separately byte-identical baseline/fixed/worktree.
+- Fixed manager SHA-256: 31100d79d5b4ade9387445953f17e0597b9cfd6e1ededc144df8dc51594c5b1b
+- Baseline manager and pinned Git blob SHA-256: 692afcd087a9062f63a591d9a3b27adc432e5d23da458c58dcc59db7aac00484
+- Focused test SHA-256, both snapshots/worktree: fa4c7b390f5c6d37a2ea7446e2e39a479f80498e450551718cb8eae443b75f85
+- Changeset SHA-256: 3da6ab989ed5c732d447b6c07190677b389b782e10df845d029b9cbdc770cf85
+- Final implementation status contains exactly the expected three changed/untracked files. The original <original-checkout> checkout is clean on main at b1176d302b3210395683ac6a5025e84c52b64f15.
+
+Residual limits and attribution
+No production incidence, double-charge prevention, payment-loss prevention, live chain correctness, performance benchmark, full-repository build or coverage threshold is established. Existing same-file PR overlap remains a future rebase/review coordination matter, not a finding in this local patch.
+
+This second independent review, focused reruns and scratch probes were performed by a different Codex Sol6.1 extra-high audit subagent. Tools used: local shell/Python/rg/Git/hash/JSON inspection, apply_patch for this scratch report/probes, the existing approved Node/Vitest installation and run.py, and internal parent-agent status messages. No production source or implementation tests were edited, no dependencies installed, no new agents spawned, no commit/push/PR/external contact occurred, and no live RPC, signing, funds or security probing occurred. Codex performed the implementation; no Claude or Astra contribution is credited. Existing attribution, including PR #3892, remains untouched.

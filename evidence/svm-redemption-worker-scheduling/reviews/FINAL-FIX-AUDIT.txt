@@ -1,0 +1,54 @@
+SVM redemption scheduler final fix audit — 27 October 2026
+
+VERDICT: APPROVED. No actionable correctness, scope, or regression-test findings in the three-file patch inspected. The implementation follows the approved design, and both requested acceptance-test refinements are present. This approval does not claim completion of build/typechecking still being performed by the parent.
+
+Audited worktree: <implementation>
+Base: cb0e0487e252f42114225c5a25abdd6968a0d0db
+Expected uncommitted files only:
+- typescript/packages/mechanisms/svm/src/batch-settlement/server/channelManager.ts
+- typescript/packages/mechanisms/svm/test/unit/batch.channelManager.scheduling.test.ts
+- typescript/.changeset/svm-redemption-worker-scheduling.md
+
+Static review
+- The automatic gate is acquired before enqueue and released in finally; neither start nor stop resets it. Its ownership therefore spans queued/running work and restarts. An older automatic job cannot release a gate held by a newer automatic job because the latter cannot acquire it until the former releases it.
+- start captures its incremented generation in the timer closure. tick checks running/generation at admission and again when its queued operation reaches execution. stop invalidates the generation synchronously, so an old queued automatic job does not enter runPass after stop/start.
+- The execution identity check and invocation of runPass have no await between them. Once runPass starts it finishes normally, including subsequent reads/submissions inside that pass. The patch does not alter payment, claim, distribution, sealing, RPC, signing or onchain cancellation behavior.
+- Manual redeem remains independently queued and returns its own result/rejection. The generic private enqueue is appropriate for the different manual/automatic result types, preserves the existing rejection-swallowing tail convention, and introduces no shared infrastructure or dependency.
+- stop captures one promise synchronously. A flush appends one explicit redemption, including repeated flush requests; no-flush captures the existing queue tail. Neither branch rereads the mutable tail or mutates lifecycle state after await. A restarted interval or later manual call cannot extend an earlier stop boundary.
+- Automatic rejections report through the existing onError callback and release the gate. A callback that itself throws retains the existing ignored timer-promise rejection behavior; this patch appropriately does not introduce a broader callback-error policy.
+- Lifecycle JSDoc describes skipped ticks, obsolete queued work, executing-pass completion and captured stop boundaries. The @x402/svm patch changeset matches the behavioral scope. No public interfaces, options, dependencies, Go files or unrelated features changed.
+
+Test assessment
+The 11 focused tests use the imported class, real MemoryChannelStore and deferred list operations. Their assertions observe reads, results, rejection identity, error callbacks and promise completion. They do not replace private methods or exercise RPC/settlement/signing to prove scheduler behavior. Cleanup releases all deferred gates before waiting for each manager, preventing expected baseline failures from hanging later tests.
+
+The tests exercise bounded automatic work, one final flush, distinct manual passes, rejection isolation, stale automatic work queued behind manual redemption, stop/start generation isolation, gate recovery, captured no-flush boundaries, old flush boundaries after restart, repeated explicit flushes, and idempotent start/restart. Both required design-audit refinements are implemented. The stop(true)+restart case genuinely queues a new automatic tick behind a blocked final flush before checking that the old stop resolves while new work remains blocked. Existing full worker tests cover successful/pending payment paths without duplicating their fixtures here. No additional tests or abstraction are required for this focused patch.
+
+Independent focused reruns
+I reran baseline and fixed sequentially through run.py using --maxWorkers=1 --minWorkers=1 --no-file-parallelism and coverage disabled. No full-suite/build job was run by this auditor.
+
+Baseline: 11 cases, 6 passed, 5 failed, exit 1. Failures match the intended behavioral defects:
+1. Slow automatic pass: expected 2 reads, observed 10 from five accumulated passes.
+2. Final flush after slow automatic work: expected 4 reads, observed 12.
+3. Automatic work queued behind manual redemption: expected 2 reads, observed 4 after stop.
+4. Old queued tick after restart: expected 2 reads before the next current tick, observed 3.
+5. Old final flush boundary after restart: stop remained unresolved while later work was blocked.
+
+Fixed: all 11 passed, exit 0.
+
+Artifacts:
+<evidence-workspace>/audit-baseline.{log,meta.json,results.json}
+<evidence-workspace>/audit-fixed.{log,meta.json,results.json}
+
+The parent's completed fixed-full-svm meta/JSON artifacts report exit 0 and all 1,115 tests passing across 58 test-result files. I inspected those artifacts rather than rerunning the full suite. Vitest's aggregate numTotalTestSuites is 247 because that count includes nested suites; do not describe that as 247 files. Coverage was disabled and no coverage threshold is claimed.
+
+Provenance and final integrity
+The tested source and test snapshots match the actual worktree byte for byte. Baseline and fixed focused regression tests are byte-identical; baseline retains the original source. The final hashes I independently checked are:
+baseline channelManager.ts: 692afcd087a9062f63a591d9a3b27adc432e5d23da458c58dcc59db7aac00484
+fixed channelManager.ts: 31100d79d5b4ade9387445953f17e0597b9cfd6e1ededc144df8dc51594c5b1b
+focused test (both): fa4c7b390f5c6d37a2ea7446e2e39a479f80498e450551718cb8eae443b75f85
+changeset: 3da6ab989ed5c732d447b6c07190677b389b782e10df845d029b9cbdc770cf85
+
+git diff --check passed. Status at final inspection contains exactly the expected three files. The tracked source diff contains 46 additions/13 removals; the new test/changeset files are untracked and are therefore absent from ordinary git diff --stat, but were explicitly read, hashed and audited.
+
+Attribution and limits
+Implementation is by Codex; this independent final review and focused rerun were performed by the Codex Sol6.1 extra-high audit subagent. Tools used were local shell/rg/Git/hash/JSON inspection, the existing approved isolated Node/Vitest setup and run.py, and scratch report writing. This auditor made no production source changes, installed no dependencies, spawned no agents, and made no commits, push, PR, external contact, live RPC, signing, funds or security-probing actions. No Claude or Astra work is credited, and existing attribution including PR #3892 remains untouched.

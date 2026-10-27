@@ -1,0 +1,226 @@
+{
+  "upstream": "https://github.com/x402-foundation/x402",
+  "baseline": "cb0e0487e252f42114225c5a25abdd6968a0d0db",
+  "discovery_revision": "b5b0c13104746c2ae3a205bf96ed6894e231e59b",
+  "branch": "codex/svm-redemption-worker-scheduling",
+  "files_sha256": {
+    "typescript/packages/mechanisms/svm/src/batch-settlement/server/channelManager.ts": "31100d79d5b4ade9387445953f17e0597b9cfd6e1ededc144df8dc51594c5b1b",
+    "typescript/packages/mechanisms/svm/test/unit/batch.channelManager.scheduling.test.ts": "fa4c7b390f5c6d37a2ea7446e2e39a479f80498e450551718cb8eae443b75f85",
+    "typescript/.changeset/svm-redemption-worker-scheduling.md": "3da6ab989ed5c732d447b6c07190677b389b782e10df845d029b9cbdc770cf85"
+  },
+  "checks": {
+    "baseline-final-focused": {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "test/unit/batch.channelManager.scheduling.test.ts",
+        "--coverage.enabled=false",
+        "--maxWorkers=2",
+        "--minWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=<evidence-workspace>/baseline-final-focused.results.json"
+      ],
+      "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+      "exit_code": 1,
+      "seconds": 0.39
+    },
+    "fixed-full-svm": {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--coverage.enabled=false",
+        "--maxWorkers=2",
+        "--minWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=<evidence-workspace>/fixed-full-svm.results.json"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 0,
+      "seconds": 15.48
+    },
+    "fixed-lint": {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/batch-settlement/server/channelManager.ts",
+        "test/unit/batch.channelManager.scheduling.test.ts"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 0,
+      "seconds": 1.25
+    },
+    "fixed-format": {
+      "command": [
+        "node",
+        "node_modules/prettier/bin/prettier.cjs",
+        "--config",
+        ".prettierrc",
+        "--ignore-path",
+        "/dev/null",
+        "--check",
+        "src/batch-settlement/server/channelManager.ts",
+        "test/unit/batch.channelManager.scheduling.test.ts",
+        "<implementation>/typescript/.changeset/svm-redemption-worker-scheduling.md"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 0,
+      "seconds": 0.14
+    },
+    "core-build": {
+      "command": [
+        "node",
+        "<evidence-workspace>/build.mjs",
+        "../../scripts/mirror-cjs-dts.mjs"
+      ],
+      "cwd": "<fixed>/typescript/packages/core",
+      "exit_code": 0,
+      "seconds": 2.6
+    },
+    "svm-build": {
+      "command": [
+        "node",
+        "<evidence-workspace>/build.mjs",
+        "../../../scripts/mirror-cjs-dts.mjs"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 0,
+      "seconds": 9.58
+    },
+    "baseline-types": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+      "exit_code": 2,
+      "seconds": 1.17
+    },
+    "fixed-types": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 2,
+      "seconds": 1.27
+    },
+    "baseline-scheduler-types": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false",
+        "--project",
+        "scheduler.typecheck.json"
+      ],
+      "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+      "exit_code": 2,
+      "seconds": 1.14
+    },
+    "fixed-scheduler-types": {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false",
+        "--project",
+        "scheduler.typecheck.json"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 2,
+      "seconds": 1.13
+    },
+    "audit-baseline": {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "test/unit/batch.channelManager.scheduling.test.ts",
+        "--coverage.enabled=false",
+        "--maxWorkers=1",
+        "--minWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=<evidence-workspace>/audit-baseline.results.json"
+      ],
+      "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+      "exit_code": 1,
+      "seconds": 0.39
+    },
+    "audit-fixed": {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "test/unit/batch.channelManager.scheduling.test.ts",
+        "--coverage.enabled=false",
+        "--maxWorkers=1",
+        "--minWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=<evidence-workspace>/audit-fixed.results.json"
+      ],
+      "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+      "exit_code": 0,
+      "seconds": 0.38
+    }
+  },
+  "runtime_test_limits": "Synthetic fake-timer/store tests; no live RPC, funds, Solana execution or transaction cancellation. Full SVM runtime suite, coverage disabled. No full repository build.",
+  "compiler_limits": "Package tsc: five pre-existing diagnostics byte-identical baseline/fix. Supplemental source+scheduler-test tsc: two pre-existing signatureVerification.ts diagnostics byte-identical baseline/fix, none in new test or modified source.",
+  "attribution": "Codex implementation; independent Sol 6.1 extra-high design and final fix audits. No Claude or Astra work.",
+  "public_changes": false,
+  "commits_created": true,
+  "second_independent_audit": {
+    "report": "SECOND-INDEPENDENT-AUDIT.txt",
+    "reviewer": "Different Sol 6.1 extra-high audit agent",
+    "verdict": "No actionable findings",
+    "baseline": {
+      "passed": 6,
+      "expected_failures": 5
+    },
+    "fixed": {
+      "passed": 11,
+      "failed": 0
+    },
+    "additional_scratch_probes": {
+      "passed": 3,
+      "failed": 0
+    },
+    "implementation_changes": false,
+    "initial_mislabeled_run": "Retained separately as second-audit-initial-fixed-root; not baseline evidence."
+  },
+  "implementation_commit": "4706be4da705e5bcc8a0cd5c2467be2abe9ccf0b",
+  "evidence_status": "Prepared locally; not pushed.",
+  "portable_probe_changes": "SDK import prefixes remapped to an explicit source-root alias; original test bodies unchanged. Original source preserved for provenance.",
+  "portable_probe_verification": {
+    "source_root": "<fixed>",
+    "passed": 3,
+    "failed": 0,
+    "results": "results/portable-evidence-probes.results.json"
+  },
+  "runtime_versions": {
+    "node": "24.19.0",
+    "pnpm": "11.1.1",
+    "solana_kit": "8.4.0",
+    "vitest": "3.2.7",
+    "typescript": "5.9.2",
+    "golang": "not used for this TypeScript-only fix"
+  },
+  "dependency_integrity_sha256": {
+    "typescript/pnpm-lock.yaml": "41f220a7b4fb0284c319062c1a031158f5c0ecbb1bf46d19230208a8ef4955d1",
+    "typescript/packages/core/package.json": "feaa63f1c2f23f35aef5b99b4bf9ed1861bae2a29c505ebfadaad9d161af56db",
+    "typescript/packages/mechanisms/svm/package.json": "7e027bc967c33d68fef283eb693c295ebb7a7c5e9ab53022422a45aa8bdddba6"
+  }
+}

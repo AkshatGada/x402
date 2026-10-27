@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "test/unit/batch.channelManager.scheduling.test.ts",
+    "--coverage.enabled=false",
+    "--maxWorkers=2",
+    "--minWorkers=1",
+    "--no-file-parallelism",
+    "--reporter=json",
+    "--outputFile=<evidence-workspace>/fixed-focused.results.json"
+  ],
+  "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 0.39
+}

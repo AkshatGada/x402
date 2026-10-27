@@ -1,0 +1,133 @@
+CLI Building entry: {"index":"src/index.ts","v1/index":"src/v1/index.ts","exact/client/index":"src/exact/client/index.ts","exact/server/index":"src/exact/server/index.ts","exact/facilitator/index":"src/exact/facilitator/index.ts","exact/v1/client/index":"src/exact/v1/client/index.ts","exact/v1/facilitator/index":"src/exact/v1/facilitator/index.ts","upto/client/index":"src/upto/client/index.ts","upto/server/index":"src/upto/server/index.ts","upto/facilitator/index":"src/upto/facilitator/index.ts","batch-settlement/client/index":"src/batch-settlement/client/index.ts","batch-settlement/server/index":"src/batch-settlement/server/index.ts","batch-settlement/facilitator/index":"src/batch-settlement/facilitator/index.ts"}
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+(node:15262) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///private<fixed>/typescript/packages/mechanisms/svm/tsup.config.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /private<fixed>/typescript/packages/mechanisms/svm/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+CLI Target: es2020
+CLI Cleaning output folder
+ESM Build start
+ESM dist/esm/chunk-43FCDWAS.mjs                         50.96 KB
+ESM dist/esm/upto/client/index.mjs                      262.00 B
+ESM dist/esm/v1/index.mjs                               317.00 B
+ESM dist/esm/chunk-IB6YIOAY.mjs                         12.50 KB
+ESM dist/esm/chunk-TJWPVXW3.mjs                         10.96 KB
+ESM dist/esm/chunk-FGGCYBLY.mjs                         3.23 KB
+ESM dist/esm/chunk-N2S23ATN.mjs                         729.00 B
+ESM dist/esm/chunk-3W4XFDUQ.mjs                         2.64 KB
+ESM dist/esm/chunk-VJYARVT4.mjs                         4.79 KB
+ESM dist/esm/index.mjs                                  14.04 KB
+ESM dist/esm/chunk-EOTSIPTP.mjs                         52.29 KB
+ESM dist/esm/chunk-GESWB23A.mjs                         1.61 KB
+ESM dist/esm/chunk-WWACQNRQ.mjs                         148.00 B
+ESM dist/esm/chunk-VO3DVL5G.mjs                         17.85 KB
+ESM dist/esm/chunk-ZKQLQ646.mjs                         4.81 KB
+ESM dist/esm/chunk-33A2M3J5.mjs                         1.27 KB
+ESM dist/esm/chunk-GITDOBRS.mjs                         1.33 KB
+ESM dist/esm/chunk-WIPN332D.mjs                         637.00 B
+ESM dist/esm/chunk-SWW6QIIB.mjs                         3.55 KB
+ESM dist/esm/chunk-ABLYXK2S.mjs                         61.80 KB
+ESM dist/esm/chunk-BBBB2OS4.mjs                         1.01 KB
+ESM dist/esm/chunk-6Q3AZ62A.mjs                         16.78 KB
+ESM dist/esm/batch-settlement/server/index.mjs          71.42 KB
+ESM dist/esm/chunk-ZHJQD6CC.mjs                         20.31 KB
+ESM dist/esm/exact/v1/client/index.mjs                  207.00 B
+ESM dist/esm/upto/facilitator/index.mjs                 42.23 KB
+ESM dist/esm/batch-settlement/facilitator/index.mjs     86.96 KB
+ESM dist/esm/batch-settlement/client/index.mjs          877.00 B
+ESM dist/esm/upto/server/index.mjs                      8.67 KB
+ESM dist/esm/exact/client/index.mjs                     1.35 KB
+ESM dist/esm/exact/server/index.mjs                     5.28 KB
+ESM dist/esm/exact/facilitator/index.mjs                31.97 KB
+ESM dist/esm/exact/v1/facilitator/index.mjs             207.00 B
+ESM dist/esm/chunk-43FCDWAS.mjs.map                     127.28 KB
+ESM dist/esm/v1/index.mjs.map                           71.00 B
+ESM dist/esm/chunk-IB6YIOAY.mjs.map                     30.18 KB
+ESM dist/esm/upto/client/index.mjs.map                  71.00 B
+ESM dist/esm/chunk-N2S23ATN.mjs.map                     3.82 KB
+ESM dist/esm/chunk-TJWPVXW3.mjs.map                     23.38 KB
+ESM dist/esm/chunk-FGGCYBLY.mjs.map                     7.82 KB
+ESM dist/esm/chunk-VJYARVT4.mjs.map                     7.99 KB
+ESM dist/esm/chunk-3W4XFDUQ.mjs.map                     8.37 KB
+ESM dist/esm/chunk-EOTSIPTP.mjs.map                     104.73 KB
+ESM dist/esm/chunk-GESWB23A.mjs.map                     7.00 KB
+ESM dist/esm/index.mjs.map                              35.45 KB
+ESM dist/esm/chunk-WWACQNRQ.mjs.map                     325.00 B
+ESM dist/esm/chunk-33A2M3J5.mjs.map                     2.30 KB
+ESM dist/esm/chunk-GITDOBRS.mjs.map                     3.29 KB
+ESM dist/esm/chunk-VO3DVL5G.mjs.map                     42.33 KB
+ESM dist/esm/chunk-WIPN332D.mjs.map                     1.76 KB
+ESM dist/esm/chunk-ZKQLQ646.mjs.map                     8.27 KB
+ESM dist/esm/chunk-BBBB2OS4.mjs.map                     2.64 KB
+ESM dist/esm/chunk-SWW6QIIB.mjs.map                     6.23 KB
+ESM dist/esm/chunk-6Q3AZ62A.mjs.map                     32.13 KB
+ESM dist/esm/exact/v1/client/index.mjs.map              71.00 B
+ESM dist/esm/chunk-ABLYXK2S.mjs.map                     197.39 KB
+ESM dist/esm/chunk-ZHJQD6CC.mjs.map                     43.17 KB
+ESM dist/esm/batch-settlement/server/index.mjs.map      135.58 KB
+ESM dist/esm/upto/facilitator/index.mjs.map             82.68 KB
+ESM dist/esm/batch-settlement/client/index.mjs.map      71.00 B
+ESM dist/esm/upto/server/index.mjs.map                  15.36 KB
+ESM dist/esm/exact/server/index.mjs.map                 10.43 KB
+ESM dist/esm/exact/client/index.mjs.map                 2.98 KB
+ESM dist/esm/exact/facilitator/index.mjs.map            66.34 KB
+ESM dist/esm/exact/v1/facilitator/index.mjs.map         71.00 B
+ESM dist/esm/batch-settlement/facilitator/index.mjs.map 190.90 KB
+ESM ⚡️ Build success in 52ms
+DTS Build start
+DTS ⚡️ Build success in 9202ms
+DTS dist/esm/v1/index.d.mts                           289.00 B
+DTS dist/esm/exact/client/index.d.mts                 1.24 KB
+DTS dist/esm/exact/facilitator/index.d.mts            1.64 KB
+DTS dist/esm/exact/v1/facilitator/index.d.mts         2.92 KB
+DTS dist/esm/upto/server/index.d.mts                  6.53 KB
+DTS dist/esm/exact/server/index.d.mts                 4.86 KB
+DTS dist/esm/upto/facilitator/index.d.mts             23.15 KB
+DTS dist/esm/batch-settlement/server/index.d.mts      32.09 KB
+DTS dist/esm/index.d.mts                              32.05 KB
+DTS dist/esm/batch-settlement/facilitator/index.d.mts 15.65 KB
+DTS dist/esm/exact/v1/client/index.d.mts              1.45 KB
+DTS dist/esm/upto/client/index.d.mts                  1.86 KB
+DTS dist/esm/batch-settlement/client/index.d.mts      18.76 KB
+DTS dist/esm/scheme-3fVISIqP.d.mts                    1.34 KB
+DTS dist/esm/scheme-C-HJzMfH.d.mts                    9.67 KB
+DTS dist/esm/settlement-cache-jUfefgU-.d.mts          1.20 KB
+DTS dist/esm/defaultAssets-BxQwBgBJ.d.mts             1.35 KB
+DTS dist/esm/signer-dp_dlrjE.d.mts                    13.14 KB
+DTS dist/esm/types-CPo7FwL6.d.mts                     5.72 KB
+DTS dist/esm/rentCleanup-UyV_WnTn.d.mts               22.51 KB
+DTS dist/esm/discovery-CC37BTiw.d.mts                 2.13 KB
+CLI Building entry: {"index":"src/index.ts","v1/index":"src/v1/index.ts","exact/client/index":"src/exact/client/index.ts","exact/server/index":"src/exact/server/index.ts","exact/facilitator/index":"src/exact/facilitator/index.ts","exact/v1/client/index":"src/exact/v1/client/index.ts","exact/v1/facilitator/index":"src/exact/v1/facilitator/index.ts","upto/client/index":"src/upto/client/index.ts","upto/server/index":"src/upto/server/index.ts","upto/facilitator/index":"src/upto/facilitator/index.ts","batch-settlement/client/index":"src/batch-settlement/client/index.ts","batch-settlement/server/index":"src/batch-settlement/server/index.ts","batch-settlement/facilitator/index":"src/batch-settlement/facilitator/index.ts"}
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: es2020
+CJS Build start
+CJS dist/cjs/index.js                                  151.46 KB
+CJS dist/cjs/exact/server/index.js                     11.21 KB
+CJS dist/cjs/upto/server/index.js                      20.33 KB
+CJS dist/cjs/exact/client/index.js                     18.74 KB
+CJS dist/cjs/batch-settlement/client/index.js          96.94 KB
+CJS dist/cjs/v1/index.js                               12.61 KB
+CJS dist/cjs/upto/facilitator/index.js                 145.60 KB
+CJS dist/cjs/exact/facilitator/index.js                76.45 KB
+CJS dist/cjs/batch-settlement/server/index.js          117.60 KB
+CJS dist/cjs/upto/client/index.js                      27.86 KB
+CJS dist/cjs/batch-settlement/facilitator/index.js     212.85 KB
+CJS dist/cjs/exact/v1/facilitator/index.js             23.62 KB
+CJS dist/cjs/exact/v1/client/index.js                  11.98 KB
+CJS dist/cjs/index.js.map                              496.28 KB
+CJS dist/cjs/upto/server/index.js.map                  210.43 KB
+CJS dist/cjs/exact/server/index.js.map                 40.90 KB
+CJS dist/cjs/exact/client/index.js.map                 82.51 KB
+CJS dist/cjs/batch-settlement/client/index.js.map      380.26 KB
+CJS dist/cjs/v1/index.js.map                           71.01 KB
+CJS dist/cjs/exact/facilitator/index.js.map            188.58 KB
+CJS dist/cjs/upto/facilitator/index.js.map             457.21 KB
+CJS dist/cjs/upto/client/index.js.map                  217.62 KB
+CJS dist/cjs/batch-settlement/server/index.js.map      389.02 KB
+CJS dist/cjs/exact/v1/facilitator/index.js.map         70.87 KB
+CJS dist/cjs/batch-settlement/facilitator/index.js.map 619.44 KB
+CJS dist/cjs/exact/v1/client/index.js.map              46.89 KB
+CJS ⚡️ Build success in 63ms
+[mirror-cjs-dts] Mirrored 21 declaration file(s) into dist/cjs

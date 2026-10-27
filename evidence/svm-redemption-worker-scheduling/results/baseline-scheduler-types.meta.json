@@ -1,0 +1,14 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false",
+    "--project",
+    "scheduler.typecheck.json"
+  ],
+  "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+  "exit_code": 2,
+  "seconds": 1.14
+}

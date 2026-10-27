@@ -1,0 +1,10 @@
+{
+  "command": [
+    "node",
+    "<evidence-workspace>/build.mjs",
+    "../../../scripts/mirror-cjs-dts.mjs"
+  ],
+  "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 9.58
+}

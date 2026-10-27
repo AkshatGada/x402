@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src",
+    "test/unit/batch.channelManager.scheduling.test.ts"
+  ]
+}

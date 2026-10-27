@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "cwd": "<baseline>/typescript/packages/mechanisms/svm",
+  "exit_code": 2,
+  "seconds": 1.17
+}

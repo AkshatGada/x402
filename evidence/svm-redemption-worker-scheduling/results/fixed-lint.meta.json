@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/batch-settlement/server/channelManager.ts",
+    "test/unit/batch.channelManager.scheduling.test.ts"
+  ],
+  "cwd": "<fixed>/typescript/packages/mechanisms/svm",
+  "exit_code": 0,
+  "seconds": 1.25
+}
