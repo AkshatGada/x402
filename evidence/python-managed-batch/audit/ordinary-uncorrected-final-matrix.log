@@ -1,0 +1,1159 @@
+<implementation>/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+FFFFFFFF..FFFFFFFFFFFFFFFFFFFF....FFFFFFFFFFFFFFFFFFFFFFFF..FFFF......FF [ 87%]
+FF....FFFF                                                               [100%]
+=================================== FAILURES ===================================
+_______ test_signer_outage_releases_known_undispatched_admission[False] ________
+
+async_mode = False
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_signer_outage_releases_known_undispatched_admission(async_mode):
+     remote,scheme,server,p=scenario(async_mode,signer=RefundSigner(True))
+     assert verify(async_mode,server,p).is_valid
+     with pytest.raises(RuntimeError,match='synthetic signer outage'):settle(async_mode,server,p)
+     calls=cancel_calls(remote)
+>    assert len(calls)==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+
+<audit>/test_audit_lifecycle.py:75: AssertionError
+________ test_signer_outage_releases_known_undispatched_admission[True] ________
+
+async_mode = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_signer_outage_releases_known_undispatched_admission(async_mode):
+     remote,scheme,server,p=scenario(async_mode,signer=RefundSigner(True))
+     assert verify(async_mode,server,p).is_valid
+     with pytest.raises(RuntimeError,match='synthetic signer outage'):settle(async_mode,server,p)
+     calls=cancel_calls(remote)
+>    assert len(calls)==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+
+<audit>/test_audit_lifecycle.py:75: AssertionError
+_________ test_explicit_before_settle_abort_releases_admission[False] __________
+
+async_mode = False
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_explicit_before_settle_abort_releases_admission(async_mode):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     assert verify(async_mode,server,p).is_valid
+     server.on_before_settle(lambda c: AbortResult(reason='application declined') if c.phase!='cancel' else None)
+     with pytest.raises(PaymentAbortedError,match='application declined'):settle(async_mode,server,p)
+>    assert len(cancel_calls(remote))==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+E     +    where [] = cancel_calls(<test_audit_lifecycle.Remote object at 0x1092cb980>)
+
+<audit>/test_audit_lifecycle.py:85: AssertionError
+__________ test_explicit_before_settle_abort_releases_admission[True] __________
+
+async_mode = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_explicit_before_settle_abort_releases_admission(async_mode):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     assert verify(async_mode,server,p).is_valid
+     server.on_before_settle(lambda c: AbortResult(reason='application declined') if c.phase!='cancel' else None)
+     with pytest.raises(PaymentAbortedError,match='application declined'):settle(async_mode,server,p)
+>    assert len(cancel_calls(remote))==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+E     +    where [] = cancel_calls(<test_audit_lifecycle.AsyncRemote object at 0x1092e5790>)
+
+<audit>/test_audit_lifecycle.py:85: AssertionError
+_____ test_failed_cancellation_retains_identity_and_original_error[False] ______
+
+async_mode = False
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_failed_cancellation_retains_identity_and_original_error(async_mode):
+     remote,scheme,server,p=scenario(async_mode,signer=RefundSigner(True))
+     assert verify(async_mode,server,p).is_valid
+     remote.outcomes=[SettleResponse(success=False,transaction='',network=NETWORK,error_reason='synthetic_cancel_failure')]
+     with pytest.raises(RuntimeError,match='synthetic signer outage'):settle(async_mode,server,p)
+>    assert len(cancel_calls(remote))==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+E     +    where [] = cancel_calls(<test_audit_lifecycle.Remote object at 0x1092e4980>)
+
+<audit>/test_audit_lifecycle.py:95: AssertionError
+______ test_failed_cancellation_retains_identity_and_original_error[True] ______
+
+async_mode = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_failed_cancellation_retains_identity_and_original_error(async_mode):
+     remote,scheme,server,p=scenario(async_mode,signer=RefundSigner(True))
+     assert verify(async_mode,server,p).is_valid
+     remote.outcomes=[SettleResponse(success=False,transaction='',network=NETWORK,error_reason='synthetic_cancel_failure')]
+     with pytest.raises(RuntimeError,match='synthetic signer outage'):settle(async_mode,server,p)
+>    assert len(cancel_calls(remote))==1
+E    assert 0 == 1
+E     +  where 0 = len([])
+E     +    where [] = cancel_calls(<test_audit_lifecycle.AsyncRemote object at 0x108acaf00>)
+
+<audit>/test_audit_lifecycle.py:95: AssertionError
+___________ test_pending_bounded_retry_retains_refund_context[False] ___________
+
+async_mode = False
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_pending_bounded_retry_retains_refund_context(async_mode):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     pending=SettleResponse(success=False,error_reason='settlement_pending',transaction='0xpending',network=NETWORK)
+     remote.outcomes=[pending,pending]
+     result=settle(async_mode,server,p)
+     assert result is pending
+     assert len([c for c in remote.calls if c[0]=='settle'])==2
+     assert not cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_lifecycle.py:108: AttributeError
+___________ test_pending_bounded_retry_retains_refund_context[True] ____________
+
+async_mode = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    def test_pending_bounded_retry_retains_refund_context(async_mode):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     pending=SettleResponse(success=False,error_reason='settlement_pending',transaction='0xpending',network=NETWORK)
+     remote.outcomes=[pending,pending]
+     result=settle(async_mode,server,p)
+     assert result is pending
+     assert len([c for c in remote.calls if c[0]=='settle'])==2
+     assert not cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_lifecycle.py:108: AttributeError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-False] _
+
+async_mode = False, key = 'balance'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109309fa0>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-True] _
+
+async_mode = True, key = 'balance'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10930ac60>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-False] _
+
+async_mode = False, key = 'totalClaimed'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1093367e0>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-True] _
+
+async_mode = True, key = 'totalClaimed'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1093364e0>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-False] _
+
+async_mode = False, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1093341a0>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-True] _
+
+async_mode = True, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109336960>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-False] _
+
+async_mode = False, key = 'refundNonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109308860>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-True] _
+
+async_mode = True, key = 'refundNonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109309b20>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-False] _
+
+async_mode = False, key = 'pendingId'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109309580>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-True] _
+
+async_mode = True, key = 'pendingId'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','totalClaimed','chargedCumulativeAmount','refundNonce','pendingId'])
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode,kind='voucher')
+     remote.verify_extra.pop(key)
+     result=verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1091078c0>.is_valid
+
+<audit>/test_audit_lifecycle.py:130: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-False] _
+
+async_mode = False, key = 'balance'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-True] _
+
+async_mode = True, key = 'balance'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-False] _
+
+async_mode = False, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-True] _
+
+async_mode = True, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-False] _
+
+async_mode = False, key = 'totalClaimed'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-True] _
+
+async_mode = True, key = 'totalClaimed'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-False] _
+
+async_mode = False, key = 'refundNonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-True] _
+
+async_mode = True, key = 'refundNonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-False] _
+
+async_mode = False, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-True] _
+
+async_mode = True, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('key',['balance','chargedCumulativeAmount','totalClaimed','refundNonce','withdrawRequestedAt'])
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode,key):
+     remote,scheme,server,p=scenario(async_mode)
+     assert verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState'].pop(key);remote.outcomes=[receipt]
+     result=settle(async_mode,server,p)
+>    assert result is receipt and not result.success
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False).success
+
+<audit>/test_audit_lifecycle.py:142: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[01-False] _
+
+async_mode = False, bad = '01'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1092e4a10>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[01-True] _
+
+async_mode = True, bad = '01'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1092e5580>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[+1-False] _
+
+async_mode = False, bad = '+1'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1090946b0>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[+1-True] _
+
+async_mode = True, bad = '+1'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10930a060>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[ 1-False] _
+
+async_mode = False, bad = ' 1'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10930bf20>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[ 1-True] _
+
+async_mode = True, bad = ' 1'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109308800>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[True-False] _
+
+async_mode = False, bad = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1093471d0>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[True-True] _
+
+async_mode = True, bad = True
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x1093465d0>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[1.5-False] _
+
+async_mode = False, bad = 1.5
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109345010>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[1.5-True] _
+
+async_mode = True, bad = 1.5
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10933b200>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[9007199254740992-False] _
+
+async_mode = False, bad = 9007199254740992
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109344950>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[9007199254740992-True] _
+
+async_mode = True, bad = 9007199254740992
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_admitted_uint_rejected_and_known_admission_canceled(async_mode,bad):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     remote.verify_extra['refundNonce']=bad
+     result=h.verify(async_mode,server,p)
+>    assert not result.is_valid
+E    assert not True
+E     +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x109347500>.is_valid
+
+<audit>/test_audit_extended.py:21: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[01-False] _
+
+async_mode = False, bad = '01'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1091078c0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[01-True] _
+
+async_mode = True, bad = '01'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10930b3e0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[+1-False] _
+
+async_mode = False, bad = '+1'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x109309ac0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[+1-True] _
+
+async_mode = True, bad = '+1'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1092c8d10>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '+1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[ 1-False] _
+
+async_mode = False, bad = ' 1'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1092e76b0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[ 1-True] _
+
+async_mode = True, bad = ' 1'
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1093349b0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': ' 1', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[True-False] _
+
+async_mode = False, bad = True
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1093343b0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[True-True] _
+
+async_mode = True, bad = True
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10933a4e0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': True, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[1.5-False] _
+
+async_mode = False, bad = 1.5
+caplog = <_pytest.logging.LogCaptureFixture object at 0x1093392e0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[1.5-True] _
+
+async_mode = True, bad = 1.5
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10933a630>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': 1.5, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[9007199254740992-False] _
+
+async_mode = False, bad = 9007199254740992
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10933a5d0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[9007199254740992-True] _
+
+async_mode = True, bad = 9007199254740992
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10933a390>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('bad',['01','+1',' 1',True,1.5,2**53])
+    def test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning(async_mode,bad,caplog):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     receipt=remote.receipt(p);receipt.extra['channelState']['refundNonce']=bad;remote.outcomes=[receipt]
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...9500', 'totalClaimed': '1000', 'refundNonce': 9007199254740992, 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:32: AssertionError
+_ test_receipt_bearing_local_enrichment_error_does_not_cancel[0xalready-broadcast-synthetic-False] _
+
+async_mode = False, transaction = '0xalready-broadcast', reason = 'synthetic'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1093375f0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('transaction,reason',[('0xalready-broadcast','synthetic'),(None,'settlement_pending')])
+    def test_receipt_bearing_local_enrichment_error_does_not_cancel(async_mode,transaction,reason,monkeypatch):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     error=SettleError(reason,transaction=transaction)
+     def enrich(ctx):raise error
+     monkeypatch.setattr(scheme,'enrich_settlement_payload',enrich)
+     with pytest.raises(SettleError) as raised:h.settle(async_mode,server,p)
+     assert raised.value is error and not h.cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_extended.py:64: AttributeError
+_ test_receipt_bearing_local_enrichment_error_does_not_cancel[0xalready-broadcast-synthetic-True] _
+
+async_mode = True, transaction = '0xalready-broadcast', reason = 'synthetic'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1092e7e90>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('transaction,reason',[('0xalready-broadcast','synthetic'),(None,'settlement_pending')])
+    def test_receipt_bearing_local_enrichment_error_does_not_cancel(async_mode,transaction,reason,monkeypatch):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     error=SettleError(reason,transaction=transaction)
+     def enrich(ctx):raise error
+     monkeypatch.setattr(scheme,'enrich_settlement_payload',enrich)
+     with pytest.raises(SettleError) as raised:h.settle(async_mode,server,p)
+     assert raised.value is error and not h.cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_extended.py:64: AttributeError
+_ test_receipt_bearing_local_enrichment_error_does_not_cancel[None-settlement_pending-False] _
+
+async_mode = False, transaction = None, reason = 'settlement_pending'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10930a060>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('transaction,reason',[('0xalready-broadcast','synthetic'),(None,'settlement_pending')])
+    def test_receipt_bearing_local_enrichment_error_does_not_cancel(async_mode,transaction,reason,monkeypatch):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     error=SettleError(reason,transaction=transaction)
+     def enrich(ctx):raise error
+     monkeypatch.setattr(scheme,'enrich_settlement_payload',enrich)
+     with pytest.raises(SettleError) as raised:h.settle(async_mode,server,p)
+     assert raised.value is error and not h.cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_extended.py:64: AttributeError
+_ test_receipt_bearing_local_enrichment_error_does_not_cancel[None-settlement_pending-True] _
+
+async_mode = True, transaction = None, reason = 'settlement_pending'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10930a3f0>
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('transaction,reason',[('0xalready-broadcast','synthetic'),(None,'settlement_pending')])
+    def test_receipt_bearing_local_enrichment_error_does_not_cancel(async_mode,transaction,reason,monkeypatch):
+     remote,scheme,server,p=h.scenario(async_mode)
+     assert h.verify(async_mode,server,p).is_valid
+     error=SettleError(reason,transaction=transaction)
+     def enrich(ctx):raise error
+     monkeypatch.setattr(scheme,'enrich_settlement_payload',enrich)
+     with pytest.raises(SettleError) as raised:h.settle(async_mode,server,p)
+     assert raised.value is error and not h.cancel_calls(remote)
+>    assert scheme.read_request_context(p).pending_id=='trusted-admission'
+E    AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+<audit>/test_audit_extended.py:64: AttributeError
+_ test_committed_receipt_validation_does_not_depend_on_local_context[missing-state-False] _
+
+async_mode = False, shape = 'missing-state'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('shape',['missing-state','invalid-nonce'])
+    def test_committed_receipt_validation_does_not_depend_on_local_context(async_mode,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     receipt=remote.receipt(p)
+     if shape=='missing-state':receipt.extra.pop('channelState')
+     else:receipt.extra['channelState']['refundNonce']='01'
+     # An application hook can return an already obtained authoritative receipt.
+     # Its validation must not depend on a previous local verify cache entry.
+     server.on_before_settle(lambda ctx:SkipSettleResult(result=receipt))
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:107: AssertionError
+_ test_committed_receipt_validation_does_not_depend_on_local_context[missing-state-True] _
+
+async_mode = True, shape = 'missing-state'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('shape',['missing-state','invalid-nonce'])
+    def test_committed_receipt_validation_does_not_depend_on_local_context(async_mode,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     receipt=remote.receipt(p)
+     if shape=='missing-state':receipt.extra.pop('channelState')
+     else:receipt.extra['channelState']['refundNonce']='01'
+     # An application hook can return an already obtained authoritative receipt.
+     # Its validation must not depend on a previous local verify cache entry.
+     server.on_before_settle(lambda ctx:SkipSettleResult(result=receipt))
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...:84532', amount='500', extensions=None, extension_responses=None, extra={'chargeCount': 0}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:107: AssertionError
+_ test_committed_receipt_validation_does_not_depend_on_local_context[invalid-nonce-False] _
+
+async_mode = False, shape = 'invalid-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('shape',['missing-state','invalid-nonce'])
+    def test_committed_receipt_validation_does_not_depend_on_local_context(async_mode,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     receipt=remote.receipt(p)
+     if shape=='missing-state':receipt.extra.pop('channelState')
+     else:receipt.extra['channelState']['refundNonce']='01'
+     # An application hook can return an already obtained authoritative receipt.
+     # Its validation must not depend on a previous local verify cache entry.
+     server.on_before_settle(lambda ctx:SkipSettleResult(result=receipt))
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:107: AssertionError
+_ test_committed_receipt_validation_does_not_depend_on_local_context[invalid-nonce-True] _
+
+async_mode = True, shape = 'invalid-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('shape',['missing-state','invalid-nonce'])
+    def test_committed_receipt_validation_does_not_depend_on_local_context(async_mode,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind='voucher')
+     receipt=remote.receipt(p)
+     if shape=='missing-state':receipt.extra.pop('channelState')
+     else:receipt.extra['channelState']['refundNonce']='01'
+     # An application hook can return an already obtained authoritative receipt.
+     # Its validation must not depend on a previous local verify cache entry.
+     server.on_before_settle(lambda ctx:SkipSettleResult(result=receipt))
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and not result.success and result.after_settle_aborted
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '01', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+<audit>/test_audit_extended.py:107: AssertionError
+_ test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-voucher-False] _
+
+async_mode = False, kind = 'voucher', shape = 'missing-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('kind',['voucher','deposit'])
+    @pytest.mark.parametrize('shape',['complete','missing-nonce'])
+    def test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt(async_mode,kind,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind=kind)
+     if kind=='deposit':
+      p.payload['deposit']={'amount':'10000','authorization':{'erc3009Authorization':{'validAfter':'0','validBefore':'9999999999','salt':'0x'+'00'*32,'signature':'0x'+'12'*65}}}
+     receipt=remote.receipt(p);receipt.extra['chargedAmount']='100'
+     if shape=='missing-nonce':receipt.extra['channelState'].pop('refundNonce')
+     remote.outcomes=[receipt]
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and result.success==(shape=='complete')
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) and True == ('missing-nonce' == 'complete'
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False).success
+E
+E      - complete
+E      + missing-nonce))
+
+<audit>/test_audit_extended.py:122: AssertionError
+_ test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-voucher-True] _
+
+async_mode = True, kind = 'voucher', shape = 'missing-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('kind',['voucher','deposit'])
+    @pytest.mark.parametrize('shape',['complete','missing-nonce'])
+    def test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt(async_mode,kind,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind=kind)
+     if kind=='deposit':
+      p.payload['deposit']={'amount':'10000','authorization':{'erc3009Authorization':{'validAfter':'0','validBefore':'9999999999','salt':'0x'+'00'*32,'signature':'0x'+'12'*65}}}
+     receipt=remote.receipt(p);receipt.extra['chargedAmount']='100'
+     if shape=='missing-nonce':receipt.extra['channelState'].pop('refundNonce')
+     remote.outcomes=[receipt]
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and result.success==(shape=='complete')
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) and True == ('missing-nonce' == 'complete'
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False).success
+E
+E      - complete
+E      + missing-nonce))
+
+<audit>/test_audit_extended.py:122: AssertionError
+_ test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-deposit-False] _
+
+async_mode = False, kind = 'deposit', shape = 'missing-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('kind',['voucher','deposit'])
+    @pytest.mark.parametrize('shape',['complete','missing-nonce'])
+    def test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt(async_mode,kind,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind=kind)
+     if kind=='deposit':
+      p.payload['deposit']={'amount':'10000','authorization':{'erc3009Authorization':{'validAfter':'0','validBefore':'9999999999','salt':'0x'+'00'*32,'signature':'0x'+'12'*65}}}
+     receipt=remote.receipt(p);receipt.extra['chargedAmount']='100'
+     if shape=='missing-nonce':receipt.extra['channelState'].pop('refundNonce')
+     remote.outcomes=[receipt]
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and result.success==(shape=='complete')
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) and True == ('missing-nonce' == 'complete'
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False).success
+E
+E      - complete
+E      + missing-nonce))
+
+<audit>/test_audit_extended.py:122: AssertionError
+_ test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-deposit-True] _
+
+async_mode = True, kind = 'deposit', shape = 'missing-nonce'
+
+    @pytest.mark.parametrize('async_mode',[False,True])
+    @pytest.mark.parametrize('kind',['voucher','deposit'])
+    @pytest.mark.parametrize('shape',['complete','missing-nonce'])
+    def test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt(async_mode,kind,shape):
+     remote,scheme,server,p=h.scenario(async_mode,kind=kind)
+     if kind=='deposit':
+      p.payload['deposit']={'amount':'10000','authorization':{'erc3009Authorization':{'validAfter':'0','validBefore':'9999999999','salt':'0x'+'00'*32,'signature':'0x'+'12'*65}}}
+     receipt=remote.receipt(p);receipt.extra['chargedAmount']='100'
+     if shape=='missing-nonce':receipt.extra['channelState'].pop('refundNonce')
+     remote.outcomes=[receipt]
+     assert scheme.read_request_context(p) is None
+     result=h.settle(async_mode,server,p)
+>    assert result is receipt and result.success==(shape=='complete')
+E    AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False) and True == ('missing-nonce' == 'complete'
+E     +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...lance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}, 'chargedAmount': '100'}, after_settle_aborted=False).success
+E
+E      - complete
+E      + missing-nonce))
+
+<audit>/test_audit_extended.py:122: AssertionError
+=============================== warnings summary ===============================
+../../..<implementation>/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6
+  <implementation>/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+    warnings.warn(  # deprecated in 14.0 - 2024-11-09
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_signer_outage_releases_known_undispatched_admission[False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_signer_outage_releases_known_undispatched_admission[True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_explicit_before_settle_abort_releases_admission[False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_explicit_before_settle_abort_releases_admission[True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_failed_cancellation_retains_identity_and_original_error[False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_failed_cancellation_retains_identity_and_original_error[True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_pending_bounded_retry_retains_refund_context[False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_pending_bounded_retry_retains_refund_context[True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-True]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-False]
+FAILED ../../..<audit>/test_audit_lifecycle.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[01-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[01-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[+1-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[+1-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[ 1-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[ 1-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[True-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[True-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[1.5-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[1.5-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[9007199254740992-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_admitted_uint_rejected_and_known_admission_canceled[9007199254740992-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[01-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[01-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[+1-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[+1-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[ 1-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[ 1-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[True-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[True-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[1.5-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[1.5-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[9007199254740992-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_noncanonical_committed_uint_is_receipt_abort_not_replica_warning[9007199254740992-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_receipt_bearing_local_enrichment_error_does_not_cancel[0xalready-broadcast-synthetic-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_receipt_bearing_local_enrichment_error_does_not_cancel[0xalready-broadcast-synthetic-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_receipt_bearing_local_enrichment_error_does_not_cancel[None-settlement_pending-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_receipt_bearing_local_enrichment_error_does_not_cancel[None-settlement_pending-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_committed_receipt_validation_does_not_depend_on_local_context[missing-state-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_committed_receipt_validation_does_not_depend_on_local_context[missing-state-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_committed_receipt_validation_does_not_depend_on_local_context[invalid-nonce-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_committed_receipt_validation_does_not_depend_on_local_context[invalid-nonce-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-voucher-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-voucher-True]
+FAILED ../../..<audit>/test_audit_extended.py::test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-deposit-False]
+FAILED ../../..<audit>/test_audit_extended.py::test_direct_paid_settle_without_local_verify_reaches_remote_and_validates_receipt[missing-nonce-deposit-True]
+64 failed, 18 passed, 1 warning in 0.94s

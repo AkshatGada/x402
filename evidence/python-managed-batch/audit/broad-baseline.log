@@ -1,0 +1,487 @@
+CWD <validation>
+PYTHONPATH <validation>/baseline/python
+COMMAND ["python3", "<test-cache>", "<implementation>/.venv/bin/python", "-m", "pytest", "-p", "no:cacheprovider", "--import-mode=importlib", "-q", "<validation>/baseline/python/x402/tests/unit", "--ignore=<validation>/baseline/python/x402/tests/unit/mechanisms/svm", "--ignore=<validation>/baseline/python/x402/tests/unit/mechanisms/tvm"]
+PROVENANCE {"x402": "<validation>/baseline/python/x402/__init__.py", "server": "<validation>/baseline/python/x402/server.py", "scheme": "<validation>/baseline/python/x402/mechanisms/evm/batch_settlement/server/scheme.py"}
+
+<implementation>/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+........................................................................ [  3%]
+........................................................................ [  6%]
+........................................................................ [ 10%]
+...............................................................F........ [ 13%]
+........................................................................ [ 17%]
+............................................F.F..F...................... [ 20%]
+........................................................................ [ 23%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+...........................................s............s............... [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+.....................F..F...FFF......................................... [ 58%]
+........................................................................ [ 61%]
+........................................................................ [ 64%]
+........................................................................ [ 68%]
+........................................................................ [ 71%]
+........................................................................ [ 75%]
+........................................................................ [ 78%]
+........................................................................ [ 81%]
+........................................................................ [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 98%]
+......................                                                   [100%]
+=================================== FAILURES ===================================
+_ TestSettlementPendingReasonUnification.test_svm_constant_matches_core_constant _
+
+    """SVM signer protocol definitions."""
+
+    from typing import Protocol
+
+    try:
+>       from solders.keypair import Keypair
+E       ModuleNotFoundError: No module named 'solders'
+
+<validation>/baseline/python/x402/mechanisms/svm/signer.py:6: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+self = <x402.tests.unit.core.test_settle_pending_retry.TestSettlementPendingReasonUnification object at 0x109c34140>
+
+    def test_svm_constant_matches_core_constant(self):
+>       from x402.mechanisms.svm.constants import ERR_SETTLEMENT_PENDING as SVM_REASON
+
+<validation>/baseline/python/x402/tests/unit/core/test_settle_pending_retry.py:62:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<validation>/baseline/python/x402/mechanisms/svm/__init__.py:69: in <module>
+    from .signer import ClientSvmSigner, FacilitatorSvmSigner
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """SVM signer protocol definitions."""
+
+    from typing import Protocol
+
+    try:
+        from solders.keypair import Keypair
+        from solders.transaction import VersionedTransaction
+    except ImportError as e:
+>       raise ImportError(
+            "SVM mechanism requires solana packages. Install with: pip install x402[svm]"
+        ) from e
+E       ImportError: SVM mechanism requires solana packages. Install with: pip install x402[svm]
+
+<validation>/baseline/python/x402/mechanisms/svm/signer.py:9: ImportError
+_ TestValidateDiscoveryExtensionSSRF.test_rejects_ref_over_http_without_dereferencing_it _
+
+self = <x402.tests.unit.extensions.bazaar.test_facilitator.TestValidateDiscoveryExtensionSSRF object at 0x10a187500>
+
+    def test_rejects_ref_over_http_without_dereferencing_it(self) -> None:
+>       server, base_url = self._serve()
+
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:974:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:968: in _serve
+    server = HTTPServer(("127.0.0.1", 0), _CountingHandler)
+<python-runtime>/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+<python-runtime>/lib/python3.12/http/server.py:140: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.server.HTTPServer object at 0x10dd2cc50>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+
+        May be overridden.
+
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+<python-runtime>/lib/python3.12/socketserver.py:478: PermissionError
+_ TestValidateDiscoveryExtensionSSRF.test_rejects_ref_nested_inside_schema_properties _
+
+self = <x402.tests.unit.extensions.bazaar.test_facilitator.TestValidateDiscoveryExtensionSSRF object at 0x10a187890>
+
+    def test_rejects_ref_nested_inside_schema_properties(self) -> None:
+>       server, base_url = self._serve()
+
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:1005:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:968: in _serve
+    server = HTTPServer(("127.0.0.1", 0), _CountingHandler)
+<python-runtime>/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+<python-runtime>/lib/python3.12/http/server.py:140: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.server.HTTPServer object at 0x10dceeff0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+
+        May be overridden.
+
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+<python-runtime>/lib/python3.12/socketserver.py:478: PermissionError
+_ TestValidateDiscoveryExtensionSSRF.test_extract_discovery_info_rejects_external_ref_end_to_end _
+
+self = <x402.tests.unit.extensions.bazaar.test_facilitator.TestValidateDiscoveryExtensionSSRF object at 0x10a187da0>
+
+    def test_extract_discovery_info_rejects_external_ref_end_to_end(self) -> None:
+        """Matches the real attack path: a client's paymentPayload with a malicious
+        extensions.bazaar.schema, processed via extract_discovery_info(validate=True) the
+        way a facilitator's verify hook does.
+        """
+>       server, base_url = self._serve()
+
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:1051:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py:968: in _serve
+    server = HTTPServer(("127.0.0.1", 0), _CountingHandler)
+<python-runtime>/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+<python-runtime>/lib/python3.12/http/server.py:140: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <http.server.HTTPServer object at 0x10dd2f890>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+
+        May be overridden.
+
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+<python-runtime>/lib/python3.12/socketserver.py:478: PermissionError
+______________________ test_fastmcp_import_path_available ______________________
+
+    def test_fastmcp_import_path_available() -> None:
+        """mcp.server.fastmcp must provide the names x402.mcp.server imports."""
+>       from mcp.server.fastmcp import Context, FastMCP
+E       ModuleNotFoundError: No module named 'mcp'
+
+<validation>/baseline/python/x402/tests/unit/mcp/test_mcp_dependency.py:13: ModuleNotFoundError
+_____________ test_fastmcp_settlement_failure_preserves_extensions _____________
+
+    def test_fastmcp_settlement_failure_preserves_extensions() -> None:
+        """Settlement failure 402 keeps extensions in FastMCP wrapper path."""
+        extensions = {
+            "bazaar": {
+                "info": {
+                    "input": {
+                        "type": "mcp",
+                        "toolName": "get_weather",
+                        "inputSchema": {"type": "object"},
+                    }
+                },
+                "schema": {"type": "object"},
+            }
+        }
+>       result = _create_settlement_failed_result(
+            accepts=[make_payment_requirements()],
+            resource=ResourceInfo(
+                url="mcp://tool/get_weather",
+                description="Tool: get_weather",
+                mime_type="application/json",
+            ),
+            error_message="settle exploded",
+            extensions=extensions,
+        )
+
+<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py:183:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+accepts = [PaymentRequirements(scheme='exact', network='eip155:8453', asset='0x0000000000000000000000000000000000000000', amount='1000000', pay_to='0x1234567890123456789012345678901234567890', max_timeout_seconds=300, extra={})]
+resource = ResourceInfo(url='mcp://tool/get_weather', description='Tool: get_weather', mime_type='application/json', service_name=None, tags=None, icon_url=None)
+error_message = 'settle exploded'
+extensions = {'bazaar': {'info': {'input': {'inputSchema': {'type': 'object'}, 'toolName': 'get_weather', 'type': 'mcp'}}, 'schema': {'type': 'object'}}}
+
+    def _create_settlement_failed_result(
+        accepts: list[PaymentRequirements],
+        resource: ResourceInfo,
+        error_message: str,
+        extensions: dict[str, Any] | None = None,
+        *,
+        network: str | None = None,
+        settle_response: SettleResponse | None = None,
+    ) -> Any:
+        """Create a settlement failed CallToolResult."""
+>       from mcp.types import CallToolResult, TextContent
+E       ModuleNotFoundError: No module named 'mcp'
+
+<validation>/baseline/python/x402/mcp/server.py:458: ModuleNotFoundError
+_____________ test_fastmcp_verify_failure_uses_bare_invalid_reason _____________
+
+    @pytest.mark.asyncio
+    async def test_fastmcp_verify_failure_uses_bare_invalid_reason() -> None:
+        reason = "invalid_batch_settlement_evm_cumulative_amount_mismatch"
+        requirements = _cash_requirements()
+        payload = PaymentPayload(
+            x402_version=2,
+            accepted=requirements.model_dump(by_alias=True),
+            payload={"signature": "~test-payer"},
+        )
+        resource_server = Mock()
+        resource_server.find_matching_requirements = Mock(return_value=requirements)
+        resource_server.verify_payment = AsyncMock(
+            return_value=Mock(is_valid=False, invalid_reason=reason)
+        )
+
+>       wrapper = create_fastmcp_payment_wrapper(resource_server, accepts=[requirements])
+
+<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+resource_server = <Mock id='4531657648'>
+
+    def create_payment_wrapper(
+        resource_server: Any,
+        *,
+        accepts: list[PaymentRequirements],
+        resource: ResourceInfo | None = None,
+        hooks: PaymentWrapperHooks | None = None,
+        extensions: dict[str, Any] | None = None,
+    ) -> Callable:
+        """Create a decorator that wraps a FastMCP tool handler with x402 payment logic.
+
+        The decorated handler automatically:
+        - Returns 402 payment required when no payment is provided
+        - Verifies payment payloads against the facilitator
+        - Executes the tool handler on successful verification
+        - Settles payments after successful execution
+        - Returns settlement info in response ``_meta``
+
+        The original handler should return either a ``str`` (JSON text) or a ``dict``
+        (automatically serialized to JSON). The wrapper handles conversion to
+        ``CallToolResult`` and attaches payment metadata.
+
+        Note: The wrapper automatically adds a ``ctx: Context`` parameter to the
+        function signature so FastMCP injects the request context. Your handler
+        does NOT need to include ``ctx`` in its parameters.
+
+        Args:
+            resource_server: An async ``x402ResourceServer`` instance configured
+                with facilitator client and scheme registrations.
+            accepts: List of accepted ``PaymentRequirements``. The first entry is
+                used for verification and settlement.
+            resource: Optional ``ResourceInfo`` metadata (url, description, mimeType).
+                Defaults to ``mcp://tool/{function_name}``.
+            hooks: Optional ``PaymentWrapperHooks`` for on_before_execution,
+                on_after_execution, on_after_settlement (matches server_async).
+            extensions: Optional x402 extensions to include in PaymentRequired responses.
+                Use this to attach Bazaar discovery metadata so facilitators can index
+                the tool. Example: ``declare_mcp_discovery_extension(config)``
+
+        Returns:
+            A decorator to apply to a FastMCP tool handler function.
+        """
+        # Lazy import mcp types so the module can be imported without mcp installed
+>       from mcp.server.fastmcp import Context
+E       ModuleNotFoundError: No module named 'mcp'
+
+<validation>/baseline/python/x402/mcp/server.py:95: ModuleNotFoundError
+____________ test_payment_wrapper_verify_abort_uses_invalid_reason _____________
+
+    @pytest.mark.asyncio
+    async def test_payment_wrapper_verify_abort_uses_invalid_reason() -> None:
+        reason = "invalid_batch_settlement_evm_cumulative_amount_mismatch"
+
+        async def verify(_payload, _requirements):
+            pytest.fail("facilitator should not run after BeforeVerify abort")
+
+        mock_facilitator = _MockFacilitatorClient(verify=verify)
+        server = x402ResourceServer(mock_facilitator)
+        server.register("x402:cash", _MockSchemeNetworkServer(scheme="cash"))
+        server.initialize()
+        server.on_before_verify(
+            lambda _ctx: AbortResult(
+                reason=reason,
+                message="Client voucher base does not match server state",
+            )
+        )
+
+        requirements = _cash_requirements()
+>       wrapper = create_fastmcp_payment_wrapper(server, accepts=[requirements])
+
+<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py:485:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+resource_server = <x402.server.x402ResourceServer object at 0x10e1b97c0>
+
+    def create_payment_wrapper(
+        resource_server: Any,
+        *,
+        accepts: list[PaymentRequirements],
+        resource: ResourceInfo | None = None,
+        hooks: PaymentWrapperHooks | None = None,
+        extensions: dict[str, Any] | None = None,
+    ) -> Callable:
+        """Create a decorator that wraps a FastMCP tool handler with x402 payment logic.
+
+        The decorated handler automatically:
+        - Returns 402 payment required when no payment is provided
+        - Verifies payment payloads against the facilitator
+        - Executes the tool handler on successful verification
+        - Settles payments after successful execution
+        - Returns settlement info in response ``_meta``
+
+        The original handler should return either a ``str`` (JSON text) or a ``dict``
+        (automatically serialized to JSON). The wrapper handles conversion to
+        ``CallToolResult`` and attaches payment metadata.
+
+        Note: The wrapper automatically adds a ``ctx: Context`` parameter to the
+        function signature so FastMCP injects the request context. Your handler
+        does NOT need to include ``ctx`` in its parameters.
+
+        Args:
+            resource_server: An async ``x402ResourceServer`` instance configured
+                with facilitator client and scheme registrations.
+            accepts: List of accepted ``PaymentRequirements``. The first entry is
+                used for verification and settlement.
+            resource: Optional ``ResourceInfo`` metadata (url, description, mimeType).
+                Defaults to ``mcp://tool/{function_name}``.
+            hooks: Optional ``PaymentWrapperHooks`` for on_before_execution,
+                on_after_execution, on_after_settlement (matches server_async).
+            extensions: Optional x402 extensions to include in PaymentRequired responses.
+                Use this to attach Bazaar discovery metadata so facilitators can index
+                the tool. Example: ``declare_mcp_discovery_extension(config)``
+
+        Returns:
+            A decorator to apply to a FastMCP tool handler function.
+        """
+        # Lazy import mcp types so the module can be imported without mcp installed
+>       from mcp.server.fastmcp import Context
+E       ModuleNotFoundError: No module named 'mcp'
+
+<validation>/baseline/python/x402/mcp/server.py:95: ModuleNotFoundError
+______ test_payment_wrapper_facilitator_verify_error_uses_invalid_reason _______
+
+    @pytest.mark.asyncio
+    async def test_payment_wrapper_facilitator_verify_error_uses_invalid_reason() -> None:
+        reason = "custom_failure_reason"
+
+        async def verify(_payload, _requirements):
+            raise VerifyError(reason, "human-readable detail", "0xpayer")
+
+        mock_facilitator = _MockFacilitatorClient(verify=verify)
+        server = x402ResourceServer(mock_facilitator)
+        server.register("x402:cash", _MockSchemeNetworkServer(scheme="cash"))
+        server.initialize()
+
+        requirements = _cash_requirements()
+>       wrapper = create_fastmcp_payment_wrapper(server, accepts=[requirements])
+
+<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py:517:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+resource_server = <x402.server.x402ResourceServer object at 0x10e223650>
+
+    def create_payment_wrapper(
+        resource_server: Any,
+        *,
+        accepts: list[PaymentRequirements],
+        resource: ResourceInfo | None = None,
+        hooks: PaymentWrapperHooks | None = None,
+        extensions: dict[str, Any] | None = None,
+    ) -> Callable:
+        """Create a decorator that wraps a FastMCP tool handler with x402 payment logic.
+
+        The decorated handler automatically:
+        - Returns 402 payment required when no payment is provided
+        - Verifies payment payloads against the facilitator
+        - Executes the tool handler on successful verification
+        - Settles payments after successful execution
+        - Returns settlement info in response ``_meta``
+
+        The original handler should return either a ``str`` (JSON text) or a ``dict``
+        (automatically serialized to JSON). The wrapper handles conversion to
+        ``CallToolResult`` and attaches payment metadata.
+
+        Note: The wrapper automatically adds a ``ctx: Context`` parameter to the
+        function signature so FastMCP injects the request context. Your handler
+        does NOT need to include ``ctx`` in its parameters.
+
+        Args:
+            resource_server: An async ``x402ResourceServer`` instance configured
+                with facilitator client and scheme registrations.
+            accepts: List of accepted ``PaymentRequirements``. The first entry is
+                used for verification and settlement.
+            resource: Optional ``ResourceInfo`` metadata (url, description, mimeType).
+                Defaults to ``mcp://tool/{function_name}``.
+            hooks: Optional ``PaymentWrapperHooks`` for on_before_execution,
+                on_after_execution, on_after_settlement (matches server_async).
+            extensions: Optional x402 extensions to include in PaymentRequired responses.
+                Use this to attach Bazaar discovery metadata so facilitators can index
+                the tool. Example: ``declare_mcp_discovery_extension(config)``
+
+        Returns:
+            A decorator to apply to a FastMCP tool handler function.
+        """
+        # Lazy import mcp types so the module can be imported without mcp installed
+>       from mcp.server.fastmcp import Context
+E       ModuleNotFoundError: No module named 'mcp'
+
+<validation>/baseline/python/x402/mcp/server.py:95: ModuleNotFoundError
+=============================== warnings summary ===============================
+../../..<implementation>/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6
+  <implementation>/.venv/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+    warnings.warn(  # deprecated in 14.0 - 2024-11-09
+
+../../..<implementation>/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  <implementation>/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/core/test_settle_pending_retry.py::TestSettlementPendingReasonUnification::test_svm_constant_matches_core_constant
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_over_http_without_dereferencing_it
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_nested_inside_schema_properties
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_extract_discovery_info_rejects_external_ref_end_to_end
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/mcp/test_mcp_dependency.py::test_fastmcp_import_path_available
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py::test_fastmcp_settlement_failure_preserves_extensions
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py::test_fastmcp_verify_failure_uses_bare_invalid_reason
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py::test_payment_wrapper_verify_abort_uses_invalid_reason
+FAILED ../../..<validation>/baseline/python/x402/tests/unit/mcp/test_server_wrappers.py::test_payment_wrapper_facilitator_verify_error_uses_invalid_reason
+9 failed, 2099 passed, 2 skipped, 2 warnings in 4.56s

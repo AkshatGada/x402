@@ -1,0 +1,26 @@
+{
+  "method": "stdlib trace executable-line accounting, not branch or project coverage",
+  "file": "<implementation>/python/x402/mechanisms/evm/batch_settlement/server/managed.py",
+  "covered": 237,
+  "executable": 253,
+  "percent": 93.68,
+  "missing": [
+    0,
+    49,
+    50,
+    75,
+    97,
+    122,
+    189,
+    228,
+    230,
+    239,
+    249,
+    253,
+    289,
+    296,
+    297,
+    347
+  ],
+  "pytest_exit": 0
+}

@@ -1,0 +1,703 @@
+COMMAND ["python3", "<test-cache>", "<implementation>/.venv/bin/python", "<coordinator>/regression-origin.py", "<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py"]
+CWD <coordinator>
+<implementation>/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+{"source": "/private<coordinator>/uncorrected/python", "modules": {"x402": {"path": "<coordinator>/uncorrected/python/x402/__init__.py", "sha256": "53dbdd4827be3fa426a1d7ea3631b15e9f69d9bc5cf4798a4673c343ba5125ca"}, "x402.server": {"path": "<coordinator>/uncorrected/python/x402/server.py", "sha256": "8207cad960f4f99c6232a8153d2417a5b4948e00c90aabc9795bc36b388e133b"}, "x402.server_base": {"path": "<coordinator>/uncorrected/python/x402/server_base.py", "sha256": "cd622586f28006a7e5a7537e3c59fb993cab691b1d8909bc7e3cc34f73e0fc17"}, "x402.mechanisms.evm.batch_settlement.server.managed": {"path": "<coordinator>/uncorrected/python/x402/mechanisms/evm/batch_settlement/server/managed.py", "sha256": "a36bd85d2dd84a0a3c6ed75c314fe5468b65990233bbfe0a67efdd2ef3dd8e2d"}}}
+FFFFFFFF..FFFFFFFFFFFFFFFFFFFFFF......                                   [100%]
+=================================== FAILURES ===================================
+_______ test_signer_outage_releases_known_undispatched_admission[False] ________
+
+async_mode = False
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_signer_outage_releases_known_undispatched_admission(async_mode):
+        remote, scheme, server, p = scenario(async_mode, signer=RefundSigner(True))
+        assert verify(async_mode, server, p).is_valid
+        with pytest.raises(RuntimeError, match="synthetic signer outage"):
+            settle(async_mode, server, p)
+        calls = cancel_calls(remote)
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:194: AssertionError
+________ test_signer_outage_releases_known_undispatched_admission[True] ________
+
+async_mode = True
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_signer_outage_releases_known_undispatched_admission(async_mode):
+        remote, scheme, server, p = scenario(async_mode, signer=RefundSigner(True))
+        assert verify(async_mode, server, p).is_valid
+        with pytest.raises(RuntimeError, match="synthetic signer outage"):
+            settle(async_mode, server, p)
+        calls = cancel_calls(remote)
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:194: AssertionError
+_________ test_explicit_before_settle_abort_releases_admission[False] __________
+
+async_mode = False
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_explicit_before_settle_abort_releases_admission(async_mode):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        assert verify(async_mode, server, p).is_valid
+        server.on_before_settle(
+            lambda c: AbortResult(reason="application declined") if c.phase != "cancel" else None
+        )
+        with pytest.raises(PaymentAbortedError, match="application declined"):
+            settle(async_mode, server, p)
+>       assert len(cancel_calls(remote)) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = cancel_calls(<evm.batch_settlement.server.test_managed_recovery.Remote object at 0x10d016930>)
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:208: AssertionError
+__________ test_explicit_before_settle_abort_releases_admission[True] __________
+
+async_mode = True
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_explicit_before_settle_abort_releases_admission(async_mode):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        assert verify(async_mode, server, p).is_valid
+        server.on_before_settle(
+            lambda c: AbortResult(reason="application declined") if c.phase != "cancel" else None
+        )
+        with pytest.raises(PaymentAbortedError, match="application declined"):
+            settle(async_mode, server, p)
+>       assert len(cancel_calls(remote)) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = cancel_calls(<evm.batch_settlement.server.test_managed_recovery.AsyncRemote object at 0x10d0179b0>)
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:208: AssertionError
+_____ test_failed_cancellation_retains_identity_and_original_error[False] ______
+
+async_mode = False
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_failed_cancellation_retains_identity_and_original_error(async_mode):
+        remote, scheme, server, p = scenario(async_mode, signer=RefundSigner(True))
+        assert verify(async_mode, server, p).is_valid
+        remote.outcomes = [
+            SettleResponse(
+                success=False, transaction="", network=NETWORK, error_reason="synthetic_cancel_failure"
+            )
+        ]
+        with pytest.raises(RuntimeError, match="synthetic signer outage"):
+            settle(async_mode, server, p)
+>       assert len(cancel_calls(remote)) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = cancel_calls(<evm.batch_settlement.server.test_managed_recovery.Remote object at 0x10d015250>)
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:224: AssertionError
+______ test_failed_cancellation_retains_identity_and_original_error[True] ______
+
+async_mode = True
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_failed_cancellation_retains_identity_and_original_error(async_mode):
+        remote, scheme, server, p = scenario(async_mode, signer=RefundSigner(True))
+        assert verify(async_mode, server, p).is_valid
+        remote.outcomes = [
+            SettleResponse(
+                success=False, transaction="", network=NETWORK, error_reason="synthetic_cancel_failure"
+            )
+        ]
+        with pytest.raises(RuntimeError, match="synthetic signer outage"):
+            settle(async_mode, server, p)
+>       assert len(cancel_calls(remote)) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = cancel_calls(<evm.batch_settlement.server.test_managed_recovery.AsyncRemote object at 0x10d0164b0>)
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:224: AssertionError
+___________ test_pending_bounded_retry_retains_refund_context[False] ___________
+
+async_mode = False
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_pending_bounded_retry_retains_refund_context(async_mode):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        pending = SettleResponse(
+            success=False, error_reason="settlement_pending", transaction="0xpending", network=NETWORK
+        )
+        remote.outcomes = [pending, pending]
+        result = settle(async_mode, server, p)
+        assert result is pending
+        assert len([c for c in remote.calls if c[0] == "settle"]) == 2
+        assert not cancel_calls(remote)
+>       assert scheme.read_request_context(p).pending_id == "trusted-admission"
+E       AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:240: AttributeError
+___________ test_pending_bounded_retry_retains_refund_context[True] ____________
+
+async_mode = True
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    def test_pending_bounded_retry_retains_refund_context(async_mode):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        pending = SettleResponse(
+            success=False, error_reason="settlement_pending", transaction="0xpending", network=NETWORK
+        )
+        remote.outcomes = [pending, pending]
+        result = settle(async_mode, server, p)
+        assert result is pending
+        assert len([c for c in remote.calls if c[0] == "settle"]) == 2
+        assert not cancel_calls(remote)
+>       assert scheme.read_request_context(p).pending_id == "trusted-admission"
+E       AttributeError: 'NoneType' object has no attribute 'pending_id'
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:240: AttributeError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-False] _
+
+async_mode = False, key = 'balance'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d017500>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-True] _
+
+async_mode = True, key = 'balance'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d016120>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-False] _
+
+async_mode = False, key = 'totalClaimed'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d015070>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-True] _
+
+async_mode = True, key = 'totalClaimed'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d014ef0>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-False] _
+
+async_mode = False, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d017950>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-True] _
+
+async_mode = True, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d067c80>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-False] _
+
+async_mode = False, key = 'refundNonce'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d064e00>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-True] _
+
+async_mode = True, key = 'refundNonce'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d0652b0>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[withdrawRequestedAt-False] _
+
+async_mode = False, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d066540>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[withdrawRequestedAt-True] _
+
+async_mode = True, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d067290>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-False] _
+
+async_mode = False, key = 'pendingId'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d0e2db0>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-True] _
+
+async_mode = True, key = 'pendingId'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        [
+            "balance",
+            "totalClaimed",
+            "chargedCumulativeAmount",
+            "refundNonce",
+            "withdrawRequestedAt",
+            "pendingId",
+        ],
+    )
+    def test_incomplete_admission_fails_before_handler_and_releases_known_lock(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode, kind="voucher")
+        remote.verify_extra.pop(key)
+        result = verify(async_mode, server, p)
+>       assert not result.is_valid
+E       assert not True
+E        +  where True = <x402.schemas.hooks.ResourceVerifyResponse object at 0x10d067860>.is_valid
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:275: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-False] _
+
+async_mode = False, key = 'balance'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-True] _
+
+async_mode = True, key = 'balance'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...iveAmount': '1000', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-False] _
+
+async_mode = False, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-True] _
+
+async_mode = True, key = 'chargedCumulativeAmount'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei... 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-False] _
+
+async_mode = False, key = 'totalClaimed'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-True] _
+
+async_mode = True, key = 'totalClaimed'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...mulativeAmount': '1000', 'balance': '9500', 'refundNonce': '8', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-False] _
+
+async_mode = False, key = 'refundNonce'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-True] _
+
+async_mode = True, key = 'refundNonce'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...tiveAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'withdrawRequestedAt': 0}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-False] _
+
+async_mode = False, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+_ test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-True] _
+
+async_mode = True, key = 'withdrawRequestedAt'
+
+    @pytest.mark.parametrize("async_mode", [False, True])
+    @pytest.mark.parametrize(
+        "key",
+        ["balance", "chargedCumulativeAmount", "totalClaimed", "refundNonce", "withdrawRequestedAt"],
+    )
+    def test_incomplete_committed_receipt_fails_closed_and_preserves_receipt(async_mode, key):
+        remote, scheme, server, p = scenario(async_mode)
+        assert verify(async_mode, server, p).is_valid
+        receipt = remote.receipt(p)
+        receipt.extra["channelState"].pop(key)
+        remote.outcomes = [receipt]
+        result = settle(async_mode, server, p)
+>       assert result is receipt and not result.success
+E       AssertionError: assert (SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) is SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False) and not True)
+E        +  where True = SettleResponse(success=True, error_reason=None, error_message=None, payer=None, transaction='0xsynthetic', network='ei...CumulativeAmount': '1000', 'balance': '9500', 'totalClaimed': '1000', 'refundNonce': '8'}}, after_settle_aborted=False).success
+
+../x402-python-managed-batch-20261027/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py:294: AssertionError
+=========================== short test summary info ============================
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_signer_outage_releases_known_undispatched_admission[False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_signer_outage_releases_known_undispatched_admission[True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_explicit_before_settle_abort_releases_admission[False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_explicit_before_settle_abort_releases_admission[True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_failed_cancellation_retains_identity_and_original_error[False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_failed_cancellation_retains_identity_and_original_error[True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_pending_bounded_retry_retains_refund_context[False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_pending_bounded_retry_retains_refund_context[True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[balance-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[totalClaimed-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[chargedCumulativeAmount-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[refundNonce-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[withdrawRequestedAt-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[withdrawRequestedAt-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_admission_fails_before_handler_and_releases_known_lock[pendingId-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[balance-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[chargedCumulativeAmount-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[totalClaimed-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[refundNonce-True]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-False]
+FAILED ../../..<implementation>/python/x402/tests/unit/mechanisms/evm/batch_settlement/server/test_managed_recovery.py::test_incomplete_committed_receipt_fails_closed_and_preserves_receipt[withdrawRequestedAt-True]
+30 failed, 8 passed in 0.25s

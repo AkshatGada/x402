@@ -1,0 +1,17 @@
+{
+  "wheel": "<coordinator>/dist/x402-2.25.0-py3-none-any.whl",
+  "sha256": "10ec1e70a67d23dd3eb849b952418c877645649261e2efa600c5c57bf8fd9c44",
+  "verified_production_files": [
+    "python/x402/mechanisms/evm/batch_settlement/client/channel.py",
+    "python/x402/mechanisms/evm/batch_settlement/errors.py",
+    "python/x402/mechanisms/evm/batch_settlement/server/channel_manager.py",
+    "python/x402/mechanisms/evm/batch_settlement/server/channel_manager_sync.py",
+    "python/x402/mechanisms/evm/batch_settlement/server/managed.py",
+    "python/x402/mechanisms/evm/batch_settlement/server/scheme.py",
+    "python/x402/mechanisms/evm/batch_settlement/types.py",
+    "python/x402/mechanisms/evm/batch_settlement/utils.py",
+    "python/x402/schemas/hooks.py",
+    "python/x402/server.py",
+    "python/x402/server_base.py"
+  ]
+}

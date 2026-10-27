@@ -1,0 +1,5 @@
+=== RUN   TestPythonManagedCustodyProbe
+    managed_python_probe_test.go:103: {"result":"managed-custody-passed","scenarios":[{"consent":"delegated","channelId":"0x192476ee2b6d03b8421ab5ae7f78889aa2eb938a48fa63037584b8324e029ffb","chargeCount":1,"cancelReleased":true,"refundSucceeded":true,"correctiveProofPreserved":true,"replayDidNotCharge":true,"earlyHookAbortReleased":true,"buyerRecovered":true},{"consent":"signed","channelId":"0x212868c9b70dafd6050b92d32930c6aabfde589f9fe730a0f13dbe5935fa9096","chargeCount":1,"cancelReleased":true,"refundSucceeded":true,"correctiveProofPreserved":true,"replayDidNotCharge":true,"earlyHookAbortReleased":true,"buyerRecovered":true}]}
+--- PASS: TestPythonManagedCustodyProbe (0.33s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.571s

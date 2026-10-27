@@ -1,0 +1,68 @@
+{
+  "uncorrected": {
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "--import-mode=importlib",
+      "-q",
+      "<audit>/test_audit_lifecycle.py",
+      "<audit>/test_audit_extended.py"
+    ],
+    "cwd": "<audit>",
+    "env": {
+      "PYTHONPATH": "<coordinator>/uncorrected/python:<audit>",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "origin": {
+      "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+      "executable": "<implementation>/.venv/bin/python",
+      "x402": "<coordinator>/uncorrected/python/x402/__init__.py",
+      "server": "<coordinator>/uncorrected/python/x402/server.py",
+      "managed": "<coordinator>/uncorrected/python/x402/mechanisms/evm/batch_settlement/server/managed.py"
+    },
+    "log": "ordinary-uncorrected-final-matrix.log",
+    "summary": "64 behavioral failures, 18 passed",
+    "test_hashes": {
+      "test_audit_lifecycle.py": "fc81bceea34d1339946caea81c9ced37f6b8b38644d95bb7aeb8cc8a74ad31c4",
+      "test_audit_extended.py": "a8fcad4d1ccbdb4316414c731f4f7466658e94a7b06a95adfbb3e79fe0715e99"
+    }
+  },
+  "final": {
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-p",
+      "no:cacheprovider",
+      "--import-mode=importlib",
+      "-q",
+      "<audit>/test_audit_lifecycle.py",
+      "<audit>/test_audit_extended.py"
+    ],
+    "cwd": "<audit>",
+    "env": {
+      "PYTHONPATH": "<implementation>/python:<audit>",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "origin": {
+      "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+      "executable": "<implementation>/.venv/bin/python",
+      "x402": "<implementation>/python/x402/__init__.py",
+      "server": "<implementation>/python/x402/server.py",
+      "managed": "<implementation>/python/x402/mechanisms/evm/batch_settlement/server/managed.py"
+    },
+    "log": "ordinary-final.log",
+    "summary": "82 passed",
+    "test_hashes": {
+      "test_audit_lifecycle.py": "fc81bceea34d1339946caea81c9ced37f6b8b38644d95bb7aeb8cc8a74ad31c4",
+      "test_audit_extended.py": "a8fcad4d1ccbdb4316414c731f4f7466658e94a7b06a95adfbb3e79fe0715e99"
+    }
+  }
+}

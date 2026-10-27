@@ -1,0 +1,417 @@
+<implementation>/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+{"source": "<replay-stage>/baseline", "modules": {"x402": {"path": "<replay-stage>/baseline/python/x402/__init__.py", "sha256": "53dbdd4827be3fa426a1d7ea3631b15e9f69d9bc5cf4798a4673c343ba5125ca"}, "x402.server": {"path": "<replay-stage>/baseline/python/x402/server.py", "sha256": "8207cad960f4f99c6232a8153d2417a5b4948e00c90aabc9795bc36b388e133b"}, "x402.mechanisms.evm.batch_settlement.server.scheme": {"path": "<replay-stage>/baseline/python/x402/mechanisms/evm/batch_settlement/server/scheme.py", "sha256": "7d53d34e1516344253922dc3f90d02fe6da5e88c0ca03eb5b3fd401020d64912"}}}
+managed-configuration-missing-on-pinned-upstream
+FFFFFFFF...FFFFFFF.....................F..F..                            [100%]
+=================================== FAILURES ===================================
+_ test_managed_salt_matches_go_12_plus_20_layout[0x0000000000000000000000000000000000000000000000000000000000000001-000000000000000000000001] _
+
+salt = '0x0000000000000000000000000000000000000000000000000000000000000001'
+entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '0x0000000000...0000000000001' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         + 0x0000000000000000000000000000000000000000000000000000000000000001
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+__ test_managed_salt_matches_go_12_plus_20_layout[1-000000000000000000000001] __
+
+salt = '1', entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '1' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         + 1
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+_ test_managed_salt_matches_go_12_plus_20_layout[0x01-000000000000000000000001] _
+
+salt = '0x01', entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '0x01' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         + 0x01
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+_ test_managed_salt_matches_go_12_plus_20_layout[ 1 -000000000000000000000001] _
+
+salt = ' 1 ', entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert ' 1 ' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         +  1
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+_ test_managed_salt_matches_go_12_plus_20_layout[0X1-000000000000000000000001] _
+
+salt = '0X1', entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '0X1' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         + 0X1
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+_ test_managed_salt_matches_go_12_plus_20_layout[0x000000000000000000000000000000000000000000000000000000000000000001-000000000000000000000001] _
+
+salt = '0x000000000000000000000000000000000000000000000000000000000000000001'
+entropy = '000000000000000000000001'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '0x0000000000...0000000000001' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000015555555555555555555555555555555555555555
+E         + 0x000000000000000000000000000000000000000000000000000000000000000001
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+__ test_managed_salt_matches_go_12_plus_20_layout[-000000000000000000000000] ___
+
+salt = '', entropy = '000000000000000000000000'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '' == '0x0000000000...5555555555555'
+E
+E         - 0x0000000000000000000000005555555555555555555555555555555555555555
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+_ test_managed_salt_matches_go_12_plus_20_layout[0xabababababababababababababababababababababababababababababababab-abababababababababababab] _
+
+salt = '0xabababababababababababababababababababababababababababababababab'
+entropy = 'abababababababababababab'
+
+    @pytest.mark.parametrize(
+        "salt,entropy",
+        [
+            ("0x" + "00" * 31 + "01", "00" * 11 + "01"),
+            ("1", "00" * 11 + "01"),
+            ("0x01", "00" * 11 + "01"),
+            (" 1 ", "00" * 11 + "01"),
+            ("0X1", "00" * 11 + "01"),
+            ("0x" + "00" * 32 + "01", "00" * 11 + "01"),
+            ("", "00" * 12),
+            ("0x" + "ab" * 32, "ab" * 12),
+        ],
+    )
+    def test_managed_salt_matches_go_12_plus_20_layout(salt, entropy):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+        config = build_channel_config(deps, requirements())
+>       assert config.salt == "0x" + entropy + AUTHOR[2:]
+E       AssertionError: assert '0xababababab...babababababab' == '0xababababab...5555555555555'
+E
+E         - 0xabababababababababababab5555555555555555555555555555555555555555
+E         + 0xabababababababababababababababababababababababababababababababab
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:51: AssertionError
+________________ test_out_of_range_or_invalid_salt_rejected[-1] ________________
+
+salt = '-1'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+________________ test_out_of_range_or_invalid_salt_rejected[0x] ________________
+
+salt = '0x'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+_______________ test_out_of_range_or_invalid_salt_rejected[0xzz] _______________
+
+salt = '0xzz'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+_ test_out_of_range_or_invalid_salt_rejected[115792089237316195423570985008687907853269984665640564039457584007913129639936] _
+
+salt = '115792089237316195423570985008687907853269984665640564039457584007913129639936'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+_________ test_out_of_range_or_invalid_salt_rejected[9007199254740992] _________
+
+salt = '9007199254740992'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+_ test_out_of_range_or_invalid_salt_rejected[0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff] _
+
+salt = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+
+    @pytest.mark.parametrize("salt", ["-1", "0x", "0xzz", str(1 << 256), str(2**53), "0x" + "ff" * 33])
+    def test_out_of_range_or_invalid_salt_rejected(salt):
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER), InMemoryClientChannelStorage(), salt
+        )
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:76: Failed
+_ test_changing_refund_authorizer_creates_new_channel_and_recovery_uses_same_identity _
+
+    def test_changing_refund_authorizer_creates_new_channel_and_recovery_uses_same_identity():
+        calls = []
+
+        def read_contract(*args):
+            calls.append(args[-1])
+            return [1000, 100]
+
+        deps = BatchSettlementClientDeps(
+            SimpleNamespace(address=PAYER, read_contract=read_contract),
+            InMemoryClientChannelStorage(),
+            "1",
+        )
+        req = requirements()
+        config = build_channel_config(deps, req)
+>       channel_id = compute_channel_id(config, req.network)
+
+<review>/public-evidence/harness/baseline-tests/test_managed_salt.py:94:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+baseline/python/x402/mechanisms/evm/batch_settlement/utils.py:126: in compute_channel_id
+    message = _channel_config_message(config)
+baseline/python/x402/mechanisms/evm/batch_settlement/utils.py:98: in _channel_config_message
+    "salt": coerce_bytes32(config.salt),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = '1'
+
+    def coerce_bytes32(value: str | bytes) -> bytes:
+        """Validate and decode a bytes32 input."""
+        if isinstance(value, bytes):
+            if len(value) != 32:
+                raise ValueError(f"bytes32 must be 32 bytes, got {len(value)}")
+            return value
+        raw = value.removeprefix("0x")
+        if len(raw) != 64:
+>           raise ValueError(f"bytes32 hex must be 64 chars, got {len(raw)}")
+E           ValueError: bytes32 hex must be 64 chars, got 1
+
+baseline/python/x402/mechanisms/evm/batch_settlement/utils.py:110: ValueError
+_ TestPaymentRequirementsExtra.test_managed_refund_consent_survives_wire_conversion _
+
+self = <test_types.TestPaymentRequirementsExtra object at 0x10afb8a40>
+
+    def test_managed_refund_consent_survives_wire_conversion(self):
+        wire = {
+            "receiverAuthorizer": "0x" + "44" * 20,
+            "withdrawDelay": 900,
+            "name": "USDC",
+            "version": "2",
+            "voucherManager": "facilitator",
+            "refundAuthorizer": "0x" + "55" * 20,
+        }
+>       assert PaymentRequirementsExtra.from_dict(wire).to_dict() == wire
+E       AssertionError: assert {'name': 'USD...awDelay': 900} == {'name': 'USD...on': '2', ...}
+E
+E         Omitting 4 identical items, use -vv to show
+E         Right contains 2 more items:
+E         {'refundAuthorizer': '0x5555555555555555555555555555555555555555',
+E          'voucherManager': 'facilitator'}
+E         Use -v to get more diff
+
+<review>/public-evidence/harness/baseline-tests/test_types.py:307: AssertionError
+_ TestPaymentResponseExtra.test_managed_charge_count_survives_wire_conversion __
+
+self = <test_types.TestPaymentResponseExtra object at 0x10afb8560>
+
+    def test_managed_charge_count_survives_wire_conversion(self):
+        wire = {"chargedAmount": "100", "chargeCount": 2}
+>       assert PaymentResponseExtra.from_dict(wire).to_dict() == wire
+E       AssertionError: assert {'chargedAmount': '100'} == {'chargeCount...mount': '100'}
+E
+E         Omitting 1 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'chargeCount': 2}
+E         Use -v to get more diff
+
+<review>/public-evidence/harness/baseline-tests/test_types.py:338: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[0x0000000000000000000000000000000000000000000000000000000000000001-000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[1-000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[0x01-000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[ 1 -000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[0X1-000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[0x000000000000000000000000000000000000000000000000000000000000000001-000000000000000000000001]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[-000000000000000000000000]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_managed_salt_matches_go_12_plus_20_layout[0xabababababababababababababababababababababababababababababababab-abababababababababababab]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[-1]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[0x]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[0xzz]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[115792089237316195423570985008687907853269984665640564039457584007913129639936]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[9007199254740992]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_out_of_range_or_invalid_salt_rejected[0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff]
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_managed_salt.py::test_changing_refund_authorizer_creates_new_channel_and_recovery_uses_same_identity
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_types.py::TestPaymentRequirementsExtra::test_managed_refund_consent_survives_wire_conversion
+FAILED ../../../../../../..<review>/public-evidence/harness/baseline-tests/test_types.py::TestPaymentResponseExtra::test_managed_charge_count_survives_wire_conversion
+17 failed, 28 passed in 0.08s

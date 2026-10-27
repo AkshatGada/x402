@@ -1,0 +1,29 @@
+{
+  "baseline": {
+    "failures": [
+      "core/test_settle_pending_retry.py::TestSettlementPendingReasonUnification::test_svm_constant_matches_core_constant",
+      "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_extract_discovery_info_rejects_external_ref_end_to_end",
+      "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_nested_inside_schema_properties",
+      "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_over_http_without_dereferencing_it",
+      "mcp/test_mcp_dependency.py::test_fastmcp_import_path_available",
+      "mcp/test_server_wrappers.py::test_fastmcp_settlement_failure_preserves_extensions",
+      "mcp/test_server_wrappers.py::test_fastmcp_verify_failure_uses_bare_invalid_reason",
+      "mcp/test_server_wrappers.py::test_payment_wrapper_facilitator_verify_error_uses_invalid_reason",
+      "mcp/test_server_wrappers.py::test_payment_wrapper_verify_abort_uses_invalid_reason"
+    ],
+    "summary": "9 failed, 2099 passed, 2 skipped, 2 warnings in 4.56s"
+  },
+  "corrected_summary": "9 failed, 2220 passed, 2 skipped, 2 warnings in 4.79s",
+  "identical_failure_ids": [
+    "core/test_settle_pending_retry.py::TestSettlementPendingReasonUnification::test_svm_constant_matches_core_constant",
+    "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_extract_discovery_info_rejects_external_ref_end_to_end",
+    "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_nested_inside_schema_properties",
+    "extensions/bazaar/test_facilitator.py::TestValidateDiscoveryExtensionSSRF::test_rejects_ref_over_http_without_dereferencing_it",
+    "mcp/test_mcp_dependency.py::test_fastmcp_import_path_available",
+    "mcp/test_server_wrappers.py::test_fastmcp_settlement_failure_preserves_extensions",
+    "mcp/test_server_wrappers.py::test_fastmcp_verify_failure_uses_bare_invalid_reason",
+    "mcp/test_server_wrappers.py::test_payment_wrapper_facilitator_verify_error_uses_invalid_reason",
+    "mcp/test_server_wrappers.py::test_payment_wrapper_verify_abort_uses_invalid_reason"
+  ],
+  "new_failures": []
+}

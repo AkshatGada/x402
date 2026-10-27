@@ -1,0 +1,8 @@
+CWD <validation>/go-reference
+ENV {"CGO_ENABLED": "0", "GOPROXY": "off", "GOTOOLCHAIN": "local", "GOMODCACHE": "<test-cache>", "GOCACHE": "<test-cache>", "GOPATH": "<validation>/gopath", "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python", "X402_PROBE_SCRIPT": "<validation>/go-http-probe.py", "X402_PROBE_RESULT": "managed-custody-passed", "X402_AUDIT_SOURCE_ROOT": "<implementation>", "X402_EXPECT_SIGNER_FIX": "1", "PYTHONDONTWRITEBYTECODE": "1"}
+COMMAND ["python3", "<test-cache>", "<test-cache>", "test", "-mod=readonly", "-p", "2", "-count=1", "-v", "-run", "^TestPythonManagedCustodyProbe$", "./mechanisms/evm/batch-settlement/facilitator"]
+=== RUN   TestPythonManagedCustodyProbe
+    managed_python_probe_test.go:103: {"result":"managed-custody-passed","scenarios":[{"consent":"delegated","channelId":"0x0603fa3ba9f02637e522b45c277cd90f22eb666cb59ce855ec60917e08a716b3","chargeCount":1,"cancelReleased":true,"refundSucceeded":true,"correctiveProofPreserved":true,"replayDidNotCharge":true,"earlyHookAbortReleased":true,"buyerRecovered":true},{"consent":"signed","channelId":"0xf93a60848f8b32a815ae00ffdeea9d79a54ee0f3891e10ef213c705c7913c9df","chargeCount":1,"cancelReleased":true,"refundSucceeded":true,"correctiveProofPreserved":true,"replayDidNotCharge":true,"earlyHookAbortReleased":true,"buyerRecovered":true}]}
+--- PASS: TestPythonManagedCustodyProbe (0.32s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.564s

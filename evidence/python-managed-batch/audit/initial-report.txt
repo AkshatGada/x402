@@ -1,0 +1,127 @@
+Independent Python managed-custody audit — initial frozen round — 2026-10-28
+
+VERDICT: REQUEST CHANGES. Four ordinary workflow/protocol correctness findings.
+No source, index, evidence producer, dependencies, public PRs or attribution edited.
+This was the separately invoked gpt-6.1-sol / xhigh auditor in Codex. No Claude or
+Astra attribution belongs to this review. PR #3892 was not touched.
+
+Source binding
+- <implementation>
+- branch codex/python-managed-batch-server-client
+- base/HEAD dbe1080ac7f65e2e05cc8430a834c255a6800828
+- original patch SHA256 8acdb8bfb46714ae70f0d78eb59fa0a710a14b074ac0c95b112e64ecee0d5fd2
+- All 25 changed/new files match source-manifest.json before and after initial round.
+- index SHA256 before/after 6502747765d3dc7c637a3d04b3a07a8826d9259a8c9a549d562e573c9c02f0a0
+- Exact file hashes: source-before.json, source-after-initial.json.
+
+[P2] Release known undispatched reservations after local settlement failure.
+managed.py:209-258,313-314; server_base.py:1595-1598 and settlement dispatch/error path.
+A valid refund is admitted, then a local refund signer fails during enrichment.
+No /settle is dispatched, but the failure hook only discards local request state.
+Actual Go loopback reproduction shows verify=1, settle=0, held=true; a subsequent
+valid refund fails channel_busy. Explicit before_settle AbortResult also leaves
+admission reserved. Bounded TTL limits duration; this is an ordinary availability
+and retryability defect, not a claimed funds incident.
+Repro: go-signer-probe.py / go-signer-probe-escalated.log; independent public-core
+matrix test_signer_outage_releases_known_undispatched_admission and
+ test_explicit_before_settle_abort_releases_admission (sync and async).
+Minimal correction: after unrecovered local enrichment failure, and on explicit
+before-settle AbortResult, dispatch existing cancel machinery with zero amount.
+Set dispatch flag immediately before call_facilitator yield; do not cancel after
+it. Exclude receipt-bearing/pending SettleError, avoid recursive cancel, keep
+original error. Handle dispatch_cancel in both settle drivers. Keep recovery-first
+ordering; preserve existing generic thrown-hook and SkipSettleResult behavior.
+
+[P2] Keep managed refund admission/snapshot across pending or failed outcomes.
+managed.py:313-314.
+When both existing settlement_pending attempts return pending+transaction, the
+scheme clears the context. An explicit later retry fails missing_channel during
+refund enrichment and cannot reach the facilitator's pending transaction store.
+The same unconditional cleanup loses failed-cancel identity. A thrown remote
+exception currently retains context because settle drivers do not inject it into
+the generator; that existing distinction must not be changed incidentally.
+Repro: test_pending_bounded_retry_retains_refund_context fails sync/async;
+ test_unknown_remote_exception_retains_identity_without_cancellation passes both.
+Minimal correction: retain context for failed/pending/cancel-failure outcomes;
+clear on confirmed success/cancel and existing weakref request collection. Never
+turn an unknown offchain result into an automatic new charge/cancellation.
+
+[P2] Reject incomplete admitted authoritative snapshots before serving.
+managed.py:125-145.
+An isValid response missing pendingId, balance, totalClaimed, refundNonce or
+chargedCumulativeAmount is accepted. Missing values become zero/default state,
+and the voucher business handler may run with an incomplete reservation/snapshot.
+Repro: test_incomplete_admission_fails_before_handler_and_releases_known_lock
+fails all ten sync/async required-field cases.
+Minimal correction: capture trusted pendingId/channel identity first, then parse
+required canonical uint snapshot values using shared _read_required_uint_extra.
+Return verification_state_unavailable AbortResult on incomplete snapshot; existing
+after-verify abort cancellation releases known admission. Python int/string nonce
+must remain exact; independent 2^200+12345 nonce controls already pass.
+
+[P2] Distinguish authoritative receipt validation from optional replica failure.
+managed.py:274-304.
+A successful facilitator receipt missing authoritative channel snapshot fields is
+accepted; fields are silently taken from pre-settle snapshot. Parsing is inside
+the blanket replica exception handler, which also suppresses malformed authority.
+Optional storage failure should preserve a known receipt; malformed required
+receipt state needs a distinct failed-closed outcome preserving that receipt.
+Repro: test_incomplete_committed_receipt_fails_closed_and_preserves_receipt fails
+all ten missing-field sync/async cases.
+Minimal correction: parse canonical charged/balance/claimed/nonce/withdraw time
+before the optional replica update try. Raise AfterSettleAbortError for missing or
+malformed authoritative state, preserving transaction/amount/extra and avoiding
+cancel of a committed outcome. Narrow catch to optional replica I/O/callbacks.
+
+Independent checks completed on the original frozen source
+- Focused: 108 passed.
+- Broad eligible unit selection: 2182 passed, 9 failed, 2 skipped.
+- Original baseline in same environment: 2099 passed, identical 9 failures, 2 skipped.
+  Exact failure-set comparison recorded in broad-*-summary.json. No unrelated
+  baseline failure investigation was performed.
+- Missing-feature baseline: explicit source assertion and config TypeError;
+  overlaid salt/type tests: 17 expected behavioral failures, 28 passed.
+- Import origins recorded in commands.json and test logs for implemented/baseline.
+- Independent public-core matrix: 28 behavior failures, 6 passes, no startup error.
+  Passing controls cover unknown dispatch retention, recovery short circuit, and
+  exact wide nonce in both drivers.
+- Actual Go signer-outage repro: specific defect assertions pass. First execution
+  failed before behavior because sandbox denied loopback bind; the separately
+  labeled approved escalation log is the actual behavioral reproduction.
+- All heavy checks serialized through with-test-slot.py; Go workers bounded at 2.
+
+Evidence provenance reviewed
+- Independently checked all 451 Python baseline files and 675 Go reference files
+  against pinned Git tree blob IDs: no missing/mismatched files (provenance.json).
+- Wheel hash matches report; all 10 changed production files match frozen source
+  manifest. Salt and type test overlays byte-match original changed tests.
+- Read evidence scripts. Baseline script explicitly asserts baseline x402 import;
+  no baseline script silently loads changed production source or mutates it.
+- Read actual Go bridge and Python HTTP probe. Bridge uses actual Go scheme but
+  synthetic upstream chain/signing helpers and a seeded channel, and explicitly
+  encodes returned models as HTTP 200. Original interoperability claims are
+  bounded honestly in HANDOFF/README. It does not prove production non-200 mapping,
+  initial funded deposit flow, live auth gateway, RPC, funds, or settlement worker.
+- 93.89% claim is explicitly stdlib managed.py executable-line accounting, not
+  branch/overall coverage. Original coverage output inspected, not overwritten.
+- Catalog eligibility and TS syntax checks do not imply full E2E type/build/funded
+  coverage; handoff labels these limits. Python facilitator/MCP remain excluded.
+
+Other reviewed behavior
+Mode is explicit and defaults to server. Config fields append for positional API
+compatibility. Shared salt builder follows Go decimal/hex and bytes12+bytes20
+rules and feeds buyer recovery. Managed verify/settle bypass authoritative local
+storage, echo admission, preserve facilitator corrective proofs for both mismatch
+reasons, skip refund handler, use distinct consent signer, and preserve chargeCount
+including zero. Local managed refund jobs are disabled. No new project dependency,
+legacy source, Go production or TS SDK implementation changes belong to this patch.
+Weakref request cleanup is scoped to managed request context and avoids retaining
+payloads. Core optional verify_result is additive and captures trusted admission
+when manual after-verify hooks abort first.
+
+Remaining boundaries
+No live RPC, external service, funds, credentials, exploit reproduction or security
+investigation used. Adjacent HTTP error propagation work (#3802/#3938/#3825) remains
+out of scope. No source edits, installs, commits, push, PR creation or contact by
+this auditor. Coordinator owns corrections; initial verdict applies only to the
+original 25-file patch until a separate final hash-bound re-audit.

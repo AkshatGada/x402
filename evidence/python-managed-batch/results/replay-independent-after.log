@@ -1,0 +1,8 @@
+<implementation>/.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+{"source": "/private<implementation>", "modules": {"x402": {"path": "/private<implementation>/python/x402/__init__.py", "sha256": "53dbdd4827be3fa426a1d7ea3631b15e9f69d9bc5cf4798a4673c343ba5125ca"}, "x402.server": {"path": "/private<implementation>/python/x402/server.py", "sha256": "90e43a2c30ff0841fffa51114526c7ccf4ef2f31c6e5cd5324cb8918a3247d21"}, "x402.mechanisms.evm.batch_settlement.server.scheme": {"path": "/private<implementation>/python/x402/mechanisms/evm/batch_settlement/server/scheme.py", "sha256": "cb4997bf375cff3a12796ed43ea88cbd349f1dc7e41620702cbd6b6b45e56a2e"}}}
+........................................................................ [ 87%]
+..........                                                               [100%]
+82 passed in 0.37s

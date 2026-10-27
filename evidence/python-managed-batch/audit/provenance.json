@@ -1,0 +1,20 @@
+{
+  "python-baseline": {
+    "verified": 451,
+    "missing": [],
+    "mismatches": []
+  },
+  "go-reference": {
+    "verified": 675,
+    "missing": [],
+    "mismatches": []
+  },
+  "wheel": {
+    "sha256": "d9a4c70905b42d320361591ca10c70fc231d19504f46d5e7c5e2c73e59b814b1",
+    "matches_reported_sha256": true,
+    "production_sources_compared": 10,
+    "mismatches": {}
+  },
+  "salt_overlay_matches_frozen_test": true,
+  "types_overlay_matches_frozen_test": true
+}

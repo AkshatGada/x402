@@ -1,0 +1,12 @@
+COMMAND ["python3", "<test-cache>", "<node-runtime>/bin/node", "<validation>/validate-catalog.mjs"]
+CWD <implementation>
+✔ Python managed eligibility includes buyer and HTTP server, with Go facilitator only (0.515208ms)
+✔ component configuration adds managed HTTP endpoints but excludes Python MCP (0.480208ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2.820625

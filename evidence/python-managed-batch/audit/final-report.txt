@@ -1,0 +1,167 @@
+Final independent Python managed-custody audit — 2026-10-28
+
+VERDICT: NO REMAINING BLOCKING FINDINGS IN THE REVIEWED SCOPE.
+The four ordinary lifecycle/protocol findings from initial-report.txt are corrected
+on the exact final source below. Ready for local contribution review and human
+review; no live-chain, release or full-SDK-green claim is implied.
+
+Source identity
+- Checkout <implementation>
+- Branch codex/python-managed-batch-server-client
+- Base/HEAD dbe1080ac7f65e2e05cc8430a834c255a6800828 (uncommitted contribution)
+- Final 27-file patch SHA256:
+  0b36be9f7cb2090641dc81d62f275c5c51e7b69812a394cd62f38a78013986b0
+- source-before-final.json and source-after-final.json contain all exact SHA256s.
+  All 27 match the final producer manifest before/after; zero source drift, zero
+  unlisted changed files. Working index remains SHA256
+  6502747765d3dc7c637a3d04b3a07a8826d9259a8c9a549d562e573c9c02f0a0.
+- Final patch independently applies to the pinned base via an audit-only temporary
+  index; git diff --check passes. No source/index edits by the auditor.
+- Initial original 25-file patch 8acdb8bf... and the intermediate bc22adfb... patch
+  are not the final audited implementation. Intermediate receipts are archived
+  under interim-bc22/ and are not presented as final passing evidence.
+
+Corrections independently assessed
+1. Known local pre-dispatch failures now release admission through existing
+   cancellation dispatch, after unrecovered failure hooks. Explicit before-settle
+   AbortResult also cancels. Both sync/async settle drivers handle dispatch_cancel.
+   Original signer/application errors survive, and cancel-phase errors do not
+   recursively cancel. The dispatch flag is set before the facilitator call;
+   thrown/unknown remote outcomes are not automatically canceled.
+2. Pending/failed outcomes retain trusted reservation identity and refund snapshot.
+   The existing exactly-one settlement_pending retry is unchanged. A later
+   explicit reconciliation attempt can enrich the same reservation. Failed cancel
+   retains identity; confirmed success/cancel and weakref payload collection clear
+   request state. Receipt-bearing or settlement_pending local SettleError is
+   excluded from automatic cancel. Manual failure recovery still short-circuits.
+3. A trusted pendingId is captured before validating a managed verify snapshot.
+   Missing or noncanonical required uint fields fail before the handler. Known
+   admission is canceled; missing identity is never invented or borrowed. Exact
+   Python integers/decimal strings preserve a full-width refund nonce.
+4. Authoritative receipt fields are parsed before the optional replica update.
+   Missing/malformed authority yields AfterSettleAbortError with the same receipt's
+   transaction/amount/extra retained and no cancellation of its committed outcome.
+   Optional storage/callback failures instead log once and preserve success. The
+   real buyer response hook advances its local watermark from the known receipt.
+   Receipt validation does not depend on a cached local request context.
+5. The coordinator restored direct voucher/deposit settle without local verify:
+   absent pendingId reaches Go's existing full-reverify path. Replay again reaches
+   the facilitator and is rejected without another charge. Refund enrichment
+   continues to require its verified snapshot. No extra protocol restriction was
+   introduced by the cleanup correction.
+
+Other reviewed behavior
+- Explicit voucher_store_mode defaults to server. New config/context arguments are
+  appended for positional compatibility. Capability negotiation copies managed
+  authorizer/delay and requires a usable refund-consent path.
+- Shared buyer salt normalization follows Go's decimal/hex and 12+20 byte layout;
+  default zero entropy works with both consent configurations. The same builder
+  feeds buyer payloads/recovery. Self-managed canonical identities remain stable.
+- Managed admission and every payment settle stay at the facilitator despite local
+  replicas. Corrective state and signed proof for both mismatch reasons survive.
+  Refunds skip the handler, use separate server consent where configured, and do
+  not fabricate facilitator claim signatures. chargeCount=0 survives receipts.
+- Managed server cooperative refund APIs and automatic refund jobs are disabled;
+  no Python managed facilitator/store/worker port was added. No new dependencies,
+  legacy source changes, Go production changes or TypeScript SDK edits are present.
+- E2E serverSdks complements clientSdks for the four HTTP managed routes; Go remains
+  the facilitator role and managed Python MCP endpoints remain excluded.
+
+Checks independently rerun on final source
+- Focused production suite: 146 passed, including real Flask/FastAPI middleware.
+- Broad eligible Python units: 2220 passed, 9 failed, 2 skipped. Independently run
+  pinned baseline: 2099 passed, identical 9 failures, 2 skipped. Exact failure IDs
+  compared in source-after-final.json. Thus 121 additional passing unit cases and
+  no new failures in this bounded selection; full SDK is not described as green.
+- Audit-only public-core matrix: 82 passed. Exact same current test files against
+  the verified uncorrected source: 64 behavioral failures, 18 passes, no collection
+  or startup failure. Includes sync/async local signer/abort cleanup, failed cancel,
+  pending/unknown retention, recovery short circuit, canonical uint forms, missing
+  receipt fields, no-context direct voucher/deposit routing, replica outage plus
+  real buyer update, existing thrown-hook/SkipSettleResult behavior, and actual
+  eth-account recovery of refund signatures containing nonce 2^200+12345.
+- The first 34-case audit expected a cancel call even if pendingId was entirely
+  absent. That assertion was clarified to no cancel without trusted identity;
+  original backup/log and adjustment hashes are retained. The final identical
+  82-case before/after comparison uses the clarified assertion on both sources.
+- Actual Go/Python loopback checks all pass on final source: full existing probe
+  (both consent paths, commit/replay/corrective buyer recovery/cross-server cancel/
+  early manual after-verify abort/partial refund), signer outage, default-zero salt.
+  The same controlled signer harness confirms original source verify=1, settle=0,
+  held=true; final verify=1, settle=1, held=false, next verify valid. This is an
+  ordinary synthetic signer-outage control, not an incident or exploit claim.
+- Changed/new package Python Ruff check and format: all 15 files pass.
+- managed.py stdlib executable-line accounting independently reproduced on final
+  146-test suite: 237/253, 93.68%. This is not branch or overall project coverage.
+- Import origins, exact environments/commands and test hashes are in commands.json,
+  final-commands.json, matrix-commands.json and go-commands.json. All heavy checks
+  used with-test-slot.py; Go worker count stayed at two. Initial loopback-denied
+  startup log is explicitly separate from approved behavioral-run logs.
+
+Coordinator receipts inspected; not independently rebuilt in this final pass
+- E2E Python lint and two catalog unittest cases pass.
+- Two Node catalog tests and syntax transpilation of four changed TS files pass.
+  This is not a full E2E harness type/build or funded-route test.
+- Corrected sdist/wheel build passes. Auditor independently verifies all 11 changed
+  production files in the corrected wheel against final manifest. Wheel SHA256:
+  10ec1e70a67d23dd3eb849b952418c877645649261e2efa600c5c57bf8fd9c44.
+- Coordinator's promoted 38-case correction suite also passes and includes two
+  missing-withdraw-time cases plus direct voucher controls. The broader 82-case
+  audit matrix remains a separate audit artifact.
+
+Evidence provenance/framing
+- Independently verified all 451 Python baseline files and 675 Go reference files
+  against pinned Git tree blob IDs: no missing/mismatched files. Initial wheel's
+  10-file verification and final wheel's 11-file verification are distinct.
+- Baseline source imports are explicitly asserted; overlaid salt/type test files
+  match the original contribution tests. Missing managed configuration raises
+  TypeError on baseline and baseline salt/wire control yields 17 failures/28 passes.
+- Read handoff, run commands, baseline/coverage/validation scripts and actual Go
+  bridge. They do not silently substitute changed production code on baseline or
+  require source mutation. Coordinator's preserved uncorrected snapshot matches
+  every original changed-file hash. Final independent matrix records both origins.
+- The bridge's canonicalConfig helper re-packs the already packed salt; tested
+  entropy 1 happens to be idempotent. The added zero-entropy control deliberately
+  compares direct Go ComputeChannelId and exercises actual Go verify/settle/refund,
+  without claiming that helper is an oracle for deriving salt from original input.
+  Production packing works; this helper limitation is validation-only.
+- Read the refreshed producer HANDOFF.txt/RUN_COMMANDS.txt/package verification.
+  Current labels match the final 27-file patch, 146 focused/82 audit cases, broad
+  baseline comparison, final coverage/wheel and actual agent attribution. Original
+  handoff/wheel/coverage remain explicitly under pre-audit/. No framing blocker
+  remains; current claims point to final coordinator-work/audit receipts.
+
+Remaining boundaries
+Actual Go admission/storage and both SDKs' methods are exercised, but chain reads,
+authorizer/chain fixtures and onchain writes are synthetic, with a seeded channel
+and fixed synthetic caller identity. No live RPC, funds, credentials, deployment,
+auth gateway or funded initial deposit/top-up/gas-sponsoring E2E run was used.
+Initial deposit/direct routing is a unit control. Pending reconciliation is tested
+with response doubles, not a delayed live transaction. Python runtime is 3.12.14;
+other supported Python versions were not exercised.
+
+Structured non-200 HTTP failure recovery still depends on #3802/#3938/#3825; the
+bridge returns response models as HTTP 200 and cannot prove production mappings.
+SVM/TVM extras and MCP are absent in this environment; unchanged baseline failures
+remain. Complete monorepo builds, full TypeScript E2E types/builds, live worker and
+funded route compatibility were not run. These are honest test boundaries, not
+additional required funded testing or a claim that adjacent fixes are duplicated.
+
+No vulnerability hunting, exploit reproduction, public reporting, maintainer
+contact, installs, commits, push or PR changes by this auditor. Read SECURITY.md;
+any future sensitive discovery belongs in its private TSC/maintainer process.
+
+Attribution
+Codex implemented and corrected production code; this separately invoked
+gpt-6.1-sol / xhigh Codex auditor reviewed independently and authored audit tests/
+probes. The coordinator promoted selected audit regressions into contribution
+source. Tools used here: Python/pytest/eth-account/httpx/stdlib trace, Go, Ruff,
+Git and local shell tools; Node/esbuild receipts were inspected. No Claude or
+Astra credit or copied coauthor trailer belongs to this work. PR #3892 attribution
+was not changed.
+
+Primary artifacts: final-report.txt, initial-report.txt, source-before-final.json,
+source-after-final.json, provenance.json, matrix-commands.json, final-commands.json,
+go-commands.json, ordinary-final.log, ordinary-uncorrected-final-matrix.log,
+focused-final.log, broad-final.log, coverage-final.json, go-*-final.log and the
+independently authored test/probe scripts in this audit directory.

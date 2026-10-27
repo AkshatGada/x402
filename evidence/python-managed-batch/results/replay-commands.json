@@ -1,0 +1,211 @@
+[
+  {
+    "label": "upstream-missing-feature",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "<replay-stage>/pytest-origin.py",
+      "<review>/public-evidence/harness/baseline-tests"
+    ],
+    "cwd": "<replay-stage>",
+    "env": {
+      "X402_AUDIT_SOURCE_ROOT": "<replay-stage>/baseline",
+      "X402_REPLAY_HARNESS": "<review>/public-evidence/harness",
+      "X402_EXPECT_MISSING_CONFIG": "1",
+      "PYTHONPATH": "<replay-stage>/baseline/python"
+    },
+    "exit": 1,
+    "expected_exit": 1
+  },
+  {
+    "label": "correction-before",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "<replay-stage>/pytest-origin.py",
+      "<review>/public-evidence/harness/test_managed_recovery.py"
+    ],
+    "cwd": "<replay-stage>",
+    "env": {
+      "X402_AUDIT_SOURCE_ROOT": "<replay-stage>/uncorrected",
+      "X402_REPLAY_HARNESS": "<review>/public-evidence/harness",
+      "X402_EXPECT_MISSING_CONFIG": "0",
+      "PYTHONPATH": "<replay-stage>/uncorrected/python"
+    },
+    "exit": 1,
+    "expected_exit": 1
+  },
+  {
+    "label": "correction-after",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "<replay-stage>/pytest-origin.py",
+      "<review>/public-evidence/harness/test_managed_recovery.py"
+    ],
+    "cwd": "<replay-stage>",
+    "env": {
+      "X402_AUDIT_SOURCE_ROOT": "/private<implementation>",
+      "X402_REPLAY_HARNESS": "<review>/public-evidence/harness",
+      "X402_EXPECT_MISSING_CONFIG": "0",
+      "PYTHONPATH": "/private<implementation>/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "label": "independent-before",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "<replay-stage>/pytest-origin.py",
+      "<review>/public-evidence/harness/test_audit_lifecycle.py",
+      "<review>/public-evidence/harness/test_audit_extended.py"
+    ],
+    "cwd": "<replay-stage>",
+    "env": {
+      "X402_AUDIT_SOURCE_ROOT": "<replay-stage>/uncorrected",
+      "X402_REPLAY_HARNESS": "<review>/public-evidence/harness",
+      "X402_EXPECT_MISSING_CONFIG": "0",
+      "PYTHONPATH": "<replay-stage>/uncorrected/python"
+    },
+    "exit": 1,
+    "expected_exit": 1
+  },
+  {
+    "label": "independent-after",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<implementation>/.venv/bin/python",
+      "<replay-stage>/pytest-origin.py",
+      "<review>/public-evidence/harness/test_audit_lifecycle.py",
+      "<review>/public-evidence/harness/test_audit_extended.py"
+    ],
+    "cwd": "<replay-stage>",
+    "env": {
+      "X402_AUDIT_SOURCE_ROOT": "/private<implementation>",
+      "X402_REPLAY_HARNESS": "<review>/public-evidence/harness",
+      "X402_EXPECT_MISSING_CONFIG": "0",
+      "PYTHONPATH": "/private<implementation>/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "label": "go-signer-before",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<replay-stage>/baseline/go",
+    "env": {
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<review>/public-evidence/harness/go-signer-controlled.py",
+      "X402_PROBE_RESULT": "signer-outage-reproduced",
+      "X402_AUDIT_SOURCE_ROOT": "<replay-stage>/uncorrected",
+      "X402_EXPECT_SIGNER_FIX": "0",
+      "PYTHONPATH": "<replay-stage>/uncorrected/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "label": "go-signer-after",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<replay-stage>/baseline/go",
+    "env": {
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<review>/public-evidence/harness/go-signer-controlled.py",
+      "X402_PROBE_RESULT": "signer-outage-fixed",
+      "X402_AUDIT_SOURCE_ROOT": "/private<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONPATH": "/private<implementation>/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "label": "go-zero-salt",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<replay-stage>/baseline/go",
+    "env": {
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<review>/public-evidence/harness/go-zero-salt-probe.py",
+      "X402_PROBE_RESULT": "zero-salt-passed",
+      "X402_AUDIT_SOURCE_ROOT": "/private<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONPATH": "/private<implementation>/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  },
+  {
+    "label": "go-full-flow",
+    "command": [
+      "<python-framework>",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<replay-stage>/baseline/go",
+    "env": {
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<review>/public-evidence/harness/go-http-probe.py",
+      "X402_PROBE_RESULT": "managed-custody-passed",
+      "X402_AUDIT_SOURCE_ROOT": "/private<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONPATH": "/private<implementation>/python"
+    },
+    "exit": 0,
+    "expected_exit": 0
+  }
+]

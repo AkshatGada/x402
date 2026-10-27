@@ -1,0 +1,2 @@
+# Keep the audited reconstruction patch byte-for-byte, including context markers.
+harness/uncorrected-implementation.patch -whitespace

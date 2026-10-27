@@ -1,0 +1,5 @@
+=== RUN   TestPythonManagedCustodyProbe
+    managed_python_probe_test.go:103: {"result":"zero-salt-passed","source":"/private<implementation>/python/x402/__init__.py","scenarios":[{"consent":"delegated","salt":"0x0000000000000000000000000000000000000000000000000000000000000000","channelId":"0x27f6ec89c9f60b3788747f15aad507a489fe829325fcf266ef90737d4451605d","calls":{"settle":2,"verify":2},"refundSucceeded":true},{"consent":"signed","salt":"0x0000000000000000000000007b8bda9c9da1adc880b90ba262de05039b11da94","channelId":"0x0bb0406fd136af2382d43ea350866a57365d0644e965dc6c81903863828bdf51","calls":{"settle":2,"verify":2},"refundSucceeded":true}]}
+--- PASS: TestPythonManagedCustodyProbe (0.31s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mechanisms/evm/batch-settlement/facilitator	0.551s

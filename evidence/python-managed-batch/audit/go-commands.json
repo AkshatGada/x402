@@ -1,0 +1,134 @@
+[
+  {
+    "name": "go-signer-uncorrected-controlled",
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<validation>/go-reference",
+    "env": {
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOTOOLCHAIN": "local",
+      "GOMODCACHE": "<test-cache>",
+      "GOCACHE": "<test-cache>",
+      "GOPATH": "<validation>/gopath",
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<audit>/go-signer-controlled.py",
+      "X402_PROBE_RESULT": "signer-outage-reproduced",
+      "X402_AUDIT_SOURCE_ROOT": "<coordinator>/uncorrected",
+      "X402_EXPECT_SIGNER_FIX": "0",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0
+  },
+  {
+    "name": "go-signer-final",
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<validation>/go-reference",
+    "env": {
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOTOOLCHAIN": "local",
+      "GOMODCACHE": "<test-cache>",
+      "GOCACHE": "<test-cache>",
+      "GOPATH": "<validation>/gopath",
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<audit>/go-signer-controlled.py",
+      "X402_PROBE_RESULT": "signer-outage-fixed",
+      "X402_AUDIT_SOURCE_ROOT": "<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0
+  },
+  {
+    "name": "go-zero-salt-final",
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<validation>/go-reference",
+    "env": {
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOTOOLCHAIN": "local",
+      "GOMODCACHE": "<test-cache>",
+      "GOCACHE": "<test-cache>",
+      "GOPATH": "<validation>/gopath",
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<audit>/go-zero-salt-probe.py",
+      "X402_PROBE_RESULT": "zero-salt-passed",
+      "X402_AUDIT_SOURCE_ROOT": "<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0
+  },
+  {
+    "name": "go-original-flow-final",
+    "command": [
+      "python3",
+      "<test-cache>",
+      "<test-cache>",
+      "test",
+      "-mod=readonly",
+      "-p",
+      "2",
+      "-count=1",
+      "-v",
+      "-run",
+      "^TestPythonManagedCustodyProbe$",
+      "./mechanisms/evm/batch-settlement/facilitator"
+    ],
+    "cwd": "<validation>/go-reference",
+    "env": {
+      "CGO_ENABLED": "0",
+      "GOPROXY": "off",
+      "GOTOOLCHAIN": "local",
+      "GOMODCACHE": "<test-cache>",
+      "GOCACHE": "<test-cache>",
+      "GOPATH": "<validation>/gopath",
+      "X402_PROBE_PYTHON": "<implementation>/.venv/bin/python",
+      "X402_PROBE_SCRIPT": "<validation>/go-http-probe.py",
+      "X402_PROBE_RESULT": "managed-custody-passed",
+      "X402_AUDIT_SOURCE_ROOT": "<implementation>",
+      "X402_EXPECT_SIGNER_FIX": "1",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0
+  }
+]

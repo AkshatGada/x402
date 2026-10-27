@@ -1,0 +1,8 @@
+{
+  "upstream_revision": "dbe1080ac7f65e2e05cc8430a834c255a6800828",
+  "implementation_commit": "a2048fe7a1e6193ee254b7c0f55b392ba991d8fc",
+  "implementation_branch": "codex/python-managed-batch-server-client",
+  "audited_patch_sha256": "0b36be9f7cb2090641dc81d62f275c5c51e7b69812a394cd62f38a78013986b0",
+  "source_file_count": 27,
+  "publication_status_at_preparation": "local only"
+}

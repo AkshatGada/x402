@@ -1,0 +1,7 @@
+COMMAND ["python3", "<test-cache>", "<node-runtime>/bin/node", "<validation>/syntax-ts.mjs"]
+CWD <implementation>
+Syntax passed: e2e/src/mechanisms.ts
+Syntax passed: e2e/src/discovery.ts
+Syntax passed: e2e/src/types.ts
+Syntax passed: e2e/src/mechanisms-managed-roles.test.ts
+E2E package JSON parsed
