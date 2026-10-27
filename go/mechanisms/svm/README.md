@@ -59,12 +59,6 @@ github.com/x402-foundation/x402/go/v2/mechanisms/svm/exact/facilitator
 - Used for verifying transaction signatures and settling payments on-chain
 - Requires facilitator signer with Solana RPC integration
 
-### Recipient Account Diagnostics
-
-After a standard-wallet exact payment fails simulation, an optional `GetAccountInfo` signer method can inspect the validated recipient ATA. `invalid_exact_solana_recipient_ata_missing` reports an absent account; `invalid_exact_solana_recipient_ata_wrong_program_owner` reports a different token-program owner. Original simulation details and the payer are preserved, including in settlement's pre-broadcast rejection.
-
-Successful simulation adds no account read. Signers without the method, lookup failures and correctly owned accounts retain the original generic simulation error. The account snapshot is a current diagnostic, not proof of the earlier failure's cause. No account is created or funded.
-
 ## Upto Payment Scheme
 
 The **upto** scheme enables usage-based billing: the client authorizes a maximum amount in an onchain payment channel, and the server settles only what was actually consumed. See the [upto scheme README](./upto/README.md) for client, server, and facilitator usage.

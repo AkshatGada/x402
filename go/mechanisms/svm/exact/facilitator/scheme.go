@@ -393,7 +393,8 @@ func (f *ExactSvmScheme) verifyStaticPath(
 	}
 
 	// Step 4: Verify Transfer Instruction
-	if err := f.verifyTransferInstruction(tx, tx.Message.Instructions[2], reqStruct, signerAddressStrs); err != nil {
+	transfer, err := f.verifyTransferInstruction(tx, tx.Message.Instructions[2], reqStruct, signerAddressStrs)
+	if err != nil {
 		return x402.NewVerifyError(err.Error(), payer, err.Error())
 	}
 
@@ -465,17 +466,8 @@ func (f *ExactSvmScheme) verifyStaticPath(
 		if !ok {
 			return failure
 		}
-		// These transfer accounts and program have already passed static validation.
-		transfer := tx.Message.Instructions[2]
-		program, parseErr := tx.Message.Program(transfer.ProgramIDIndex)
-		if parseErr != nil {
-			return failure
-		}
-		accounts, parseErr := transfer.ResolveInstructionAccounts(&tx.Message)
-		if parseErr != nil || len(accounts) < 3 {
-			return failure
-		}
-		destination := accounts[2].PublicKey
+		destination := transfer.destination
+		program := transfer.programID
 		account, readErr := reader.GetAccountInfo(ctx, destination, string(requirements.Network), &rpc.GetAccountInfoOpts{
 			Commitment: rpc.CommitmentConfirmed,
 		})
@@ -778,40 +770,40 @@ func (f *ExactSvmScheme) verifyComputePriceInstruction(tx *solana.Transaction, i
 	return nil
 }
 
-// verifyTransferInstruction verifies the transfer instruction
+// verifyTransferInstruction returns the validated transfer details.
 func (f *ExactSvmScheme) verifyTransferInstruction(
 	tx *solana.Transaction,
 	inst solana.CompiledInstruction,
 	requirements x402.PaymentRequirements,
 	signerAddresses []string,
-) error {
+) (*transferCheckedInfo, error) {
 	progID, err := tx.Message.Program(inst.ProgramIDIndex)
 	if err != nil {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	// Must be Token Program or Token-2022 Program
 	if progID != solana.TokenProgramID && progID != solana.Token2022ProgramID {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	accounts, err := inst.ResolveInstructionAccounts(&tx.Message)
 	if err != nil {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	if len(accounts) < 4 {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	decoded, err := token.DecodeInstruction(accounts, inst.Data)
 	if err != nil {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	transferChecked, ok := decoded.Impl.(*token.TransferChecked)
 	if !ok {
-		return errors.New(ErrNoTransferInstruction)
+		return nil, errors.New(ErrNoTransferInstruction)
 	}
 
 	// SECURITY: Verify that the facilitator's signers are not transferring their own funds
@@ -819,46 +811,52 @@ func (f *ExactSvmScheme) verifyTransferInstruction(
 	authorityAddr := accounts[3].PublicKey.String() // TransferChecked: [source, mint, destination, authority, ...]
 	for _, signerAddr := range signerAddresses {
 		if authorityAddr == signerAddr {
-			return errors.New(ErrFeePayerTransferringFunds)
+			return nil, errors.New(ErrFeePayerTransferringFunds)
 		}
 	}
 
 	// Verify mint address
 	mintAddr := accounts[1].PublicKey.String()
 	if mintAddr != requirements.Asset {
-		return errors.New(ErrMintMismatch)
+		return nil, errors.New(ErrMintMismatch)
 	}
 
 	// Verify destination ATA
 	payToPubkey, err := solana.PublicKeyFromBase58(requirements.PayTo)
 	if err != nil {
-		return errors.New(ErrRecipientMismatch)
+		return nil, errors.New(ErrRecipientMismatch)
 	}
 
 	mintPubkey, err := solana.PublicKeyFromBase58(requirements.Asset)
 	if err != nil {
-		return errors.New(ErrMintMismatch)
+		return nil, errors.New(ErrMintMismatch)
 	}
 
 	expectedDestATA, err := findATA(payToPubkey, mintPubkey, progID)
 	if err != nil {
-		return errors.New(ErrRecipientMismatch)
+		return nil, errors.New(ErrRecipientMismatch)
 	}
 
 	destATA := transferChecked.GetDestinationAccount().PublicKey
 	if destATA.String() != expectedDestATA.String() {
-		return errors.New(ErrRecipientMismatch)
+		return nil, errors.New(ErrRecipientMismatch)
 	}
 
 	// Verify amount
 	requiredAmount, err := strconv.ParseUint(requirements.Amount, 10, 64)
 	if err != nil {
-		return errors.New(ErrAmountMismatch)
+		return nil, errors.New(ErrAmountMismatch)
 	}
 
 	if *transferChecked.Amount != requiredAmount {
-		return errors.New(ErrAmountMismatch)
+		return nil, errors.New(ErrAmountMismatch)
 	}
 
-	return nil
+	return &transferCheckedInfo{
+		programID:   progID,
+		amount:      *transferChecked.Amount,
+		mint:        mintPubkey,
+		destination: destATA,
+		authority:   accounts[3].PublicKey,
+	}, nil
 }

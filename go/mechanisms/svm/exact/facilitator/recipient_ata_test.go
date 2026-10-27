@@ -189,6 +189,20 @@ func TestRecipientATADiagnostics(t *testing.T) {
 				assertRecipientNoSettlement(t, base)
 			})
 
+			t.Run("early recipient rejection", func(t *testing.T) {
+				base := newRecipientSigner(f)
+				s := &recipientAccountSigner{recipientDiagnosticSigner: base}
+				requirements := f.requirements
+				requirements.PayTo = f.facilitatorAddr.String()
+				_, err := NewExactSvmScheme(s).Verify(context.Background(), f.payload, requirements, nil)
+				var verification *x402.VerifyError
+				require.ErrorAs(t, err, &verification)
+				assert.Equal(t, ErrRecipientMismatch, verification.InvalidReason)
+				assert.Zero(t, s.simulateCalls)
+				assert.Empty(t, s.reads)
+				assertRecipientNoSettlement(t, base)
+			})
+
 			t.Run("early mint rejection", func(t *testing.T) {
 				base := newRecipientSigner(f)
 				s := &recipientAccountSigner{recipientDiagnosticSigner: base}
