@@ -1,0 +1,28 @@
+{
+  "credited_checks": [
+    "audit-baseline-public-probe",
+    "audit-canonical-focused-and-supplemental",
+    "audit-fixed-public-probe",
+    "baseline-mcp-canonical-list",
+    "baseline-mcp-canonical-race-cover",
+    "baseline-public-probe",
+    "fixed-public-probe",
+    "focused-fix",
+    "format-final",
+    "format",
+    "mcp-build",
+    "mcp-lint",
+    "mcp-race-cover",
+    "mcp-vet",
+    "evidence-format",
+    "portable-baseline",
+    "portable-fixed",
+    "evidence-build",
+    "evidence-vet",
+    "evidence-lint"
+  ],
+  "excluded_runs": {
+    "baseline-mcp-race-cover": "Noncanonical overlay ignored; superseded by baseline-mcp-canonical-race-cover.",
+    "audit-focused-and-supplemental": "Supplemental overlay ignored; superseded by audit-canonical-focused-and-supplemental."
+  }
+}

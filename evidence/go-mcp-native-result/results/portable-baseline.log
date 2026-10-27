@@ -1,0 +1,8 @@
+PASS text-positive-control: existing text projection preserved (1 item)
+FAIL free-mixed-content: native result unavailable; sourceContent=5 projectedContent=1 paymentMade=false
+FAIL paid-mixed-content: native result unavailable; sourceContent=5 projectedContent=1 paymentMade=true
+FAIL paid-image-only: native result unavailable; sourceContent=1 projectedContent=0 paymentMade=true
+FAIL non-payment-tool-error: native result unavailable; sourceContent=5 projectedContent=1 paymentMade=false
+PASS CallPaidTool-control: calls=2 sourceContent=5 returnedContent=5 image=true audio=true resourceLink=true embeddedResource=true structured=true vendorMeta=true textAnnotations=true paymentMade=true receipt=true
+Native-result preservation failed in 4 wrapper scenarios
+exit status 1

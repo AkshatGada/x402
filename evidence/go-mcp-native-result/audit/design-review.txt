@@ -1,0 +1,164 @@
+Go MCP caller-result preservation — pre-implementation design audit
+2026-10-27 | Codex / GPT-6.1 Sol, extra-high reasoning
+
+VERDICT: PROCEED. No blocking defect in the proposed minimal design.
+
+Audit source: <source> at clean HEAD
+636f5856533e4124c6e733bc377652429952d1d6. The parent subsequently reports
+1148309d5bdf4db476c488048d34dc6706a1c6da has identical relevant Go MCP,
+module and contribution files; that newer revision was not independently
+checked by this auditor. This audit precedes implementation.
+
+RECOMMENDED DESIGN
+
+1. Import the already-used official MCP SDK in go/mcp/types.go and append
+   RawResult *mcp.CallToolResult to MCPToolCallResult. Use a short field comment
+   stating that this is the original SDK result. Keep the field untagged,
+   matching every neighboring wrapper field and ToolCallResult.RawResult.
+2. Set RawResult: result in buildMCPToolCallResultFromSDK. Keep Content's current
+   text-only projection, IsError, payment extraction and PaymentMade unchanged.
+3. Briefly document Content as the text projection and RawResult as access to
+   native content, structured content and metadata. Say it is the original
+   pointer, not a copy or immutable snapshot. A short README note after the
+   client example or in the client API section is sufficient.
+4. Add one Go Fixed changelog fragment describing native result preservation.
+   No custom result schema, marshaller, copy routine, dependency or abstraction.
+
+SOURCE/API COMPATIBILITY
+
+The official dependency is already exposed by MCPCaller and ToolCallResult;
+this adds no dependency and follows an existing public result pattern.
+Existing keyed literals and field access retain their behavior. This is not
+literally source-compatible with every Go program: external unkeyed composite
+literals of MCPToolCallResult must add a value, and whole-object reflection,
+equality fixtures, formatting and serializers can observe the new field.
+The existing Content field is already a slice, so struct comparability does
+not change. Do not call this universally source/JSON-compatible.
+
+JSON CHOICE AND TRADEOFFS
+
+With no tag, encoding/json uses the exported Go name RawResult, as it does for
+the existing ToolCallResult.RawResult. The nested SDK object uses its native
+keys: content, structuredContent, _meta and isError. The old top-level keys
+and values remain, but the complete JSON document changes. Text, IsError and
+settlement data can appear both in the compatibility fields and RawResult;
+this is the deliberate consequence of preserving both views. Image/audio
+payloads increase serialized size. Only the pointer is added in memory; no
+content copy is performed by the proposed fix.
+
+An untagged nil field serializes as "RawResult":null on a manually constructed
+zero value. A tag json:",omitempty" would keep the default name and omit that
+nil, but changes no non-nil returned result and thus cannot preserve existing
+serialized output. json:"rawResult,omitempty" also invents a camel-case outer
+key inconsistent with this wrapper's current conventions. json:"-" is the
+option that actually keeps existing JSON unchanged, at the cost of excluding
+native result data when callers serialize the wrapper. No unchanged-JSON
+requirement is established here, so the untagged field is the smallest correct
+choice and the adjacent public precedent. Do not silently add a custom JSON
+policy or modify ToolCallResult to normalize the two APIs.
+
+Native StructuredContent and Meta accept SDK values that can fail to marshal
+(for example, a locally supplied unsupported Go value). Previously discarded
+values can therefore make json.Marshal(wrapper) fail after this change. A
+real JSON wire response is normally JSON-safe, but MCPCaller also admits local
+implementations. This is another serialization compatibility tradeoff, not a
+reason to filter or rewrite the raw data.
+
+The actual cached SDK v1.3.0 defines Content as the native interface union of
+TextContent, ImageContent, AudioContent, ResourceLink and EmbeddedResource.
+Its concrete content types implement JSON marshaling, and CallToolResult has
+a JSON unmarshaller handling the union. Reuse those implementations directly.
+
+POINTER OWNERSHIP / HOOK ALIASES
+
+RawResult must be exactly the pointer returned by MCPCaller for the terminal
+result, matching CallPaidTool's existing behavior. It is a borrowed mutable
+object, not an independent snapshot. Mutating it can make its Content/IsError
+diverge from the wrapper's copied text projection/flags and extracted receipt.
+Do not add synchronization, deep copies or mutation prevention for this fix.
+
+Existing on-after-payment hook behavior already aliases some native data:
+callToolResultToMCPToolResult copies text and the top-level Meta map, but keeps
+nested metadata values and a map-valued StructuredContent aliased. A hook's
+in-place nested/map mutation can therefore already affect the original SDK
+result before it is returned. The new field reveals that existing result; it
+does not create a new hook channel. Never promise that RawResult is unchanged
+from the transport or isolated from hooks. Keep MCPToolResult, hook contexts
+and callToolResultToMCPToolResult untouched; the latter is shared with server
+hooks and broadening it would add unrelated behavior/API concerns.
+
+RETURN-PATH COVERAGE / FROZEN V1 BOUNDARY
+
+All successful-result return sites for X402MCPClient use the same converter:
+- CallTool free success and non-payment tool errors;
+- CallTool's auto-payment and hook-supplied payload routes, plus public
+  CallToolWithPayment, through callToolWithPayload;
+- paid terminal results, including a declined/no recovery outcome;
+- the original corrective result on the existing fresh-payload creation
+  fallback and the terminal retryResult after successful recovery;
+- the existing v1 compatibility path's final result.
+
+Attaching the pointer in the converter therefore preserves the terminal SDK
+object across these paths without touching retry/selection/payment behavior.
+In a recovery case it must be retryResult, not the earlier challenge object.
+The field also becomes available on the shared wrapper's v1 results; no edit
+to go/legacy, v1 signing/payment methods, extraction, wire contracts or v1-only
+feature is needed or recommended. Existing v1 package tests should continue to
+pass. CallPaidTool already preserves RawResult and needs no production edit.
+GetToolPaymentRequirements returns requirements rather than MCPToolCallResult
+and is intentionally outside this preservation contract. Transport errors or
+policy/hook aborts still return their current nil-result/error outcomes.
+
+ACCEPTANCE TESTS
+
+Use genuine SDK result values returned directly by a scripted MCPCaller. The
+current mockMCPCaller/mcpToolResultToCallToolResult manufactures text-only SDK
+content from MCPToolResult, so that helper alone cannot test this regression.
+Do not replace the SDK models or copy production conversion logic into tests.
+
+Keep a compact matrix through the public client API covering:
+- free mixed result with text, image, audio, resource link and embedded resource;
+- automatic paid mixed result with initial challenge + terminal result;
+- paid image-only result (old Content remains empty, RawResult holds the image);
+- a non-payment IsError=true result with native nontext/structured data;
+- direct CallToolWithPayment native result;
+- recovery returning a distinct final native result, if the existing recovery
+  fixture can be reused without substantial new machinery.
+
+Assert exact RawResult identity with the terminal SDK pointer and preservation
+of native concrete content types/order, bytes/MIME or resource fields, text
+annotations/content metadata, StructuredContent, and vendor Meta. Keep the
+old text projection, IsError, PaymentMade, settlement receipt values, call
+counts and payment/recovery dispatch behavior asserted. Use the existing fake
+scheme and synthetic fixtures; no signer, transport server, RPC or funds.
+One typed structured-content fixture is useful because the native SDK allows
+an object other than map[string]interface{}, while the hook projection does
+not. Pointer preservation must not narrow it to a map.
+
+A small JSON assertion should verify the chosen default RawResult key/native
+payload can serialize with representative valid SDK values, and that existing
+top-level field values retain their shape; do not assert byte-for-byte JSON
+stability. Avoid exhaustive reflection tests of what the type system already
+guarantees. A normal pre-fix test may fail compilation because the field is
+absent; for a meaningful runtime red check, add the public field before the
+converter assignment and observe the preservation cases fail, or remove only
+that assignment temporarily. No production reflection fallback is needed.
+
+READS / VALIDATION / LIMITS
+
+Read .agents/skills/contributing/SKILL.md, root CONTRIBUTING.md, Go
+CONTRIBUTING.md, Go MCP types/client/readme/tests, actual SDK source from the
+locked scratch module cache, and the discovery report/probe/source/results.
+No additional applicable AGENTS.md exists in the pinned checkout; the user's
+attribution instructions apply. Verified pinned HEAD and clean git status.
+No heavy build/test was run by this design auditor, to avoid competing with
+the parent's baseline package test. Discovery's genuine-SDK six-case probe
+and previous independent rerun are evidence read, not a new test claim.
+
+User authorization permits local implementation now. Earlier research's
+suggested maintainer coordination is an availability/API-review consideration,
+not a blocker to this authorized local work. No contact, push, PR, commit,
+install, live network/funds or security testing is required or performed.
+Production files and the original <original-checkout> workspace were not
+edited by this auditor. Attribution is Codex / GPT-6.1 Sol only; no Claude or
+Astra credit or copied co-author trailer. PR #3892 attribution is untouched.

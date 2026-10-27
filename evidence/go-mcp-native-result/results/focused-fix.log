@@ -1,0 +1,16 @@
+=== RUN   TestX402MCPClient_PreservesRawResult
+=== RUN   TestX402MCPClient_PreservesRawResult/free_mixed_content
+=== RUN   TestX402MCPClient_PreservesRawResult/automatic_payment_mixed_content
+=== RUN   TestX402MCPClient_PreservesRawResult/automatic_payment_image_only
+=== RUN   TestX402MCPClient_PreservesRawResult/explicit_payment
+=== RUN   TestX402MCPClient_PreservesRawResult/nonpayment_tool_error
+=== RUN   TestX402MCPClient_PreservesRawResult/recovered_payment_returns_final_result
+--- PASS: TestX402MCPClient_PreservesRawResult (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/free_mixed_content (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/automatic_payment_mixed_content (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/automatic_payment_image_only (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/explicit_payment (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/nonpayment_tool_error (0.00s)
+    --- PASS: TestX402MCPClient_PreservesRawResult/recovered_payment_returns_final_result (0.00s)
+PASS
+ok  	github.com/x402-foundation/x402/go/v2/mcp	0.549s

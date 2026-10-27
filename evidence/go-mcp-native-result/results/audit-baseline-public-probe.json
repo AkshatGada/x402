@@ -1,0 +1,23 @@
+{
+  "command": [
+    "<toolchain>/bin/go",
+    "run",
+    "-overlay",
+    "<validation>/baseline-overlay.json",
+    "."
+  ],
+  "cwd": "<validation>/repro",
+  "exit_code": 1,
+  "elapsed_seconds": 0.294705867767334,
+  "environment": {
+    "GOROOT": "<toolchain>",
+    "GOMODCACHE": "<cache>/gomod",
+    "GOCACHE": "<cache>/gocache",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOTOOLCHAIN": "local",
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "-p=2 -mod=readonly"
+  },
+  "local_paths_redacted": true
+}

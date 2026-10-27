@@ -1,0 +1,7 @@
+PASS text-positive-control: nativeContent=1 projectedContent=1 isError=false paymentMade=false receipt=false
+PASS free-mixed-content: nativeContent=5 projectedContent=1 isError=false paymentMade=false receipt=false
+PASS paid-mixed-content: nativeContent=5 projectedContent=1 isError=false paymentMade=true receipt=true
+PASS paid-image-only: nativeContent=1 projectedContent=0 isError=false paymentMade=true receipt=true
+PASS non-payment-tool-error: nativeContent=5 projectedContent=1 isError=true paymentMade=false receipt=false
+PASS CallPaidTool-control: calls=2 sourceContent=5 returnedContent=5 image=true audio=true resourceLink=true embeddedResource=true structured=true vendorMeta=true textAnnotations=true paymentMade=true receipt=true
+All 6 native-result preservation scenarios passed

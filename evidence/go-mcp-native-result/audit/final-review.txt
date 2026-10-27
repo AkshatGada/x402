@@ -1,0 +1,148 @@
+Go MCP native result preservation — independent final audit
+2026-10-27 | Codex / GPT-6.1 Sol, extra-high reasoning
+
+VERDICT: PASS. No actionable production or regression-test finding.
+One medium verification finding was identified and resolved during the audit.
+
+SCOPE AND SOURCE
+
+Reviewed the five-file local patch on codex/go-mcp-native-result in
+<source>, HEAD/base
+1148309d5bdf4db476c488048d34dc6706a1c6da:
+- go/mcp/types.go
+- go/mcp/client.go
+- go/mcp/client_raw_result_test.go
+- go/mcp/README.md
+- go/.changes/unreleased/fixed-mcp-client-native-result.yaml
+
+Read the user's attribution instructions, .agents/skills/contributing/SKILL.md,
+root CONTRIBUTING.md and go/CONTRIBUTING.md; no nested Go AGENTS.md exists.
+Read the pre-implementation design audit, current and baseline source, genuine
+SDK v1.3.0 types, regression tests, public repro driver and check evidence.
+Independently confirmed both saved baseline production files exactly equal
+git show 1148309d5bdf4db476c488048d34dc6706a1c6da. go.mod/go.sum are unchanged.
+The newer base differs from the discovery revision 636f585 only in the TS EVM
+package.json; relevant Go source and contribution instructions are identical.
+All five final source SHA-256 hashes match source-state.json after this audit.
+
+IMPLEMENTATION ASSESSMENT
+
+MCPToolCallResult.RawResult reuses the already exposed official SDK type. The
+single assignment at go/mcp/client.go:449 retains the exact original pointer
+in the shared converter. Every successful wrapper-result return path uses
+that converter, including free calls, non-payment tool errors, automatic and
+explicit payments, recovery fallback and terminal retry, and the existing v1
+compatibility path. Recovery returns retryResult, not its earlier challenge.
+
+The prior text projection, IsError, PaymentMade and settlement extraction are
+unchanged. Hook projections and the unrelated shared hook/server converter
+are unchanged. No signing, selection, payment-retry policy or transport logic
+was modified. The existing CallPaidTool implementation already preserves the
+SDK pointer and was correctly left alone. No dependency, custom schema,
+marshaller or deep-copy implementation was added. No legacy/v1 source was
+edited; the existing v1 tests remain in the complete MCP package test runs.
+
+The README explains native content access and shared mutable ownership. The
+short field comment and Fixed changelog fragment match the patch's scope.
+
+TEST QUALITY AND INDEPENDENT CHECKS
+
+The new committed test supplies genuine SDK content directly through MCPCaller,
+using the existing synthetic payment scheme and challenge helper. Six cases
+cover free mixed content, automatic paid mixed content, paid image-only,
+explicit payment, non-payment tool error and successful recovery. They assert
+terminal native pointer identity; a before/after native JSON snapshot; the old
+text projection, flags and receipt values; and expected call counts/payment
+payload presence. The recovery case returns a distinct native terminal object
+and therefore detects exposing the earlier payment challenge.
+
+Independently ran the six committed cases plus a scratch-only Go overlay test:
+  go test -overlay <validation>/final-audit-overlay.json
+    ./mcp -run 'TestX402MCPClient_PreservesRawResult|TestFinalAudit_NativeOwnershipTypedStructuredAndWrapperJSON'
+    -count=1 -v
+Exit 0; verbose output explicitly contains both test names and all six subcases.
+Evidence: checks/audit-canonical-focused-and-supplemental.{json,log}.
+
+The supplemental test independently confirms typed StructuredContent pointer
+identity; native concrete content type order, image/audio bytes and MIME,
+resource-link and embedded-resource fields, annotations and metadata through
+wrapper JSON; existing top-level projection, receipt and flag values; the
+default RawResult key; zero-value RawResult:null; and intended mutable alias
+semantics versus the copied projection/flags/extracted receipt. It is scratch
+validation only and did not alter any implementation or committed test file.
+
+Independently reran the exact same public desired-behavior driver before/after:
+  go run -overlay <validation>/baseline-overlay.json .
+  go run .
+Baseline exit 1: four native-result preservation failures and two controls pass.
+Fixed exit 0: all six scenarios pass. These six driver scenarios comprise four
+fault cases plus text-only and existing CallPaidTool controls; they are distinct
+from the six committed call-path cases above. Reflection is confined to the
+scratch driver's optional-field lookup so the unchanged driver compiles against
+both public APIs. The driver calls the real public wrapper API, not a copied
+production conversion. Ordinary package tests are not imported into go run.
+Evidence: checks/audit-baseline-public-probe.{json,log} and
+checks/audit-fixed-public-probe.{json,log}.
+
+Reviewed parent-run check commands and successful output:
+- canonical baseline complete ./mcp race/coverage: exit 0, 77.4%; the new test
+  is virtually excluded and the two production files are replaced by base.
+- fixed complete ./mcp race/coverage: exit 0, 78.2%.
+- go build ./mcp: exit 0.
+- go vet ./mcp: exit 0.
+- pinned golangci-lint v2.7.2 run --concurrency 2 ./mcp: exit 0, 0 issues.
+- formatting and git diff --check: pass.
+These are package-scoped checks, not a claim to have run repository-wide make
+targets. Parent-run logs are reviewed evidence, not independently rerun claims.
+
+RESOLVED VERIFICATION FINDING — MEDIUM, EVIDENCE ONLY
+
+Go canonicalizes this checkout's working directory to /private/tmp. An initial
+test overlay keyed only by /tmp silently failed to replace local package files.
+The auditor noticed the scratch test missing from verbose output and warned
+the parent that its first baseline-package overlay had the same path issue.
+Consequently the initial audit-focused-and-supplemental run only proves the
+committed six cases, and the initial baseline-mcp-race-cover run at 78.2% does
+not prove a baseline result. Both are superseded for those respective claims.
+
+The auditor reran the supplemental test with canonical overlay keys, and the
+parent reran the full baseline with canonical keys and values. Reviewed
+baseline-package-canonical-overlay.json plus the test-list check proving the
+new regression test was absent and the successful baseline race/coverage log
+at 77.4%. Evidence: checks/baseline-mcp-canonical-list.{json,log} and
+checks/baseline-mcp-canonical-race-cover.{json,log}. This finding is resolved.
+The public baseline probe was effective throughout: its module replace uses
+/tmp, the overlay applies there, and the expected four failures were visibly
+reproduced independently. No remaining validation claim relies on the ignored
+local-package overlays.
+
+ACCEPTED API / OWNERSHIP LIMITS
+
+This is an additive API change, not universal Go source or JSON compatibility.
+External unkeyed struct literals and complete-struct formatting/reflection/JSON
+expectations can change. The untagged exported field intentionally emits the
+outer RawResult key and native SDK inner JSON keys; it duplicates native data
+and receipt metadata alongside existing projections. Nil emits null. Large
+native media increases serialization size, and locally supplied unsupported
+Go values in StructuredContent/Meta can now cause whole-wrapper JSON marshaling
+to fail rather than being discarded. These are the approved design tradeoffs.
+
+RawResult is the original borrowed mutable pointer, not a snapshot. Mutation
+can diverge from the wrapper's copied text/flags/extracted receipt. Existing
+hooks already share some nested metadata/structured-content data; this patch
+does not newly isolate or broaden hook behavior. No immutability or transport-
+pristine guarantee should be made. The scratch ownership test confirms this.
+
+ATTRIBUTION AND ACTIONS
+
+Implementation and this review were performed with Codex; this independent
+final audit used GPT-6.1 Sol with extra-high reasoning, local shell/file tools
+and the installed Go toolchain with the approved isolated caches. No Claude or
+Astra work is credited by this audit, and no prior co-author trailer was copied.
+PR #3892 attribution was not touched.
+
+No source edits, commits, pushes, PRs, contact, installations, live network/RPC,
+signing, funds or adjacent payment-challenge/security testing were performed by
+this auditor. All Go checks were coordinated sequentially with the parent,
+GOMAXPROCS=2 and -p=2; GOPROXY/GOSUMDB were off. Only scratch audit evidence was
+written. There are no outstanding code findings or unresolved audit blockers.

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "<evidence-checkout>/evidence/go-mcp-native-result/harness/run.sh",
+    "<source>"
+  ],
+  "cwd": "<evidence-checkout>",
+  "exit_code": 0,
+  "elapsed_seconds": 0.7849142551422119,
+  "environment": {
+    "GOROOT": "<toolchain>",
+    "GOMODCACHE": "<cache>/gomod",
+    "GOCACHE": "<cache>/gocache",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOTOOLCHAIN": "local",
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "-p=2 -mod=readonly"
+  },
+  "local_paths_redacted": true
+}

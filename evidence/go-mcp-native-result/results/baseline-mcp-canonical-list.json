@@ -1,0 +1,25 @@
+{
+  "command": [
+    "<toolchain>/bin/go",
+    "test",
+    "-overlay",
+    "<validation>/baseline-package-canonical-overlay.json",
+    "./mcp",
+    "-list",
+    "TestX402MCPClient_PreservesRawResult"
+  ],
+  "cwd": "<source>/go",
+  "exit_code": 0,
+  "elapsed_seconds": 0.6544930934906006,
+  "environment": {
+    "GOROOT": "<toolchain>",
+    "GOMODCACHE": "<cache>/gomod",
+    "GOCACHE": "<cache>/gocache",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOTOOLCHAIN": "local",
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "-p=2 -mod=readonly"
+  },
+  "local_paths_redacted": true
+}

@@ -1,0 +1,33 @@
+{
+  "baseline": "1148309d5bdf4db476c488048d34dc6706a1c6da",
+  "implementation_commit": "52178fe36b265ccf99b94f28f107c25bc0655565",
+  "evidence_branch": "codex/evidence-go-mcp-native-result",
+  "no_live_payments": true,
+  "production_changes": [
+    {
+      "path": "go/mcp/types.go",
+      "sha256": "172d6271242f7f06591e645b78c80d283ec4f595dab6be748ec15ec440cb1f43"
+    },
+    {
+      "path": "go/mcp/client.go",
+      "sha256": "51ab95fc8990a33d3748b0411e53bce9225658dddd32637ccc963b57d6f9b573"
+    },
+    {
+      "path": "go/mcp/client_raw_result_test.go",
+      "sha256": "906e15c9590687c45dae1f0f4d923fa279e4ca3851c499255b545f3e32cb5382"
+    },
+    {
+      "path": "go/mcp/README.md",
+      "sha256": "c71b210f0c9f8d2002abdfb84777a006bdd6c0c5a451d07f40eb42e96b8922d0"
+    },
+    {
+      "path": "go/.changes/unreleased/fixed-mcp-client-native-result.yaml",
+      "sha256": "d3086a878723e9688f2ce1b36b2c7385d68482b66b6b09510152d26c24de6290"
+    }
+  ],
+  "baseline_blobs": {
+    "client.go": "33baef733b2832c3ed2773ed0dba7b80809c83c3ca91412fbe16d2ce78c54a4c",
+    "types.go": "d964d75ebe9f53fad154832141e79f95eaeafd70527b7ce5976e84f9a6726dfc"
+  },
+  "original_logs_local_paths_redacted": true
+}

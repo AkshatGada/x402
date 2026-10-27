@@ -1,0 +1,27 @@
+{
+  "command": [
+    "<toolchain>/bin/go",
+    "test",
+    "-overlay",
+    "<validation>/final-audit-overlay.json",
+    "./mcp",
+    "-run",
+    "TestX402MCPClient_PreservesRawResult|TestFinalAudit_NativeOwnershipTypedStructuredAndWrapperJSON",
+    "-count=1",
+    "-v"
+  ],
+  "cwd": "<source>/go",
+  "exit_code": 0,
+  "elapsed_seconds": 0.8972139358520508,
+  "environment": {
+    "GOROOT": "<toolchain>",
+    "GOMODCACHE": "<cache>/gomod",
+    "GOCACHE": "<cache>/gocache",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOTOOLCHAIN": "local",
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "-p=2 -mod=readonly"
+  },
+  "local_paths_redacted": true
+}

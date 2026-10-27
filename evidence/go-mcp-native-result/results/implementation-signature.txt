@@ -1,0 +1,11 @@
+commit 52178fe36b265ccf99b94f28f107c25bc0655565
+Good "git" signature for akshatgada@gmail.com with ED25519 key SHA256:25KEFNH7dMT/Sqr+PeVn2O7WXO9MVAhLH2Pc7t33cxM
+Author:     Akshat Gada <akshatgada@gmail.com>
+AuthorDate: Tue Oct 27 22:26:22 2026 +0530
+Commit:     Akshat Gada <akshatgada@gmail.com>
+CommitDate: Tue Oct 27 22:26:22 2026 +0530
+
+    fix(mcp): expose complete native tool results
+
+    Keep image, audio, resource and structured tool output accessible through
+    RawResult while preserving the existing text projection and payment metadata.
